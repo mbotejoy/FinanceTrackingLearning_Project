@@ -1,0 +1,745 @@
+/* =========================================
+   FINANCEWISE LANDING PAGE
+========================================= */
+
+:root {
+    --navy: #17324d;
+    --blue: #2169a6;
+    --mint: #d9f2e8;
+
+    --background: #f4f8f7;
+    --white: #ffffff;
+
+    --text: #1a2a36;
+    --muted: #62707a;
+    --border: #dbe4e1;
+
+    --max-width: 1200px;
+}
+
+
+/* =========================================
+   RESET
+========================================= */
+
+* {
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    margin: 0;
+
+    font-family: Georgia, "Times New Roman", serif;
+
+    background: var(--background);
+    color: var(--text);
+}
+
+img {
+    display: block;
+
+    width: 100%;
+}
+
+
+/* =========================================
+   COMMON CONTAINER
+========================================= */
+
+.landing-container {
+    width: calc(100% - 40px);
+    max-width: var(--max-width);
+
+    margin: 0 auto;
+}
+
+
+/* =========================================
+   NAVBAR
+========================================= */
+
+.landing-navbar {
+    position: sticky;
+
+    top: 0;
+
+    z-index: 1000;
+
+    background: var(--white);
+
+    border-bottom: 1px solid var(--border);
+}
+
+
+.landing-nav-container {
+    width: calc(100% - 40px);
+    max-width: var(--max-width);
+
+    min-height: 72px;
+
+    margin: 0 auto;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 30px;
+}
+
+
+/* Logo */
+
+.landing-logo {
+    color: var(--navy);
+
+    font-size: 27px;
+    font-weight: bold;
+
+    text-decoration: none;
+}
+
+.landing-logo span {
+    color: var(--blue);
+}
+
+
+/* Navigation */
+
+.landing-nav-links {
+    display: flex;
+
+    align-items: center;
+
+    gap: 30px;
+}
+
+.landing-nav-links a {
+    color: var(--text);
+
+    text-decoration: none;
+
+    font-weight: 600;
+}
+
+.landing-nav-links a:hover {
+    color: var(--blue);
+}
+
+
+/* Navbar buttons */
+
+.landing-nav-actions {
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+}
+
+
+/* =========================================
+   BUTTONS
+========================================= */
+
+.landing-btn {
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    padding: 11px 20px;
+
+    border: 1px solid var(--blue);
+    border-radius: 6px;
+
+    font: inherit;
+    font-weight: bold;
+
+    text-decoration: none;
+
+    transition:
+        background 0.2s ease,
+        color 0.2s ease,
+        transform 0.2s ease;
+}
+
+
+.landing-btn:hover {
+    transform: translateY(-1px);
+}
+
+
+.landing-btn-primary {
+    background: var(--blue);
+
+    color: var(--white);
+}
+
+.landing-btn-primary:hover {
+    background: var(--navy);
+
+    border-color: var(--navy);
+}
+
+
+.landing-btn-outline {
+    background: var(--white);
+
+    color: var(--blue);
+}
+
+.landing-btn-outline:hover {
+    background: var(--blue);
+
+    color: var(--white);
+}
+
+
+.landing-btn-large {
+    padding: 14px 25px;
+}
+
+
+.landing-btn-light {
+    background: var(--white);
+
+    color: var(--navy);
+
+    border-color: var(--white);
+}
+
+
+/* =========================================
+   HERO
+========================================= */
+
+.hero-section {
+    padding: 85px 0;
+
+    background:
+        linear-gradient(
+            135deg,
+            #f4f8f7,
+            #e9f5f1
+        );
+}
+
+
+.hero-container {
+    display: grid;
+
+    grid-template-columns: 1.05fr 0.95fr;
+
+    align-items: center;
+
+    gap: 70px;
+}
+
+
+.hero-label,
+.section-label {
+    margin: 0 0 12px;
+
+    color: var(--blue);
+
+    font-size: 14px;
+    font-weight: bold;
+
+    letter-spacing: 1.2px;
+}
+
+
+.hero-content h1 {
+    margin: 0;
+
+    color: var(--navy);
+
+    font-size: 52px;
+    line-height: 1.12;
+}
+
+
+.hero-content h1 span {
+    color: var(--blue);
+}
+
+
+.hero-description {
+    max-width: 620px;
+
+    margin: 24px 0 0;
+
+    color: var(--muted);
+
+    font-size: 19px;
+    line-height: 1.7;
+}
+
+
+.hero-actions {
+    display: flex;
+
+    flex-wrap: wrap;
+
+    gap: 14px;
+
+    margin-top: 32px;
+}
+
+
+/* Hero image */
+
+.hero-image img {
+    height: 430px;
+
+    object-fit: cover;
+
+    border-radius: 12px;
+
+    box-shadow: 0 12px 35px rgb(23 50 77 / 12%);
+}
+
+
+/* =========================================
+   COMMON SECTION HEADING
+========================================= */
+
+.section-heading {
+    max-width: 760px;
+
+    margin: 0 auto 45px;
+
+    text-align: center;
+}
+
+
+.section-heading h2 {
+    margin: 0 0 14px;
+
+    color: var(--navy);
+
+    font-size: 38px;
+}
+
+
+.section-heading > p:not(.section-label) {
+    margin: 0;
+
+    color: var(--muted);
+
+    font-size: 17px;
+    line-height: 1.7;
+}
+
+
+/* =========================================
+   ABOUT
+========================================= */
+
+.about-section {
+    padding: 90px 0;
+
+    background: var(--white);
+}
+
+
+.about-container {
+    display: grid;
+
+    grid-template-columns: 1fr 1fr;
+
+    align-items: center;
+
+    gap: 70px;
+}
+
+
+.about-image img {
+    height: 400px;
+
+    object-fit: cover;
+
+    border-radius: 12px;
+}
+
+
+.about-content h2 {
+    margin: 0 0 20px;
+
+    color: var(--navy);
+
+    font-size: 40px;
+}
+
+
+.about-content p:not(.section-label) {
+    margin: 0 0 18px;
+
+    color: var(--muted);
+
+    font-size: 17px;
+    line-height: 1.7;
+}
+
+
+.about-content .landing-btn {
+    margin-top: 10px;
+}
+
+
+/* =========================================
+   FEATURES
+========================================= */
+
+.features-section {
+    padding: 90px 0;
+}
+
+
+.features-grid {
+    display: grid;
+
+    grid-template-columns: repeat(3, 1fr);
+
+    gap: 24px;
+}
+
+
+.feature-card {
+    padding: 32px;
+
+    background: var(--white);
+
+    border: 1px solid var(--border);
+    border-radius: 10px;
+
+    text-align: center;
+
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+
+.feature-card:hover {
+    transform: translateY(-4px);
+
+    box-shadow: 0 10px 30px rgb(23 50 77 / 8%);
+}
+
+
+.feature-icon {
+    width: 55px;
+    height: 55px;
+
+    margin: 0 auto 20px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    background: var(--mint);
+
+    border-radius: 50%;
+
+    color: var(--navy);
+
+    font-family: Arial, sans-serif;
+    font-weight: bold;
+}
+
+
+.feature-card h3 {
+    margin: 0 0 12px;
+
+    color: var(--navy);
+
+    font-size: 21px;
+}
+
+
+.feature-card p {
+    margin: 0;
+
+    color: var(--muted);
+
+    line-height: 1.7;
+}
+
+
+/* =========================================
+   HOW IT WORKS
+========================================= */
+
+.how-section {
+    padding: 90px 0;
+
+    background: var(--white);
+}
+
+
+.steps-grid {
+    display: grid;
+
+    grid-template-columns: repeat(3, 1fr);
+
+    gap: 30px;
+}
+
+
+.step-card {
+    padding: 30px;
+
+    text-align: center;
+}
+
+
+.step-number {
+    width: 50px;
+    height: 50px;
+
+    margin: 0 auto 18px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    background: var(--blue);
+
+    border-radius: 50%;
+
+    color: var(--white);
+
+    font-size: 20px;
+    font-weight: bold;
+}
+
+
+.step-card h3 {
+    color: var(--navy);
+}
+
+
+.step-card p {
+    color: var(--muted);
+
+    line-height: 1.7;
+}
+
+
+/* =========================================
+   CTA
+========================================= */
+
+.cta-section {
+    padding: 75px 0;
+
+    background: var(--navy);
+}
+
+
+.cta-content {
+    max-width: 750px;
+
+    margin: 0 auto;
+
+    text-align: center;
+}
+
+
+.cta-content h2 {
+    margin: 0;
+
+    color: var(--white);
+
+    font-size: 38px;
+}
+
+
+.cta-content p {
+    margin: 18px auto 28px;
+
+    color: #dce6ec;
+
+    font-size: 18px;
+    line-height: 1.7;
+}
+
+
+/* =========================================
+   FOOTER
+========================================= */
+
+.landing-footer {
+    padding: 35px 0;
+
+    background: #10283d;
+
+    color: #dce6ec;
+}
+
+
+.footer-content {
+    text-align: center;
+}
+
+
+.footer-logo {
+    color: var(--white);
+
+    font-size: 24px;
+    font-weight: bold;
+
+    text-decoration: none;
+}
+
+
+.footer-logo span {
+    color: #7db7e3;
+}
+
+
+.footer-content p {
+    margin: 12px 0 0;
+}
+
+
+.copyright {
+    font-size: 14px;
+
+    opacity: 0.8;
+}
+
+
+/* =========================================
+   TABLET
+========================================= */
+
+@media (max-width: 950px) {
+
+    .hero-container,
+    .about-container {
+        grid-template-columns: 1fr;
+
+        gap: 45px;
+    }
+
+    .hero-content {
+        text-align: center;
+    }
+
+    .hero-description {
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .hero-actions {
+        justify-content: center;
+    }
+
+    .hero-image {
+        max-width: 700px;
+
+        margin: 0 auto;
+    }
+
+    .about-content {
+        text-align: center;
+    }
+
+    .features-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+}
+
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 700px) {
+
+    .landing-nav-links {
+        display: none;
+    }
+
+    .landing-nav-container {
+        min-height: 65px;
+    }
+
+    .landing-logo {
+        font-size: 22px;
+    }
+
+    .landing-nav-actions {
+        gap: 7px;
+    }
+
+    .landing-nav-actions .landing-btn {
+        padding: 8px 10px;
+
+        font-size: 14px;
+    }
+
+    .hero-section {
+        padding: 60px 0;
+    }
+
+    .hero-content h1 {
+        font-size: 38px;
+    }
+
+    .hero-description {
+        font-size: 17px;
+    }
+
+    .hero-image img,
+    .about-image img {
+        height: 300px;
+    }
+
+    .features-grid,
+    .steps-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .section-heading h2,
+    .about-content h2,
+    .cta-content h2 {
+        font-size: 31px;
+    }
+
+}
+
+
+/* =========================================
+   SMALL MOBILE
+========================================= */
+
+@media (max-width: 450px) {
+
+    .landing-container,
+    .landing-nav-container {
+        width: calc(100% - 28px);
+    }
+
+    .hero-content h1 {
+        font-size: 32px;
+    }
+
+    .hero-actions {
+        flex-direction: column;
+    }
+
+    .hero-actions .landing-btn {
+        width: 100%;
+    }
+
+}

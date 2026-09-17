@@ -1,0 +1,291 @@
+/* ========================================
+   FINANCEWISE - DASHBOARD
+======================================== */
+
+
+/* ---------- DASHBOARD WRAPPER ---------- */
+
+.welcome {
+    width: 100%;
+
+    text-align: center;
+}
+
+
+/* ---------- DASHBOARD INTRO ---------- */
+
+.dashboard-section {
+    width: 100%;
+
+    padding: 0;
+
+    background: transparent;
+    border: none;
+}
+
+.welcome h1 {
+    max-width: 900px;
+
+    margin: 0 auto ;
+
+    color: var(--navy);
+
+    font-size: 42px;
+    line-height: 1.2;
+
+    text-align: center;
+}
+
+.welcome > p {
+    max-width: 760px;
+
+    margin: 20px auto 0;
+
+    color: var(--muted);
+
+    font-size: 18px;
+    line-height: 1.6;
+
+    text-align: center;
+}
+
+
+/* ========================================
+   FINANCIAL SUMMARY CARDS
+======================================== */
+
+.summary-grid {
+    width: 100%;
+
+    display: grid;
+
+    grid-template-columns: repeat(3, 1fr);
+
+    gap: 28px;
+
+    margin-top: 45px;
+}
+
+.summary-card {
+    min-height: 340px;
+
+    display: flex;
+    flex-direction: column;
+
+    padding: 32px;
+
+    background: var(--white);
+
+    border: 1px solid var(--border);
+    border-radius: 8px;
+
+    text-align: left;
+}
+
+
+/* Card headings */
+
+.summary-card h2 {
+    margin: 0 0 22px;
+
+    color: var(--navy);
+
+    font-size: 26px;
+    line-height: 1.2;
+}
+
+/* Card descriptions */
+
+.summary-card p {
+    margin: 0;
+
+    color: var(--muted);
+
+    font-size: 17px;
+    line-height: 1.7;
+}
+
+/* Money value */
+
+.summary-card strong {
+    display: block;
+
+    margin-top: auto;
+    margin-bottom: 18px;
+
+    color: var(--navy);
+
+    font-size: 28px;
+}
+
+
+/* ========================================
+   CARD BUTTON
+======================================== */
+
+.card-action {
+    margin-top: 0;
+}
+
+
+.summary-card .card-action {
+    text-align: center;
+}
+
+
+.summary-card .btn {
+    width: 100%;
+    max-width: 210px;
+}
+
+
+/* ========================================
+   LEARNING Section
+======================================== */
+
+.learning-section {
+    width: 100%;
+
+    margin-top: 40px;
+
+    padding: 35px 40px;
+
+    background: var(--mint);
+
+    border-radius: 8px;
+}
+
+
+.learning-section > h2 {
+    margin: 0 0 12px;
+
+    color: var(--navy);
+
+    font-size: 30px;
+
+    text-align: center;
+}
+
+
+.learning-section > p {
+    max-width: 700px;
+
+    margin: 0 auto;
+
+    color: var(--muted);
+    font-size: 17px;
+    line-height: 1.6;
+    
+    text-align: center;
+}
+
+
+/* ========================================
+   LEARNING CARDS
+======================================== */
+
+.resources-grid {
+    width: 100%;
+
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+
+    gap: 22px;
+
+    margin-top: 30px;
+}
+
+
+.resource-card {
+    min-height: 230px;
+
+    display: flex;
+    flex-direction: column;
+
+    padding: 25px;
+
+    background: var(--white);
+
+    border: 1px solid var(--border);
+    border-radius: 8px;
+
+    text-align: center;
+}
+
+
+.resource-card h3 {
+    margin: 0 0 12px;
+
+    color: var(--navy);
+
+    font-size: 21px;
+}
+
+
+.resource-card p {
+    margin: 0;
+
+    color: var(--muted);
+
+    line-height: 1.6;
+}
+
+
+.resource-card .card-action {
+    margin-top: auto;
+    padding-top: 20px;
+}
+
+
+/* ========================================
+   RESPONSIVE DASHBOARD
+======================================== */
+
+/* TABLET */
+
+@media (max-width: 1000px) {
+
+    .summary-grid {
+        gap: 18px;
+    }
+
+    .summary-card {
+        padding: 24px;
+    }
+
+}
+
+
+/* SMALL SCREENS */
+
+@media (max-width: 900px) {
+
+    .summary-grid,
+    .resources-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .welcome > h1 {
+        font-size: 34px;
+    }
+
+}
+
+
+/* MOBILE */
+
+@media (max-width: 600px) {
+
+    .welcome > h1 {
+        font-size: 29px;
+    }
+
+    .welcome > p {
+        font-size: 16px;
+    }
+
+    .learning-section {
+        padding: 25px 18px;
+    }
+
+}

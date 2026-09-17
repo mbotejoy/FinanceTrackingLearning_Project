@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Create Budget | FinanceWise{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/budgets.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<div class="page-container">
+
+    <div class="page-header">
+        <h1>Create Your Budget</h1>
+
+        <p>
+            Set a spending limit for a category and monitor
+            your progress throughout the selected period.
+        </p>
+    </div>
+
+    <div class="budget-form">
+
+        <form method="POST"
+              class="budget-form-card">
+
+            {% csrf_token %}
+
+            <div class="form-group">
+                <label>Budget Name</label>
+
+                <input type="text"
+                       name="budget_name"
+                       placeholder="e.g. Monthly Food Budget">
+            </div>
+
+            <div class="form-group">
+                <label>Category</label>
+
+                <select name="category">
+
+                    <option value="">
+                        Select category
+                    </option>
+
+                    <option>Food</option>
+                    <option>Transport</option>
+                    <option>Education</option>
+                    <option>Entertainment</option>
+                    <option>Bills</option>
+
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Budget Amount</label>
+
+                <input type="number"
+                       name="budget_amount"
+                       step="0.01"
+                       placeholder="Enter amount">
+            </div>
+
+            <div class="form-group">
+                <label>Start Date</label>
+
+                <input type="date"
+                       name="start_date">
+            </div>
+
+            <div class="form-group">
+                <label>End Date</label>
+
+                <input type="date"
+                       name="end_date">
+            </div>
+
+            <div class="form-actions">
+
+                <a href="{% url 'budgets' %}"
+                   class="btn btn-outline">
+                    Cancel
+                </a>
+
+                <button type="submit"
+                        class="btn btn-primary">
+                    Save Budget
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+{% endblock %}

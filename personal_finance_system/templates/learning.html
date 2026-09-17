@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Learning | FinanceWise{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/learning.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<div class="page-container">
+
+    <div class="page-header">
+
+        <h1>Learn Financial Skills</h1>
+
+        <p>
+            Explore practical financial topics designed to
+            help you build stronger money habits.
+        </p>
+
+    </div>
+
+    <div class="learning-grid">
+
+        <article class="learning-card">
+
+            <h3>Budgeting Basics</h3>
+
+            <p>
+                Learn how to create a practical budget,
+                manage expenses and control your spending.
+            </p>
+
+            <div class="card-action">
+
+                <a href="{% url 'quiz' %}"
+                   class="btn btn-primary">
+                    Start Learning
+                </a>
+
+            </div>
+
+        </article>
+
+        <article class="learning-card">
+
+            <h3>Saving</h3>
+
+            <p>
+                Understand how to develop consistent saving
+                habits and work towards financial goals.
+            </p>
+
+            <div class="card-action">
+
+                <a href="{% url 'quiz' %}"
+                   class="btn btn-primary">
+                    Start Learning
+                </a>
+
+            </div>
+
+        </article>
+
+        <article class="learning-card">
+
+            <h3>Debt Management</h3>
+
+            <p>
+                Learn how borrowing works and how to manage
+                debt responsibly.
+            </p>
+
+            <div class="card-action">
+
+                <a href="{% url 'quiz' %}"
+                   class="btn btn-primary">
+                    Start Learning
+                </a>
+
+            </div>
+
+        </article>
+
+        <article class="learning-card">
+
+            <h3>Investing Basics</h3>
+
+            <p>
+                Understand basic investment concepts and the risks
+                involved.
+            </p>
+
+            <div class="card-action">
+
+                <a href="{% url 'quiz' %}"
+                   class="btn btn-primary">
+                    Start Learning
+                </a>
+
+            </div>
+
+        </article>
+
+    </div>
+
+</div>
+
+{% endblock %}

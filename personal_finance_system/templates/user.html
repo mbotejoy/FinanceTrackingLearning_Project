@@ -1,0 +1,184 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}User Dashboard | FinanceWise{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/user.css' %}">
+{% endblock %}
+
+
+{% block content %}
+
+<div class="page-container">
+
+    <section class="welcome dashboard-section">
+
+        <h1>Good Financial Decisions Start Here!</h1>
+
+        <p>
+            Track your spending, create practical budgets, and build
+            financial knowledge in one place.
+        </p>
+
+
+        <!-- Financial Summary -->
+
+        <div class="summary-grid">
+
+            <article class="summary-card">
+
+                <h2>Monthly Income</h2>
+
+                <p>
+                    View your total monthly income and stay on top
+                    of your finances.
+                </p>
+
+                <strong>KES 0.00</strong>
+
+                <div class="card-action">
+
+                    <a href="{% url 'transactions' %}"
+                       class="btn btn-outline">
+                        View Transactions
+                    </a>
+
+                </div>
+
+            </article>
+
+
+            <article class="summary-card">
+
+                <h2>Monthly Expenses</h2>
+
+                <p>
+                    Keep track of your monthly expenses and identify
+                    areas for improvement.
+                </p>
+
+                <strong>KES 0.00</strong>
+
+                <div class="card-action">
+
+                    <a href="{% url 'transactions' %}"
+                       class="btn btn-outline">
+                        View Transactions
+                    </a>
+
+                </div>
+
+            </article>
+
+
+            <article class="summary-card">
+
+                <h2>Available Balance</h2>
+
+                <p>
+                    See your available balance after accounting
+                    for income and expenses.
+                </p>
+
+                <strong>KES 0.00</strong>
+
+                <div class="card-action">
+
+                    <a href="{% url 'transactions' %}"
+                       class="btn btn-outline">
+                        View Transactions
+                    </a>
+
+                </div>
+
+            </article>
+
+        </div>
+
+
+        <!-- Learning Preview -->
+
+        <section class="learning-section">
+
+            <h2>Build Stronger Money Habits</h2>
+
+            <p>
+                Explore our curated learning resources to enhance
+                your financial literacy.
+            </p>
+
+
+            <div class="resources-grid">
+
+                <article class="resource-card">
+
+                    <h3>Budgeting Basics</h3>
+
+                    <p>
+                        Learn the fundamentals of budgeting and how
+                        to create a budget that works for you.
+                    </p>
+
+                    <div class="card-action">
+
+                        <a href="{% url 'learning' %}"
+                           class="btn btn-outline">
+                            Start Learning
+                        </a>
+
+                    </div>
+
+                </article>
+
+
+                <article class="resource-card">
+
+                    <h3>Investing 101</h3>
+
+                    <p>
+                        Discover the basics of investing and how
+                        to grow your wealth over time.
+                    </p>
+
+                    <div class="card-action">
+
+                        <a href="{% url 'learning' %}"
+                           class="btn btn-outline">
+                            Start Learning
+                        </a>
+
+                    </div>
+
+                </article>
+
+
+                <article class="resource-card">
+
+                    <h3>Debt Management</h3>
+
+                    <p>
+                        Understand strategies for managing and
+                        reducing debt effectively.
+                    </p>
+
+                    <div class="card-action">
+
+                        <a href="{% url 'learning' %}"
+                           class="btn btn-outline">
+                            Start Learning
+                        </a>
+
+                    </div>
+
+                </article>
+
+            </div>
+
+        </section>
+
+    </section>
+
+</div>
+
+{% endblock %}

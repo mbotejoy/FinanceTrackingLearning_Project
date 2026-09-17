@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Transactions | FinanceWise{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/transactions.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<div class="page-container">
+
+    <div class="page-header">
+        <h1>Your Transactions</h1>
+        <p>
+            Record and monitor your income and expenses
+            to understand where your money goes.
+        </p>
+    </div>
+
+    <div class="transaction-toolbar">
+        <a href="{% url 'add_transaction' %}"
+           class="btn btn-primary">
+            + Add Transaction
+        </a>
+    </div>
+
+    <section class="transactions-card">
+
+        <div class="table-container">
+
+            <table class="data-table">
+
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Description</th>
+                        <th>Category</th>
+                        <th>Type</th>
+                        <th>Amount</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr>
+                        <td colspan="5" class="transaction-empty">
+                            No transactions recorded yet.
+                        </td>
+                    </tr>
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </section>
+
+</div>
+
+{% endblock %}

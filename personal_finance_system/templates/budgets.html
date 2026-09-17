@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Budgets | FinanceWise{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/budgets.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<div class="page-container">
+
+    <div class="page-header">
+        <h1>Your Budgets</h1>
+
+        <p>
+            Set spending limits and monitor how your
+            expenses compare with your planned budget.
+        </p>
+    </div>
+
+    <div class="budget-toolbar">
+
+        <a href="{% url 'create_budget' %}"
+           class="btn btn-primary">
+            + Create Budget
+        </a>
+
+    </div>
+
+    <div class="budget-list">
+
+        <div class="empty-budget">
+
+            <h3>No Budgets Yet</h3>
+
+            <p>
+                Create your first budget to begin monitoring
+                your spending.
+            </p>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+{% load static %}
+{% block extra_css %}
+<link rel="stylesheet"
+      href="{% static 'css/quiz.css' %}">
+{% endblock %}
+{% block title %}Quiz | FinanceWise{% endblock %}
+
+{% block content %}
+
+<div class="page-container">
+
+    <div class="page-header">
+        <h1>Financial Literacy Quiz</h1>
+        <p>Test what you have learned.</p>
+    </div>
+
+    <div class="form-container">
+
+        <section class="page-card">
+
+            <div class="quiz-heading">
+                <strong>Topic: Budgeting</strong>
+                <span>Question 1 of 5</span>
+            </div>
+
+            <div class="quiz-question">
+
+                <h2>Question</h2>
+
+                <p>
+                    Your quiz question will appear here.
+                </p>
+
+                <label>
+                    <input type="radio" name="answer">
+                    Option A
+                </label>
+
+                <label>
+                    <input type="radio" name="answer">
+                    Option B
+                </label>
+
+                <label>
+                    <input type="radio" name="answer">
+                    Option C
+                </label>
+
+                <label>
+                    <input type="radio" name="answer">
+                    Option D
+                </label>
+
+            </div>
+
+            <div class="form-actions">
+
+                <button class="btn btn-outline" id="previousQuestion" type="button">
+                    Previous
+                </button>
+
+                <button class="btn btn-primary" id="nextQuestion" type="button">
+                    Next
+                </button>
+
+                <button class="btn btn-outline" type="button">
+                    Quit
+                </button>
+
+            </div>
+
+        </section>
+
+    </div>
+
+</div>
+
+{% endblock %}
+
+<script src="{% static 'js/quiz.js' %}"></script>
+
+

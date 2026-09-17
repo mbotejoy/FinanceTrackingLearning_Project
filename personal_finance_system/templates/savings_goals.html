@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Savings Goals | FinanceWise{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/savings.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<div class="page-container">
+
+    <div class="page-header">
+
+        <h1>Your Savings Goals</h1>
+
+        <p>
+            Create savings targets and track your progress
+            towards achieving your financial goals.
+        </p>
+
+    </div>
+
+    <div class="savings-toolbar">
+
+        <a href="{% url 'create_savings_goal' %}"
+           class="btn btn-primary">
+            + Create Savings Goal
+        </a>
+
+    </div>
+
+    <div class="goals-grid">
+
+        <div class="goal-empty">
+
+            <h3>No Savings Goals Yet</h3>
+
+            <p>
+                Create your first savings goal to begin
+                tracking your progress.
+            </p>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

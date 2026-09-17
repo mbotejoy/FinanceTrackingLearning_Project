@@ -1,0 +1,71 @@
+/* ========================================
+   FINANCIAL INSIGHTS
+======================================== */
+
+.insights-grid {
+    width: 100%;
+
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+
+    gap: 22px;
+}
+
+.insight-card {
+    min-height: 180px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    padding: 28px;
+
+    background: var(--white);
+
+    border: 1px solid var(--border);
+    border-radius: 8px;
+
+    text-align: center;
+}
+
+.insight-card h3 {
+    margin: 0 0 15px;
+
+    color: var(--navy);
+}
+
+.insight-card strong {
+    color: var(--blue);
+
+    font-size: 26px;
+}
+
+.insights-panel {
+    width: 100%;
+
+    margin-top: 30px;
+    padding: 35px;
+
+    background: var(--white);
+
+    border: 1px solid var(--border);
+    border-radius: 8px;
+
+    text-align: center;
+}
+
+.insights-panel h2 {
+    color: var(--navy);
+}
+
+.insights-panel p {
+    color: var(--muted);
+
+    line-height: 1.6;
+}
+
+@media (max-width: 900px) {
+    .insights-grid {
+        grid-template-columns: 1fr;
+    }
+}
