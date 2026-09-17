@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Recommendations | FinanceWise{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet"
+      href="{% static 'css/recommendations.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<div class="page-container">
+
+    <div class="page-header">
+
+        <h1>Your Personalized Recommendations</h1>
+
+        <p>
+            Receive practical financial guidance based on
+            your spending, budgets, savings and learning activity.
+        </p>
+
+    </div>
+
+    <div class="recommendations-container">
+
+        <div class="recommendation-empty">
+
+            <h3>No Recommendations Yet</h3>
+
+            <p>
+                Start recording transactions and creating
+                budgets to receive personalized guidance.
+            </p>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

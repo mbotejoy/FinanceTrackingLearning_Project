@@ -1,0 +1,57 @@
+/* ========================================
+   TRANSACTIONS
+======================================== */
+
+.transactions-section {
+    width: 100%;
+}
+
+.transaction-toolbar {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 25px;
+}
+
+.transactions-card {
+    width: 100%;
+    padding: 30px;
+
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+}
+
+.transaction-empty {
+    padding: 45px 20px;
+    text-align: center;
+    color: var(--muted);
+}
+
+.transaction-empty h3 {
+    margin-top: 0;
+    color: var(--navy);
+}
+
+@media (max-width: 700px) {
+    .transaction-toolbar {
+        justify-content: center;
+    }
+}
+/* ========================================
+   TRANSACTION FORM
+======================================== */
+
+.transaction-form {
+    width: 100%;
+    max-width: 700px;
+
+    margin: 0 auto;
+}
+
+.transaction-form-card {
+    padding: 35px;
+
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+}

@@ -1,0 +1,529 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>FinanceWise | Personal Finance Made Simple</title>
+
+    <link rel="stylesheet" href="{% static 'css/landing.css' %}">
+
+</head>
+
+
+<body>
+
+
+<!-- =========================================
+     NAVBAR
+========================================= -->
+
+<header class="landing-navbar">
+
+    <div class="landing-nav-container">
+
+        <!-- Logo -->
+
+        <a href="{% url 'landing' %}"
+           class="landing-logo">
+
+            Finance<span>Wise</span>
+
+        </a>
+
+
+        <!-- Navigation -->
+
+        <nav class="landing-nav-links">
+
+            <a href="#home">Home</a>
+
+            <a href="#features">Features</a>
+
+            <a href="#about">About</a>
+
+        </nav>
+
+
+        <!-- Authentication Buttons -->
+
+        <div class="landing-nav-actions">
+
+            <a href="{% url 'login' %}"
+               class="landing-btn landing-btn-outline">
+                Sign In
+            </a>
+
+            <a href="{% url 'register' %}"
+               class="landing-btn landing-btn-primary">
+                Sign Up
+            </a>
+
+        </div>
+
+    </div>
+
+</header>
+
+
+
+<main>
+
+
+<!-- =========================================
+     HERO SECTION
+========================================= -->
+
+<section class="hero-section"
+         id="home">
+
+    <div class="landing-container hero-container">
+
+
+        <!-- Hero Text -->
+
+        <div class="hero-content">
+
+            <p class="hero-label">
+                YOUR FINANCIAL JOURNEY STARTS HERE
+            </p>
+
+            <h1>
+                Make Smarter Financial Decisions
+                with <span>FinanceWise</span>
+            </h1>
+
+            <p class="hero-description">
+
+                FinanceWise helps you track your money,
+                create budgets, work towards savings goals
+                and build practical financial knowledge
+                in one simple platform.
+
+            </p>
+
+
+            <div class="hero-actions">
+
+                <a href="{% url 'register' %}"
+                   class="landing-btn landing-btn-primary landing-btn-large">
+
+                    Get Started
+
+                </a>
+
+                <a href="#about"
+                   class="landing-btn landing-btn-outline landing-btn-large">
+
+                    Learn More
+
+                </a>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- Hero Image -->
+
+        <div class="hero-image">
+
+            <img
+                src="{% static 'images/image1.jpg' %}"
+                alt="Young person using a laptop to manage personal finances">
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- =========================================
+     ABOUT SECTION
+========================================= -->
+
+<section class="about-section"
+         id="about">
+
+    <div class="landing-container about-container">
+
+
+        <div class="about-image">
+
+            <img
+                src="{% static 'images/kenyanShiling.webp' %}"
+                alt="The Kenyan Shilling">
+
+        </div>
+
+
+        <div class="about-content">
+
+            <p class="section-label">
+                ABOUT FINANCEWISE
+            </p>
+
+            <h2>
+                Learn. Track. Improve.
+            </h2>
+
+            <p>
+
+                FinanceWise combines personal finance
+                tracking with financial learning to help
+                young people develop better money habits.
+
+            </p>
+
+            <p>
+
+                Instead of simply recording expenses,
+                FinanceWise helps you understand your
+                financial behaviour and provides useful
+                insights and personalized recommendations.
+
+            </p>
+
+            <a href="{% url 'register' %}"
+               class="landing-btn landing-btn-primary">
+
+                Create Your Account
+
+            </a>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- =========================================
+     FEATURES SECTION
+========================================= -->
+
+<section class="features-section"
+         id="features">
+
+    <div class="landing-container">
+
+
+        <div class="section-heading">
+
+            <p class="section-label">
+                WHAT FINANCEWISE OFFERS
+            </p>
+
+            <h2>
+                Everything You Need to Build Better Money Habits
+            </h2>
+
+            <p>
+                Manage your finances while building practical
+                financial knowledge.
+            </p>
+
+        </div>
+
+
+
+        <div class="features-grid">
+
+
+            <!-- Transactions -->
+
+            <article class="feature-card">
+
+                <div class="feature-icon">
+                    KES
+                </div>
+
+                <h3>
+                    Track Your Finances
+                </h3>
+
+                <p>
+                    Record your income and expenses and
+                    understand where your money goes.
+                </p>
+
+            </article>
+
+
+
+            <!-- Budget -->
+
+            <article class="feature-card">
+
+                <div class="feature-icon">
+                    %
+                </div>
+
+                <h3>
+                    Create Budgets
+                </h3>
+
+                <p>
+                    Set spending limits and compare your
+                    expenses against your planned budget.
+                </p>
+
+            </article>
+
+
+
+            <!-- Savings -->
+
+            <article class="feature-card">
+
+                <div class="feature-icon">
+                    ↑
+                </div>
+
+                <h3>
+                    Set Savings Goals
+                </h3>
+
+                <p>
+                    Create financial goals and monitor
+                    your progress towards achieving them.
+                </p>
+
+            </article>
+
+
+
+            <!-- Learning -->
+
+            <article class="feature-card">
+
+                <div class="feature-icon">
+                    ★
+                </div>
+
+                <h3>
+                    Learn Financial Skills
+                </h3>
+
+                <p>
+                    Access learning materials and quizzes
+                    covering practical financial topics.
+                </p>
+
+            </article>
+
+
+
+            <!-- Insights -->
+
+            <article class="feature-card">
+
+                <div class="feature-icon">
+                    ↗
+                </div>
+
+                <h3>
+                    Financial Insights
+                </h3>
+
+                <p>
+                    Understand your spending patterns and
+                    view predictions based on your
+                    financial activity.
+                </p>
+
+            </article>
+
+
+
+            <!-- Recommendations -->
+
+            <article class="feature-card">
+
+                <div class="feature-icon">
+                    !
+                </div>
+
+                <h3>
+                    Personalized Guidance
+                </h3>
+
+                <p>
+                    Receive practical recommendations
+                    based on your spending, budgets,
+                    savings and learning activity.
+                </p>
+
+            </article>
+
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- =========================================
+     HOW IT WORKS
+========================================= -->
+
+<section class="how-section">
+
+    <div class="landing-container">
+
+
+        <div class="section-heading">
+
+            <p class="section-label">
+                HOW IT WORKS
+            </p>
+
+            <h2>
+                Start Building Better Financial Habits
+            </h2>
+
+        </div>
+
+
+
+        <div class="steps-grid">
+
+
+            <article class="step-card">
+
+                <span class="step-number">
+                    1
+                </span>
+
+                <h3>Create an Account</h3>
+
+                <p>
+                    Register for your FinanceWise account
+                    to begin your financial journey.
+                </p>
+
+            </article>
+
+
+
+            <article class="step-card">
+
+                <span class="step-number">
+                    2
+                </span>
+
+                <h3>Track Your Money</h3>
+
+                <p>
+                    Add your income, expenses, budgets
+                    and savings goals.
+                </p>
+
+            </article>
+
+
+
+            <article class="step-card">
+
+                <span class="step-number">
+                    3
+                </span>
+
+                <h3>Learn & Improve</h3>
+
+                <p>
+                    View insights, take quizzes and receive
+                    recommendations that help you improve.
+                </p>
+
+            </article>
+
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- =========================================
+     CALL TO ACTION
+========================================= -->
+
+<section class="cta-section">
+
+    <div class="landing-container">
+
+        <div class="cta-content">
+
+            <h2>
+                Ready to Take Control of Your Finances?
+            </h2>
+
+            <p>
+                Start tracking, learning and building
+                stronger financial habits with FinanceWise.
+            </p>
+
+            <a href="{% url 'register' %}"
+               class="landing-btn landing-btn-light landing-btn-large">
+
+                Get Started
+
+            </a>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+</main>
+
+
+
+<!-- =========================================
+     FOOTER
+========================================= -->
+
+<footer class="landing-footer">
+
+    <div class="landing-container footer-content">
+
+        <a href="{% url 'landing' %}"
+           class="footer-logo">
+
+            Finance<span>Wise</span>
+
+        </a>
+
+        <p>
+            Personal finance tracking and learning made simple.
+        </p>
+
+        <p class="copyright">
+            &copy; 2026 FinanceWise
+        </p>
+
+    </div>
+
+</footer>
+
+
+</body>
+
+</html>

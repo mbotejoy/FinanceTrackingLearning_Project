@@ -7,17 +7,21 @@
     <title>{% block title %}FinanceWise{% endblock %}</title>
 
     <link rel="stylesheet" href="{% static 'css/base.css' %}">
+    <link rel="stylesheet" href="{%static 'css/forms.css'%}">
     {% block extra_css %}{% endblock %}
 
 </head>
 <body>
     <header class="navbar">
-        <a class="brand" href="{% url 'home' %}">FinanceWise</a>
+        <a href="{% url 'landing' %}"
+   class="landing-logo">
+    Finance<span>Wise</span>
+</a>
 
         <div class="nav-actions">
             <button class="profile-button" title="Profile">Profile</button>
-            <a class="btn btn-outline" href="#">Sign In</a>
-            <a class="btn btn-primary" href="#">Sign Up</a>
+            <a class="btn btn-outline" href="{% url 'login' %}">Sign In</a>
+            <a class="btn btn-primary" href="{% url 'register' %}">Sign Up</a>
         </div>
     </header>
 
@@ -25,31 +29,87 @@
         <button class="sidebar-toggle" id="sidebar-toggle" title="Toggle sidebar">&#9776;</button>
 
 <nav>
-            <a class="active" href="{% url 'home' %}">
-                <span class="nav-icon">&#8962;</span>
-                <span class="nav-label">Dashboard</span>
-            </a>
-            <a href="#">
-                <span class="nav-icon">$</span>
-                <span class="nav-label">Transactions</span>
-            </a>
-            <a href="#">
-                <span class="nav-icon">&#9638;</span>
-                <span class="nav-label">Budget</span>
-            </a>
-            <a href="#">
-                <span class="nav-icon">&#8599;</span>
-                <span class="nav-label">Goals</span>
-            </a>
-            <a href="#">
-                <span class="nav-icon">&#9733;</span>
-                <span class="nav-label">Learning</span>
-            </a>
-            <a href="#">
-                <span class="nav-icon">&#9881;</span>
-                <span class="nav-label">Settings</span>
-            </a>
-        </nav>
+
+    <!-- Dashboard -->
+    <a href="{% url 'home' %}"
+       class="{% if request.resolver_match.url_name == 'home' %}active{% endif %}">
+
+        <span class="nav-icon">&#8962;</span>
+        <span class="nav-label">Dashboard</span>
+
+    </a>
+
+
+    <!-- Transactions -->
+    <a href="{% url 'transactions' %}"
+       class="{% if request.resolver_match.url_name == 'transactions' or request.resolver_match.url_name == 'add_transaction' %}active{% endif %}">
+
+        <span class="nav-icon">$</span>
+        <span class="nav-label">Transactions</span>
+
+    </a>
+
+
+    <!-- Budgets -->
+    <a href="{% url 'budgets' %}"
+       class="{% if request.resolver_match.url_name == 'budgets' or request.resolver_match.url_name == 'create_budget' %}active{% endif %}">
+
+        <span class="nav-icon">&#9638;</span>
+        <span class="nav-label">Budget</span>
+
+    </a>
+
+
+    <!-- Savings Goals -->
+    <a href="{% url 'savings_goals' %}"
+       class="{% if request.resolver_match.url_name == 'savings_goals' or request.resolver_match.url_name == 'create_savings_goal' %}active{% endif %}">
+
+        <span class="nav-icon">&#8599;</span>
+        <span class="nav-label">Savings Goals</span>
+
+    </a>
+
+
+    <!-- Financial Insights -->
+    <a href="{% url 'financial_insights' %}"
+       class="{% if request.resolver_match.url_name == 'financial_insights' %}active{% endif %}">
+
+        <span class="nav-icon">&#128200;</span>
+        <span class="nav-label">Financial Insights</span>
+
+    </a>
+
+
+    <!-- Learning -->
+    <a href="{% url 'learning' %}"
+       class="{% if request.resolver_match.url_name == 'learning' %}active{% endif %}">
+
+        <span class="nav-icon">&#9733;</span>
+        <span class="nav-label">Learning</span>
+
+    </a>
+
+
+    <!-- Quiz -->
+    <a href="{% url 'quiz' %}"
+       class="{% if request.resolver_match.url_name == 'quiz' %}active{% endif %}">
+
+        <span class="nav-icon">?</span>
+        <span class="nav-label">Quizzes</span>
+
+    </a>
+
+
+    <!-- Recommendations -->
+    <a href="{% url 'recommendations' %}"
+       class="{% if request.resolver_match.url_name == 'recommendations' %}active{% endif %}">
+
+        <span class="nav-icon">&#128161;</span>
+        <span class="nav-label">Recommendations</span>
+
+    </a>
+
+</nav>
     </aside>
 
     <main class="main-content" id="mainContent">

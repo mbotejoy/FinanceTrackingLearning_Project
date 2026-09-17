@@ -1,0 +1,177 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Sign In | FinanceWise</title>
+
+    <link rel="stylesheet"
+          href="{% static 'css/auth.css' %}">
+
+</head>
+
+
+<body>
+
+
+<!-- =========================================
+     NAVBAR
+========================================= -->
+
+<header class="auth-navbar">
+
+    <div class="auth-nav-container">
+
+        <a href="{% url 'landing' %}"
+           class="auth-logo">
+
+            Finance<span>Wise</span>
+
+        </a>
+
+
+        <a href="{% url 'landing' %}"
+           class="auth-home-link">
+
+            Back to Home
+
+        </a>
+
+    </div>
+
+</header>
+
+
+
+<!-- =========================================
+     LOGIN
+========================================= -->
+
+<main class="auth-page">
+
+    <section class="auth-card">
+
+
+        <div class="auth-heading">
+
+            <h1>Welcome Back</h1>
+
+            <p>
+                Sign in to continue managing your finances
+                and building better money habits.
+            </p>
+
+        </div>
+
+
+
+        <form method="POST"
+              class="auth-form">
+
+            {% csrf_token %}
+
+
+            <!-- Email -->
+
+            <div class="form-group">
+
+                <label for="email">
+                    Email Address
+                </label>
+
+                <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    placeholder="Enter your email address"
+                    required>
+
+            </div>
+
+
+
+            <!-- Password -->
+
+            <div class="form-group">
+
+                <label for="password">
+                    Password
+                </label>
+
+                <input
+                    type="password"
+                    id="password"
+                    name="password"
+                    placeholder="Enter your password"
+                    required>
+
+            </div>
+
+
+
+            <!-- Options -->
+
+            <div class="password-options">
+
+                <label class="remember-me">
+
+                    <input
+                        type="checkbox"
+                        name="remember">
+
+                    Remember me
+
+                </label>
+
+
+                <a href="#">
+                    Forgot Password?
+                </a>
+
+            </div>
+
+
+
+            <!-- Login -->
+
+            <button
+                type="submit"
+                class="auth-submit">
+
+                Sign In
+
+            </button>
+
+
+        </form>
+
+
+
+        <!-- Register -->
+
+        <p class="auth-switch">
+
+            Don't have an account?
+
+            <a href="{% url 'register' %}">
+                Create Account
+            </a>
+
+        </p>
+
+
+    </section>
+
+</main>
+
+
+</body>
+
+</html>

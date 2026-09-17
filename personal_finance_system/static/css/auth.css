@@ -1,0 +1,361 @@
+/* =========================================
+   FINANCEWISE AUTHENTICATION PAGES
+========================================= */
+
+:root {
+    --navy: #17324d;
+    --blue: #2169a6;
+    --mint: #d9f2e8;
+    --background: #f4f8f7;
+    --white: #ffffff;
+    --text: #1a2a36;
+    --muted: #62707a;
+    --border: #dbe4e1;
+}
+
+
+/* =========================================
+   RESET
+========================================= */
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+
+    min-height: 100vh;
+
+    font-family: Georgia, "Times New Roman", serif;
+
+    background: var(--background);
+    color: var(--text);
+}
+
+
+/* =========================================
+   NAVBAR
+========================================= */
+
+.auth-navbar {
+    background: var(--white);
+
+    border-bottom: 1px solid var(--border);
+}
+
+.auth-nav-container {
+    width: calc(100% - 40px);
+    max-width: 1200px;
+
+    min-height: 72px;
+
+    margin: 0 auto;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+
+/* Logo */
+
+.auth-logo {
+    color: var(--navy);
+
+    font-size: 27px;
+    font-weight: bold;
+
+    text-decoration: none;
+}
+
+.auth-logo span {
+    color: var(--blue);
+}
+
+
+/* Back home link */
+
+.auth-home-link {
+    color: var(--blue);
+
+    font-weight: bold;
+
+    text-decoration: none;
+}
+
+.auth-home-link:hover {
+    text-decoration: underline;
+}
+
+
+/* =========================================
+   PAGE
+========================================= */
+
+.auth-page {
+    min-height: calc(100vh - 72px);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 50px 20px;
+}
+
+
+/* =========================================
+   AUTH CARD
+========================================= */
+
+.auth-card {
+    width: 100%;
+    max-width: 500px;
+
+    padding: 42px;
+
+    background: var(--white);
+
+    border: 1px solid var(--border);
+    border-radius: 10px;
+
+    box-shadow: 0 12px 35px rgb(23 50 77 / 8%);
+}
+
+
+/* =========================================
+   HEADING
+========================================= */
+
+.auth-heading {
+    margin-bottom: 30px;
+
+    text-align: center;
+}
+
+.auth-heading h1 {
+    margin: 0 0 12px;
+
+    color: var(--navy);
+
+    font-size: 34px;
+}
+
+.auth-heading p {
+    margin: 0;
+
+    color: var(--muted);
+
+    font-size: 16px;
+    line-height: 1.6;
+}
+
+
+/* =========================================
+   FORM
+========================================= */
+
+.auth-form .form-group {
+    margin-bottom: 20px;
+}
+
+.auth-form .form-group label {
+    display: block;
+
+    margin-bottom: 8px;
+
+    color: var(--navy);
+
+    font-size: 15px;
+    font-weight: bold;
+}
+
+.auth-form input {
+    width: 100%;
+
+    padding: 13px 14px;
+
+    background: var(--white);
+
+    border: 1px solid var(--border);
+    border-radius: 6px;
+
+    color: var(--text);
+
+    font: inherit;
+
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.auth-form input:focus {
+    outline: none;
+
+    border-color: var(--blue);
+
+    box-shadow: 0 0 0 3px rgb(33 105 166 / 12%);
+}
+
+.auth-form input::placeholder {
+    color: #9aa4aa;
+}
+
+
+/* =========================================
+   NAME ROW
+========================================= */
+
+.auth-form-row {
+    display: grid;
+
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+
+    gap: 18px;
+}
+
+
+/* =========================================
+   PASSWORD OPTIONS
+========================================= */
+
+.password-options {
+    display: flex;
+
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 15px;
+
+    margin: -5px 0 22px;
+
+    font-size: 14px;
+}
+
+.remember-me {
+    display: flex;
+
+    align-items: center;
+
+    gap: 7px;
+
+    color: var(--muted);
+}
+
+.remember-me input {
+    width: auto;
+}
+
+.password-options a {
+    color: var(--blue);
+
+    text-decoration: none;
+}
+
+.password-options a:hover {
+    text-decoration: underline;
+}
+
+
+/* =========================================
+   AUTH BUTTON
+========================================= */
+
+.auth-submit {
+    width: 100%;
+
+    padding: 14px 20px;
+
+    background: var(--blue);
+
+    border: 1px solid var(--blue);
+    border-radius: 6px;
+
+    color: var(--white);
+
+    font: inherit;
+    font-weight: bold;
+
+    cursor: pointer;
+
+    transition: background 0.2s ease;
+}
+
+.auth-submit:hover {
+    background: var(--navy);
+
+    border-color: var(--navy);
+}
+
+
+/* =========================================
+   SWITCH LOGIN / REGISTER
+========================================= */
+
+.auth-switch {
+    margin: 25px 0 0;
+
+    padding-top: 22px;
+
+    border-top: 1px solid var(--border);
+
+    color: var(--muted);
+
+    text-align: center;
+}
+
+.auth-switch a {
+    color: var(--blue);
+
+    font-weight: bold;
+
+    text-decoration: none;
+}
+
+.auth-switch a:hover {
+    text-decoration: underline;
+}
+
+
+/* =========================================
+   HELP TEXT
+========================================= */
+
+.auth-help {
+    display: block;
+
+    margin-top: 6px;
+
+    color: var(--muted);
+
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 600px) {
+
+    .auth-card {
+        padding: 30px 22px;
+    }
+
+    .auth-form-row {
+        grid-template-columns: 1fr;
+
+        gap: 0;
+    }
+
+    .auth-heading h1 {
+        font-size: 29px;
+    }
+
+    .password-options {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+}

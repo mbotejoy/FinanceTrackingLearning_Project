@@ -1,0 +1,53 @@
+/* ========================================
+   LEARNING
+======================================== */
+
+.learning-grid {
+    width: 100%;
+
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+
+    gap: 22px;
+}
+
+.learning-card {
+    min-height: 280px;
+
+    display: flex;
+    flex-direction: column;
+
+    padding: 28px;
+
+    background: var(--white);
+
+    border: 1px solid var(--border);
+    border-radius: 8px;
+
+    text-align: center;
+}
+
+.learning-card h3 {
+    margin: 0 0 15px;
+
+    color: var(--navy);
+
+    font-size: 22px;
+}
+
+.learning-card p {
+    color: var(--muted);
+
+    line-height: 1.6;
+}
+
+.learning-card .card-action {
+    margin-top: auto;
+    padding-top: 20px;
+}
+
+@media (max-width: 900px) {
+    .learning-grid {
+        grid-template-columns: 1fr;
+    }
+}

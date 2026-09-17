@@ -19,6 +19,98 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('', views.home, name='home'),
+
+    # Admin
+    path("admin/", admin.site.urls),
+
+    # Landing Page
+    path("", views.landing, name="landing"),
+
+    # UserDashboard
+    path("userdashboard/", views.user, name="home"),
+
+
+    # Authentication
+    path("login/", views.login_view, name="login"),
+    path("register/", views.register, name="register"),
+
+
+    # Transactions
+    path(
+        "transactions/",
+        views.transactions,
+        name="transactions"
+    ),
+
+    path(
+        "transactions/add/",
+        views.add_transaction,
+        name="add_transaction"
+    ),
+
+
+    # Budgets
+    path(
+        "budgets/",
+        views.budgets,
+        name="budgets"
+    ),
+
+    path(
+        "budgets/create/",
+        views.create_budget,
+        name="create_budget"
+    ),
+
+
+    # Savings Goals
+    path(
+        "savings-goals/",
+        views.savings_goals,
+        name="savings_goals"
+    ),
+
+    path(
+        "savings-goals/create/",
+        views.create_savings_goal,
+        name="create_savings_goal"
+    ),
+
+
+    # Financial Insights
+    path(
+        "financial-insights/",
+        views.financial_insights,
+        name="financial_insights"
+    ),
+
+
+    # Learning
+    path(
+        "learning/",
+        views.learning,
+        name="learning"
+    ),
+
+
+    # Quiz
+    path(
+        "quiz/",
+        views.quiz,
+        name="quiz"
+    ),
+
+
+    # Recommendations
+    path(
+        "recommendations/",
+        views.recommendations,
+        name="recommendations"
+    ),
+
+    path(
+        "user/",
+        views.user,
+        name="user"
+    ),
 ]

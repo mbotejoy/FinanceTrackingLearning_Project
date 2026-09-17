@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Create Savings Goal | FinanceWise{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/savings.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<div class="page-container">
+
+    <div class="page-header">
+
+        <h1>Create Savings Goal</h1>
+
+        <p>
+            Define how much you want to save and when
+            you would like to achieve your goal.
+        </p>
+
+    </div>
+
+    <div class="goal-form">
+
+        <form method="POST"
+              class="goal-form-card">
+
+            {% csrf_token %}
+
+            <div class="form-group">
+                <label>Goal Name</label>
+
+                <input type="text"
+                       name="goal_name"
+                       placeholder="e.g. Buy a Laptop">
+            </div>
+
+            <div class="form-group">
+                <label>Target Amount</label>
+
+                <input type="number"
+                       name="target_amount"
+                       step="0.01">
+            </div>
+
+            <div class="form-group">
+                <label>Current Amount</label>
+
+                <input type="number"
+                       name="current_amount"
+                       step="1.00"
+                       value="0">
+            </div>
+
+            <div class="form-group">
+                <label>Target Date</label>
+
+                <input type="date"
+                       name="target_date">
+            </div>
+
+            <div class="form-actions">
+                <button type="submit"
+                        class="btn btn-primary">
+                    Save Goal
+                </button>
+
+                <a href="{% url 'savings_goals' %}"
+                   class="btn btn-outline">
+                    Cancel
+                </a>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+{% endblock %}

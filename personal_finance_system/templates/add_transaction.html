@@ -1,0 +1,122 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Add Transaction | FinanceWise{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/transactions.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<div class="page-container">
+
+    <div class="page-header">
+        <h1>Add Transaction</h1>
+        <p>
+            Record your income or expense so FinanceWise
+            can analyse your financial activity.
+        </p>
+    </div>
+
+    <div class="transaction-form">
+
+        <form method="POST"
+              class="transaction-form-card">
+
+            {% csrf_token %}
+
+            <div class="form-group">
+                <label for="amount">Amount</label>
+
+                <input
+                    type="number"
+                    id="amount"
+                    name="amount"
+                    step="0.01"
+                    placeholder="Enter amount"
+                    required>
+            </div>
+
+            <div class="form-group">
+                <label for="transaction_type">
+                    Transaction Type
+                </label>
+
+                <select id="transaction_type"
+                        name="transaction_type"
+                        required>
+
+                    <option value="">
+                        Select transaction type
+                    </option>
+
+                    <option value="income">Income</option>
+                    <option value="expense">Expense</option>
+
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="category">Category</label>
+
+                <select id="category"
+                        name="category"
+                        required>
+
+                    <option value="">
+                        Select category
+                    </option>
+
+                    <option>Food</option>
+                    <option>Transport</option>
+                    <option>Education</option>
+                    <option>Entertainment</option>
+                    <option>Bills</option>
+                    <option>Savings</option>
+                    <option>Other</option>
+
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="transaction_date">Date</label>
+
+                <input
+                    type="date"
+                    id="transaction_date"
+                    name="transaction_date"
+                    required>
+            </div>
+
+            <div class="form-group">
+                <label for="description">Description</label>
+
+                <textarea
+                    id="description"
+                    name="description"
+                    placeholder="Enter a short description"></textarea>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit"
+                        class="btn btn-primary">
+                    Save Transaction
+                </button>
+
+
+                <a href="{% url 'transactions' %}"
+                   class="btn btn-outline">
+                    Cancel
+                </a>
+
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+{% endblock %}

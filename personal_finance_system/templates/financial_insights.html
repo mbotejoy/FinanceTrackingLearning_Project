@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Financial Insights | FinanceWise{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/insights.css' %}">
+{% endblock %}
+
+{% block content %}
+<!-- page where the predictive analysis will be displayed -->
+<div class="page-container">
+
+    <div class="page-header">
+
+        <h1>Your Financial Insights</h1>
+
+        <p>
+            Understand your spending behaviour and view
+            insights generated from your financial activity.
+        </p>
+
+    </div>
+
+    <div class="insights-grid">
+
+        <article class="insight-card">
+
+            <h3>Highest Spending Category</h3>
+
+            <strong>No Data</strong>
+
+        </article>
+
+        <article class="insight-card">
+
+            <h3>Monthly Spending</h3>
+
+            <strong>KES 0.00</strong>
+
+        </article>
+
+        <article class="insight-card">
+
+            <h3>Predicted Spending</h3>
+
+            <strong>KES 0.00</strong>
+
+        </article>
+
+    </div>
+
+    <section class="insights-panel">
+
+        <h2>Spending Trend</h2>
+
+        <p>
+            Your spending analysis and prediction will
+            appear here once enough transaction data
+            has been recorded.
+        </p>
+
+    </section>
+
+</div>
+
+{% endblock %}
