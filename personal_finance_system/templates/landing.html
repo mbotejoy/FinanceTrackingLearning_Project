@@ -52,20 +52,35 @@
 
 
         <!-- Authentication Buttons -->
+<div class="landing-nav-actions">
 
-        <div class="landing-nav-actions">
+    {% if user.is_authenticated %}
 
-            <a href="{% url 'login' %}"
-               class="landing-btn landing-btn-outline">
-                Sign In
-            </a>
+        <a href="{% url 'home' %}"
+           class="landing-btn landing-btn-outline">
+            Dashboard
+        </a>
 
-            <a href="{% url 'register' %}"
-               class="landing-btn landing-btn-primary">
-                Sign Up
-            </a>
+        <a href="{% url 'logout' %}"
+           class="landing-btn landing-btn-primary">
+            Logout
+        </a>
 
-        </div>
+    {% else %}
+
+        <a href="{% url 'login' %}"
+           class="landing-btn landing-btn-outline">
+            Sign In
+        </a>
+
+        <a href="{% url 'register' %}"
+           class="landing-btn landing-btn-primary">
+            Sign Up
+        </a>
+
+    {% endif %}
+
+</div>
 
     </div>
 
@@ -111,12 +126,21 @@
 
             <div class="hero-actions">
 
-                <a href="{% url 'register' %}"
-                   class="landing-btn landing-btn-primary landing-btn-large">
+{% if user.is_authenticated %}
 
-                    Get Started
+    <a href="{% url 'home' %}"
+       class="landing-btn landing-btn-primary landing-btn-large">
+        Go to Dashboard
+    </a>
 
-                </a>
+{% else %}
+
+    <a href="{% url 'register' %}"
+       class="landing-btn landing-btn-primary landing-btn-large">
+        Get Started
+    </a>
+
+{% endif %}
 
                 <a href="#about"
                    class="landing-btn landing-btn-outline landing-btn-large">
@@ -192,13 +216,21 @@
                 insights and personalized recommendations.
 
             </p>
+{% if user.is_authenticated %}
 
-            <a href="{% url 'register' %}"
-               class="landing-btn landing-btn-primary">
+    <a href="{% url 'home' %}"
+       class="landing-btn landing-btn-primary landing-btn-large">
+        Go to Dashboard
+    </a>
 
-                Create Your Account
+{% else %}
 
-            </a>
+    <a href="{% url 'register' %}"
+       class="landing-btn landing-btn-primary landing-btn-large">
+        Create Your Account
+    </a>
+
+{% endif %}
 
         </div>
 

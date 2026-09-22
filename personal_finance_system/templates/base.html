@@ -18,11 +18,34 @@
     Finance<span>Wise</span>
 </a>
 
-        <div class="nav-actions">
-            <button class="profile-button" title="Profile">Profile</button>
-            <a class="btn btn-outline" href="{% url 'login' %}">Sign In</a>
-            <a class="btn btn-primary" href="{% url 'register' %}">Sign Up</a>
-        </div>
+<div class="nav-actions">
+
+    {% if user.is_authenticated %}
+
+        <span class="user-greeting">
+            Hi, {{ user.first_name }}
+        </span>
+
+        <a class="btn btn-outline"
+           href="{% url 'logout' %}">
+            Logout
+        </a>
+
+    {% else %}
+
+        <a class="btn btn-outline"
+           href="{% url 'login' %}">
+            Sign In
+        </a>
+
+        <a class="btn btn-primary"
+           href="{% url 'register' %}">
+            Sign Up
+        </a>
+
+    {% endif %}
+
+</div>
     </header>
 
     <aside class="sidebar" id="sidebar">
