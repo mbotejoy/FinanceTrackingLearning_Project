@@ -94,6 +94,12 @@ body {
     align-items: center;
     gap: 12px;
 }
+.user-greeting {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--navy);
+    white-space: nowrap;
+}
 
 
 /* ========================================
