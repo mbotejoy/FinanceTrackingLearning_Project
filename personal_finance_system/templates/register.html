@@ -76,6 +76,21 @@
               class="auth-form">
 
             {% csrf_token %}
+            <!-- Display form errors -->
+            {% if form.errors %}
+                <div class="form-errors">
+                    <ul>
+                        {% for field in form %}
+                            {% for error in field.errors %}
+                                <li>{{ error }}</li>
+                            {% endfor %}
+                        {% endfor %}
+                        {% for error in form.non_field_errors %}
+                            <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
 
 
 
@@ -144,14 +159,14 @@
 
             <div class="form-group">
 
-                <label for="password">
+                <label for="password1">
                     Password
                 </label>
 
                 <input
                     type="password"
-                    id="password"
-                    name="password"
+                    id="password1"
+                    name="password1"
                     placeholder="Create a password"
                     required>
 
@@ -167,14 +182,14 @@
 
             <div class="form-group">
 
-                <label for="confirm_password">
+                <label for="password2">
                     Confirm Password
                 </label>
 
                 <input
                     type="password"
-                    id="confirm_password"
-                    name="confirm_password"
+                    id="password2"
+                    name="password2"
                     placeholder="Enter your password again"
                     required>
 
