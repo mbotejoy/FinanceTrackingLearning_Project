@@ -94,10 +94,13 @@ body {
     align-items: center;
     gap: 12px;
 }
+
 .user-greeting {
-    font-size: 14px;
-    font-weight: 600;
+    font-size: 20px;
+    font-weight: bold;
+
     color: var(--navy);
+
     white-space: nowrap;
 }
 
