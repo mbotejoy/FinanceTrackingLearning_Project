@@ -2,6 +2,7 @@ from email.policy import default
 
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from django.conf import settings
 
 # Custom user model extending Django's built-in auth user
 class User(AbstractUser):
@@ -30,3 +31,5 @@ class User(AbstractUser):
 
     def __str__(self):
         return self.email
+
+
