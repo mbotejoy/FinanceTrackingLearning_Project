@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Delete User | FinanceWise{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/admin_dashboard.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<div class="admin-dashboard">
+
+    <div class="admin-header">
+        <h1>Delete User</h1>
+        <p>Confirm permanent account deletion.</p>
+    </div>
+
+    <div class="admin-stat-card delete-confirmation">
+
+        <h2>Are you sure you want to delete this user?</h2>
+
+        <p>
+            <strong>Name:</strong>
+            {{ account.get_full_name|default:"Not Provided" }}
+        </p>
+
+        <p>
+            <strong>Email:</strong>
+            {{ account.email }}
+        </p>
+
+        <p>
+            <strong>Role:</strong>
+            {{ account.get_role_display }}
+        </p>
+
+        <p class="delete-warning">
+            Warning: This action permanently deletes the user
+            and their associated financial records, including
+            transactions, budgets, and savings goals.
+            This action cannot be undone.
+        </p>
+
+        <form method="POST">
+            {% csrf_token %}
+
+            <button type="submit" class="action-btn delete-btn">
+                Yes, Permanently Delete
+            </button>
+
+            <a href="{% url 'admin_users' %}"
+               class="admin-btn admin-btn-secondary">
+                Cancel
+            </a>
+
+        </form>
+
+    </div>
+
+</div>
+
+{% endblock %}

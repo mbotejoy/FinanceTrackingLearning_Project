@@ -143,4 +143,56 @@ path(
     views.admin_transaction_details,
     name="admin_transaction_details"
 ),
+path(
+    "admin-dashboard/users/<int:user_id>/delete/",
+    views.admin_delete_user,
+    name="admin_delete_user"
+),
+path(
+    "admin-dashboard/categories/",
+    views.admin_categories,
+    name="admin_categories"
+),
+
+path(
+    "admin-dashboard/categories/add/",
+    views.admin_category_form,
+    name="admin_category_add"
+),
+
+path(
+    "admin-dashboard/categories/<int:category_id>/edit/",
+    views.admin_category_form,
+    name="admin_category_edit"
+),
+
+path(
+    "admin-dashboard/categories/<int:category_id>/delete/",
+    views.admin_delete_category,
+    name="admin_category_delete"
+),
+path(
+    "admin-dashboard/learning/",
+    views.admin_learning,
+    name="admin_learning"
+),
+
+path(
+    "admin-dashboard/learning/add/",
+    views.admin_learning_form,
+    name="admin_learning_add"
+),
+
+path(
+    "admin-dashboard/learning/<int:lesson_id>/edit/",
+    views.admin_learning_form,
+    name="admin_learning_edit"
+),
+
+path(
+    "admin-dashboard/learning/<int:lesson_id>/delete/",
+    views.admin_delete_learning,
+    name="admin_learning_delete"
+),
+
 ]

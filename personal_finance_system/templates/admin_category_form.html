@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Category | FinanceWise{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/admin_dashboard.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<div class="admin-dashboard">
+
+    <div class="admin-header">
+        <h1>
+            {% if category %}
+                Edit Category
+            {% else %}
+                Add Category
+            {% endif %}
+        </h1>
+        <p>Manage the categories used to classify financial transactions.</p>
+    </div>
+
+    <div class="admin-stat-card" style="max-width: 600px;">
+
+        <form method="POST">
+            {% csrf_token %}
+
+            {{ form.non_field_errors }}
+
+            <div class="category-form-group">
+                <label for="{{ form.name.id_for_label }}">
+                    Category Name
+                </label>
+
+                {{ form.name }}
+                {{ form.name.errors }}
+            </div>
+
+            <div class="category-form-group">
+                <label for="{{ form.type.id_for_label }}">
+                    Category Type
+                </label>
+
+                {{ form.type }}
+                {{ form.type.errors }}
+            </div>
+
+            <button type="submit" class="admin-btn">
+                Save Category
+            </button>
+
+            <a href="{% url 'admin_categories' %}"
+               class="admin-btn admin-btn-secondary">
+                Cancel
+            </a>
+
+        </form>
+
+    </div>
+
+</div>
+
+{% endblock %}

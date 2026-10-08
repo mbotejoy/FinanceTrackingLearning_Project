@@ -1,0 +1,90 @@
+
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Learning Content | FinanceWise{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/admin_dashboard.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<div class="admin-dashboard">
+
+    <div class="admin-header">
+        <h1>
+            {% if lesson %}
+                Edit Learning Content
+            {% else %}
+                Add Learning Content
+            {% endif %}
+        </h1>
+
+        <p>Manage financial literacy materials for students.</p>
+    </div>
+
+    <div class="admin-stat-card learning-form-card">
+
+        <form method="POST">
+            {% csrf_token %}
+
+            {{ form.non_field_errors }}
+
+            <div class="category-form-group">
+                <label for="{{ form.title.id_for_label }}">
+                    Lesson Title
+                </label>
+                {{ form.title }}
+                {{ form.title.errors }}
+            </div>
+
+            <div class="category-form-group">
+                <label for="{{ form.topic.id_for_label }}">
+                    Topic
+                </label>
+                {{ form.topic }}
+                {{ form.topic.errors }}
+            </div>
+
+            <div class="category-form-group">
+                <label for="{{ form.description.id_for_label }}">
+                    Description
+                </label>
+                {{ form.description }}
+                {{ form.description.errors }}
+            </div>
+
+            <div class="category-form-group">
+                <label for="{{ form.content.id_for_label }}">
+                    Lesson Content
+                </label>
+                {{ form.content }}
+                {{ form.content.errors }}
+            </div>
+
+            <div class="learning-publish-field">
+                {{ form.is_published }}
+                <label for="{{ form.is_published.id_for_label }}">
+                    Publish this lesson for students
+                </label>
+            </div>
+
+            <div class="learning-form-actions">
+                <button type="submit" class="admin-btn">
+                    Save Lesson
+                </button>
+
+                <a href="{% url 'admin_learning' %}"
+                   class="admin-btn admin-btn-secondary">
+                    Cancel
+                </a>
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+{% endblock %}
