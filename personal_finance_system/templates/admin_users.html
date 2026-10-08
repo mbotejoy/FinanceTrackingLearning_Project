@@ -13,21 +13,96 @@
 
     <div class="admin-header">
         <h1>Manage Users</h1>
-        <p>View and manage registered FinanceWise accounts.</p>
+        <p>View, search and manage registered FinanceWise accounts.</p>
     </div>
 
-    <div class="admin-stat-card" style="margin-bottom: 25px;">
-        <h3>Total Registered Users</h3>
-        <p>{{ total_users }}</p>
+    <!-- STATISTICS -->
+    <div class="admin-stats">
+
+        <div class="admin-stat-card">
+            <h3>Total Users</h3>
+            <p>{{ total_users }}</p>
+        </div>
+
+        <div class="admin-stat-card">
+            <h3>Students</h3>
+            <p>{{ total_students }}</p>
+        </div>
+
+        <div class="admin-stat-card">
+            <h3>Active Users</h3>
+            <p>{{ active_users }}</p>
+        </div>
+
     </div>
 
+    <!-- SEARCH AND FILTERS -->
+    <div class="admin-stat-card users-filter-card">
+
+        <form method="GET" action="{% url 'admin_users' %}"
+              class="users-filter-form">
+
+            <input
+                type="text"
+                name="search"
+                placeholder="Search by name or email..."
+                value="{{ search }}"
+            >
+
+            <select name="role">
+                <option value="">All Roles</option>
+                <option value="student"
+                    {% if selected_role == "student" %}selected{% endif %}>
+                    Student
+                </option>
+                <option value="admin"
+                    {% if selected_role == "admin" %}selected{% endif %}>
+                    Admin
+                </option>
+            </select>
+
+            <select name="status">
+                <option value="">All Statuses</option>
+                <option value="active"
+                    {% if selected_status == "active" %}selected{% endif %}>
+                    Active
+                </option>
+                <option value="inactive"
+                    {% if selected_status == "inactive" %}selected{% endif %}>
+                    Inactive
+                </option>
+            </select>
+
+            <button type="submit" class="admin-btn">
+                Search
+            </button>
+
+            <a href="{% url 'admin_users' %}"
+               class="admin-btn admin-btn-secondary">
+                Reset
+            </a>
+
+        </form>
+
+    </div>
+
+    <!-- MESSAGES -->
+    {% if messages %}
+        {% for message in messages %}
+            <div class="admin-message">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <!-- USERS TABLE -->
     <div class="admin-stat-card">
 
-        <h2 style="margin-bottom: 20px;">Registered Users</h2>
+        <h2 class="users-table-title">Registered Users</h2>
 
-        <div style="overflow-x: auto;">
+        <div class="users-table-wrapper">
 
-            <table style="width: 100%; border-collapse: collapse;">
+            <table class="users-table">
 
                 <thead>
                     <tr>
@@ -36,6 +111,8 @@
                         <th>Role</th>
                         <th>Status</th>
                         <th>Date Joined</th>
+                        <th>Last Login</th>
+                        <th>Actions</th>
                     </tr>
                 </thead>
 
@@ -44,14 +121,14 @@
                     {% for account in users %}
 
                     <tr>
+
                         <td>
-                        {% if account.first_name or account.last_name %}
-                         {{ account.first_name }} {{ account.last_name }}
-                        {% else %}
-                        <span style="color: #94a3b8;">
-                          Not Provided
-                         </span>
-                        {% endif %}
+                            {% if account.first_name or account.last_name %}
+                                {{ account.first_name }}
+                                {{ account.last_name }}
+                            {% else %}
+                                Not Provided
+                            {% endif %}
                         </td>
 
                         <td>{{ account.email }}</td>
@@ -60,20 +137,77 @@
 
                         <td>
                             {% if account.is_active %}
-                                Active
+                                <span class="status-badge active">
+                                    Active
+                                </span>
                             {% else %}
-                                Inactive
+                                <span class="status-badge inactive">
+                                    Inactive
+                                </span>
                             {% endif %}
                         </td>
 
-                        <td>{{ account.date_joined|date:"d M Y" }}</td>
+                        <td>
+                            {{ account.date_joined|date:"d M Y" }}
+                        </td>
+
+                        <td>
+                            {% if account.last_login %}
+                                {{ account.last_login|date:"d M Y" }}
+                            {% else %}
+                                Never
+                            {% endif %}
+                        </td>
+
+                        <td>
+
+                            {% if account.role == "student" and not account.is_staff and not account.is_superuser %}
+
+                                <form
+                                    method="POST"
+                                    action="{% url 'toggle_user_status' account.id %}"
+                                    onsubmit="return confirm('Are you sure you want to change this account status?');"
+                                >
+
+                                    {% csrf_token %}
+
+                                    {% if account.is_active %}
+
+                                        <button
+                                            type="submit"
+                                            class="action-btn deactivate-btn">
+                                            Deactivate
+                                        </button>
+
+                                    {% else %}
+
+                                        <button
+                                            type="submit"
+                                            class="action-btn activate-btn">
+                                            Activate
+                                        </button>
+
+                                    {% endif %}
+
+                                </form>
+
+                            {% else %}
+
+                                <span class="protected-label">
+                                    Protected
+                                </span>
+
+                            {% endif %}
+
+                        </td>
+
                     </tr>
 
                     {% empty %}
 
                     <tr>
-                        <td colspan="5">
-                            No registered users found.
+                        <td colspan="7">
+                            No users found matching your search.
                         </td>
                     </tr>
 

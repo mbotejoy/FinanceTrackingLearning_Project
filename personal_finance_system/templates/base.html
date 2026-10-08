@@ -69,13 +69,13 @@
             <span class="nav-label">Manage Users</span>
         </a>
 
-        {% comment %}
+        
         <a href="{% url 'admin_transactions' %}"
            class="{% if request.resolver_match.url_name == 'admin_transactions' %}active{% endif %}">
             <span class="nav-icon">$</span>
             <span class="nav-label">Manage Transactions</span>
         </a>
-
+        {% comment %}
         <a href="{% url 'admin_categories' %}"
            class="{% if request.resolver_match.url_name == 'admin_categories' %}active{% endif %}">
             <span class="nav-icon">&#9638;</span>
