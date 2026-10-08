@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Transaction Details | FinanceWise{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/admin_dashboard.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<div class="admin-dashboard">
+
+    <div class="admin-header">
+        <h1>Transaction Details</h1>
+        <p>View information about this financial transaction.</p>
+    </div>
+
+    <div class="admin-stat-card">
+
+        <p><strong>Transaction ID:</strong> {{ transaction.id }}</p>
+
+        <p><strong>User:</strong> {{ transaction.user.email }}</p>
+
+        <p><strong>Type:</strong> {{ transaction.get_type_display }}</p>
+
+        <p>
+            <strong>Category:</strong>
+            {{ transaction.category.name|default:"Uncategorized" }}
+        </p>
+
+        <p>
+            <strong>Amount:</strong>
+            KES {{ transaction.amount|floatformat:2 }}
+        </p>
+
+        <p><strong>Date:</strong> {{ transaction.date|date:"d M Y" }}</p>
+
+        <p>
+            <strong>Description:</strong>
+            {{ transaction.description|default:"No description" }}
+        </p>
+
+        <p>
+            <strong>Recorded On:</strong>
+            {{ transaction.created_at|date:"d M Y, H:i" }}
+        </p>
+
+        <a href="{% url 'admin_transactions' %}" class="admin-btn">
+            Back to Transactions
+        </a>
+
+    </div>
+
+</div>
+
+{% endblock %}

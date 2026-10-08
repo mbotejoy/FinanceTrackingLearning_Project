@@ -124,4 +124,23 @@ urlpatterns = [
     views.admin_users,
     name="admin_users"
     ),
+    #<int:user_id> is used so that Django knows which user
+    #account to update
+    path(
+        "admin-dashboard/users/<int:user_id>/toggle-status/",
+        views.toggle_user_status,
+        name="toggle_user_status"
+    ),
+    # Admin Transaction Management
+path(
+    "admin-dashboard/transactions/",
+    views.admin_transactions,
+    name="admin_transactions"
+),
+
+path(
+    "admin-dashboard/transactions/<int:transaction_id>/",
+    views.admin_transaction_details,
+    name="admin_transaction_details"
+),
 ]
