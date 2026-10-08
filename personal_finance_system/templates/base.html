@@ -75,19 +75,19 @@
             <span class="nav-icon">$</span>
             <span class="nav-label">Manage Transactions</span>
         </a>
-        {% comment %}
+        
         <a href="{% url 'admin_categories' %}"
            class="{% if request.resolver_match.url_name == 'admin_categories' %}active{% endif %}">
             <span class="nav-icon">&#9638;</span>
             <span class="nav-label">Manage Categories</span>
         </a>
-
+        
         <a href="{% url 'admin_learning' %}"
            class="{% if request.resolver_match.url_name == 'admin_learning' %}active{% endif %}">
             <span class="nav-icon">&#128218;</span>
             <span class="nav-label">Learning Materials</span>
         </a>
-
+        {% comment %}
         <a href="{% url 'admin_quizzes' %}"
            class="{% if request.resolver_match.url_name == 'admin_quizzes' %}active{% endif %}">
             <span class="nav-icon">?</span>

@@ -1,8 +1,17 @@
+
+/* =========================================
+   FINANCEWISE - ADMIN DASHBOARD
+========================================= */
+
 .admin-dashboard {
     padding: 30px;
     max-width: 1400px;
     margin: 0 auto;
 }
+
+/* =========================================
+   ADMIN HEADER
+========================================= */
 
 .admin-header {
     margin-bottom: 30px;
@@ -19,6 +28,10 @@
     font-size: 15px;
 }
 
+/* =========================================
+   DASHBOARD STATISTICS
+========================================= */
+
 .admin-stats {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -27,7 +40,7 @@
 }
 
 .admin-stat-card {
-    background: white;
+    background: #ffffff;
     border-radius: 12px;
     padding: 25px;
     border: 1px solid #e2e8f0;
@@ -40,11 +53,17 @@
     margin-bottom: 15px;
 }
 
-.admin-stat-card p {
+.admin-stat-card > p {
     font-size: 30px;
     font-weight: 700;
     color: #183b56;
+    margin: 12px 0;
+    line-height: 1.7;
 }
+
+/* =========================================
+   ADMIN MANAGEMENT CARDS
+========================================= */
 
 .admin-management h2 {
     font-size: 22px;
@@ -59,7 +78,7 @@
 }
 
 .management-card {
-    background: white;
+    background: #ffffff;
     border: 1px solid #e2e8f0;
     border-radius: 12px;
     padding: 24px;
@@ -85,50 +104,9 @@
     font-weight: 600;
 }
 
-@media (max-width: 900px) {
-    .admin-stats,
-    .management-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-}
-
-@media (max-width: 600px) {
-    .admin-dashboard {
-        padding: 15px;
-    }
-
-    .admin-stats,
-    .management-grid {
-        grid-template-columns: 1fr;
-    }
-}
-.admin-dashboard table {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-.admin-dashboard th,
-.admin-dashboard td {
-    padding: 14px 16px;
-    text-align: left;
-    border-bottom: 1px solid #e2e8f0;
-    font-size: 14px;
-}
-
-.admin-dashboard th {
-    background-color: #f1f5f9;
-    color: #183b56;
-    font-weight: 600;
-}
-
-.admin-dashboard td {
-    color: #475569;
-}
-
-.admin-dashboard tbody tr:hover {
-    background-color: #f8fafc;
-}
-/* SEARCH AND FILTERS */
+/* =========================================
+   SEARCH AND FILTERS
+========================================= */
 
 .users-filter-card {
     margin-bottom: 25px;
@@ -156,15 +134,34 @@
     min-width: 200px;
 }
 
+.users-filter-form input:focus,
+.users-filter-form select:focus {
+    outline: none;
+    border-color: #2563eb;
+}
+
+/* =========================================
+   GENERAL ADMIN BUTTONS
+========================================= */
+
 .admin-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     background: #183b56;
-    color: white;
+    color: #ffffff;
     border: none;
     padding: 11px 18px;
     border-radius: 8px;
     cursor: pointer;
     text-decoration: none;
     font-size: 14px;
+    transition: background-color 0.2s ease;
+}
+
+.admin-btn:hover {
+    background: #24577c;
+    color: #ffffff;
 }
 
 .admin-btn-secondary {
@@ -172,7 +169,14 @@
     color: #183b56;
 }
 
-/* USERS TABLE */
+.admin-btn-secondary:hover {
+    background: #cbd5e1;
+    color: #183b56;
+}
+
+/* =========================================
+   USERS TABLE
+========================================= */
 
 .users-table-title {
     font-size: 22px;
@@ -181,32 +185,41 @@
 }
 
 .users-table-wrapper {
+    width: 100%;
     overflow-x: auto;
 }
 
-.users-table {
+.admin-dashboard table {
     width: 100%;
     border-collapse: collapse;
 }
 
-.users-table th,
-.users-table td {
+.admin-dashboard th,
+.admin-dashboard td {
     padding: 14px 16px;
     text-align: left;
     border-bottom: 1px solid #e2e8f0;
     font-size: 14px;
+    vertical-align: middle;
 }
 
-.users-table th {
-    background: #f1f5f9;
+.admin-dashboard th {
+    background-color: #f1f5f9;
     color: #183b56;
+    font-weight: 600;
 }
 
-.users-table td {
+.admin-dashboard td {
     color: #475569;
 }
 
-/* ACCOUNT STATUS */
+.admin-dashboard tbody tr:hover {
+    background-color: #f8fafc;
+}
+
+/* =========================================
+   ACCOUNT STATUS BADGES
+========================================= */
 
 .status-badge {
     display: inline-block;
@@ -226,15 +239,24 @@
     color: #991b1b;
 }
 
-/* ACTION BUTTONS */
+/* =========================================
+   ACTION BUTTONS
+========================================= */
 
 .action-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 36px;
+    padding: 0 14px;
     border: none;
-    padding: 8px 13px;
-    border-radius: 6px;
+    border-radius: 8px;
     cursor: pointer;
     font-size: 13px;
     font-weight: 600;
+    text-decoration: none;
+    white-space: nowrap;
+    box-sizing: border-box;
 }
 
 .deactivate-btn {
@@ -242,9 +264,27 @@
     color: #991b1b;
 }
 
+.deactivate-btn:hover {
+    background: #fecaca;
+}
+
 .activate-btn {
     background: #dcfce7;
     color: #166534;
+}
+
+.activate-btn:hover {
+    background: #bbf7d0;
+}
+
+.view-btn {
+    background: #dbeafe;
+    color: #1d4ed8;
+}
+
+.view-btn:hover {
+    background: #bfdbfe;
+    color: #1d4ed8;
 }
 
 .protected-label {
@@ -252,12 +292,252 @@
     font-size: 13px;
 }
 
+/* =========================================
+   ALIGN USER ACTIONS HORIZONTALLY
+========================================= */
+
+.user-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 10px;
+    flex-wrap: nowrap;
+}
+
+.user-actions form {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+    padding: 0;
+}
+
+.user-actions .action-btn {
+    height: 36px;
+    margin: 0;
+    flex-shrink: 0;
+}
+
+/* =========================================
+   RED DUSTBIN DELETE ICON
+========================================= */
+
+.user-actions a.delete-icon-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 36px;
+    height: 36px;
+
+    padding: 0;
+    margin: 0;
+
+    background-color: #fee2e2;
+    color: #dc2626 !important;
+
+    border: none;
+    border-radius: 8px;
+    text-decoration: none;
+
+    box-sizing: border-box;
+    flex-shrink: 0;
+
+    transition: background-color 0.2s ease;
+}
+
+.user-actions a.delete-icon-btn svg {
+    display: block;
+    width: 20px;
+    height: 20px;
+
+    stroke: #dc2626 !important;
+    fill: none !important;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.user-actions a.delete-icon-btn:hover {
+    background-color: #fecaca;
+    color: #b91c1c !important;
+}
+
+.user-actions a.delete-icon-btn:hover svg {
+    stroke: #b91c1c !important;
+}
+
+.user-actions a.delete-icon-btn:focus-visible {
+    outline: 2px solid #dc2626;
+    outline-offset: 2px;
+}
+
+.users-table td:last-child {
+    vertical-align: middle;
+    white-space: nowrap;
+}
+
+/* =========================================
+   DELETE USER CONFIRMATION PAGE
+========================================= */
+
+.delete-confirmation {
+    max-width: 650px;
+}
+
+.delete-confirmation h2 {
+    color: #183b56;
+    margin-bottom: 20px;
+}
+
+.delete-confirmation p {
+    font-size: 15px;
+    color: #475569;
+    line-height: 1.7;
+    margin-bottom: 12px;
+}
+
+.delete-warning {
+    background: #fee2e2;
+    color: #991b1b !important;
+    padding: 16px;
+    border-radius: 8px;
+    margin: 20px 0;
+    line-height: 1.6;
+}
+
+.delete-confirmation form {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+/* Delete confirmation button */
+
+.delete-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: #dc2626;
+    color: #ffffff;
+    border: none;
+    border-radius: 8px;
+    padding: 11px 18px;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.delete-btn:hover {
+    background: #b91c1c;
+    color: #ffffff;
+}
+
+/* =========================================
+   SUCCESS / ERROR MESSAGES
+========================================= */
+
 .admin-message {
     padding: 12px 16px;
     background: #e0f2fe;
     border-radius: 8px;
     margin-bottom: 20px;
     color: #075985;
+}
+/* =========================================
+   CATEGORY FORM
+========================================= */
+
+.category-form-group {
+    margin-bottom: 20px;
+}
+
+.category-form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #183b56;
+}
+
+.category-form-group input,
+.category-form-group select {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    font-size: 14px;
+    box-sizing: border-box;
+}
+/* =========================================
+   LEARNING CONTENT FORM
+========================================= */
+
+.learning-form-card {
+    max-width: 800px;
+}
+
+.category-form-group {
+    margin-bottom: 20px;
+}
+
+.category-form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #183b56;
+}
+
+.category-form-group input,
+.category-form-group select,
+.category-form-group textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    font-size: 14px;
+    box-sizing: border-box;
+    font-family: inherit;
+}
+
+.category-form-group textarea {
+    resize: vertical;
+}
+
+.learning-publish-field {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 25px;
+    color: #183b56;
+    font-size: 14px;
+}
+
+.learning-publish-field input {
+    width: 16px;
+    height: 16px;
+}
+
+.learning-form-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+/* =========================================
+   RESPONSIVE DESIGN
+========================================= */
+
+@media (max-width: 900px) {
+    .admin-stats,
+    .management-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
 }
 
 @media (max-width: 700px) {
@@ -269,10 +549,33 @@
     .users-filter-form input,
     .users-filter-form select {
         width: 100%;
+        box-sizing: border-box;
+    }
+
+    .users-table-wrapper {
+        overflow-x: auto;
+    }
+
+    .users-table {
+        min-width: 850px;
     }
 }
 
-.admin-stat-card > p {
-    margin: 12px 0;
-    line-height: 1.7;
+@media (max-width: 600px) {
+    .admin-dashboard {
+        padding: 15px;
+    }
+
+    .admin-stats,
+    .management-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .admin-stat-card {
+        padding: 18px;
+    }
+
+    .admin-header h1 {
+        font-size: 24px;
+    }
 }

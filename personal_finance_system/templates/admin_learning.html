@@ -1,0 +1,153 @@
+
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Manage Learning | FinanceWise{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/admin_dashboard.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<div class="admin-dashboard">
+
+    <div class="admin-header">
+        <h1>Manage Learning Content</h1>
+        <p>Create, edit and publish financial literacy lessons.</p>
+    </div>
+
+    <div class="admin-stats">
+        <div class="admin-stat-card">
+            <h3>Matching Lessons</h3>
+            <p>{{ total_lessons }}</p>
+        </div>
+    </div>
+
+    <div class="admin-stat-card users-filter-card">
+
+        <form method="GET" class="users-filter-form">
+
+            <input
+                type="text"
+                name="search"
+                placeholder="Search lessons..."
+                value="{{ search }}"
+            >
+
+            <button type="submit" class="admin-btn">
+                Search
+            </button>
+
+            <a href="{% url 'admin_learning' %}"
+               class="admin-btn admin-btn-secondary">
+                Reset
+            </a>
+
+            <a href="{% url 'admin_learning_add' %}"
+               class="admin-btn">
+                + Add Lesson
+            </a>
+
+        </form>
+
+    </div>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="admin-message">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <div class="admin-stat-card">
+
+        <h2 class="users-table-title">Financial Literacy Lessons</h2>
+
+        <div class="users-table-wrapper">
+
+            <table class="users-table">
+
+                <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Topic</th>
+                        <th>Status</th>
+                        <th>Created</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    {% for lesson in lessons %}
+
+                    <tr>
+
+                        <td>{{ lesson.title }}</td>
+
+                        <td>{{ lesson.get_topic_display }}</td>
+
+                        <td>
+                            {% if lesson.is_published %}
+                                <span class="status-badge active">
+                                    Published
+                                </span>
+                            {% else %}
+                                <span class="status-badge inactive">
+                                    Draft
+                                </span>
+                            {% endif %}
+                        </td>
+
+                        <td>
+                            {{ lesson.created_at|date:"d M Y" }}
+                        </td>
+
+                        <td>
+                            <div class="user-actions">
+
+                                <a href="{% url 'admin_learning_edit' lesson.id %}"
+                                   class="action-btn view-btn">
+                                    Edit
+                                </a>
+
+                                <form method="POST"
+                                      action="{% url 'admin_learning_delete' lesson.id %}"
+                                      onsubmit="return confirm('Delete this lesson permanently?');">
+
+                                    {% csrf_token %}
+
+                                    <button type="submit" class="delete-btn">
+                                        Delete
+                                    </button>
+
+                                </form>
+
+                            </div>
+                        </td>
+
+                    </tr>
+
+                    {% empty %}
+
+                    <tr>
+                        <td colspan="5">
+                            No learning materials found.
+                        </td>
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

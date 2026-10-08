@@ -160,45 +160,59 @@
                         </td>
 
                         <td>
-
                             {% if account.role == "student" and not account.is_staff and not account.is_superuser %}
 
-                                <form
-                                    method="POST"
-                                    action="{% url 'toggle_user_status' account.id %}"
-                                    onsubmit="return confirm('Are you sure you want to change this account status?');"
-                                >
+                                <div class="user-actions">
 
-                                    {% csrf_token %}
+                                    <!-- Activate / Deactivate -->
+                                    <form method="POST"
+                                        action="{% url 'toggle_user_status' account.id %}"
+                                        onsubmit="return confirm('Are you sure you want to change this account status?');">
+                                        {% csrf_token %}
 
-                                    {% if account.is_active %}
+                                        {% if account.is_active %}
+                                            <button type="submit" class="action-btn deactivate-btn">
+                                                Deactivate
+                                            </button>
+                                        {% else %}
+                                            <button type="submit" class="action-btn activate-btn">
+                                                Activate
+                                            </button>
+                                        {% endif %}
+                                    </form>
 
-                                        <button
-                                            type="submit"
-                                            class="action-btn deactivate-btn">
-                                            Deactivate
-                                        </button>
+                                    <!-- Delete User -->
+                                    <a href="{% url 'admin_delete_user' account.id %}"
+                                    class="delete-icon-btn"
+                                    title="Delete User"
+                                    aria-label="Delete {{ account.email }}">
 
-                                    {% else %}
+                                        <svg xmlns="http://www.w3.org/2000/svg"
+                                            width="20"
+                                            height="20"
+                                            viewBox="0 0 24 24"
+                                            fill="none"
+                                            stroke="currentColor"
+                                            stroke-width="2"
+                                            stroke-linecap="round"
+                                            stroke-linejoin="round"
+                                            aria-hidden="true">
 
-                                        <button
-                                            type="submit"
-                                            class="action-btn activate-btn">
-                                            Activate
-                                        </button>
+                                            <path d="M3 6h18"/>
+                                            <path d="M8 6V4h8v2"/>
+                                            <path d="M19 6l-1 14H6L5 6"/>
+                                            <path d="M10 10v7"/>
+                                            <path d="M14 10v7"/>
 
-                                    {% endif %}
+                                        </svg>
 
-                                </form>
+                                    </a>
+
+                                </div>
 
                             {% else %}
-
-                                <span class="protected-label">
-                                    Protected
-                                </span>
-
+                                <span class="protected-label">Protected</span>
                             {% endif %}
-
                         </td>
 
                     </tr>

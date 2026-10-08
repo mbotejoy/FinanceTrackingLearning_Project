@@ -6,9 +6,13 @@ from django.contrib.auth import get_user_model
 from users.forms import RegisterForm
 from django.core.exceptions import PermissionDenied
 from functools import wraps
+from django.db import transaction
 from django.db.models import Q
 from django.views.decorators.http import require_POST
 from finance.models import Transaction, Category
+from finance.forms import CategoryForm
+from learning.models import LearningContent
+from learning.forms import LearningContentForm
 
 
 # Display the public landing page.
@@ -136,6 +140,46 @@ def toggle_user_status(request, user_id):
 
     return redirect("admin_users")
 
+# Display a confirmation page and delete an eligible student account.
+@admin_required
+def admin_delete_user(request, user_id):
+
+    account = get_object_or_404(User, pk=user_id)
+
+    # Prevent deletion of administrators and privileged accounts
+    if (
+        account.pk == request.user.pk
+        or account.role != "student"
+        or account.is_staff
+        or account.is_superuser
+    ):
+        messages.error(
+            request,
+            "Administrator accounts cannot be deleted here."
+        )
+        return redirect("admin_users")
+
+    if request.method == "POST":
+
+        email = account.email
+
+        # Delete user and related records together
+        with transaction.atomic():
+            account.delete()
+
+        messages.success(
+            request,
+            f"The account {email} has been permanently deleted."
+        )
+
+        return redirect("admin_users")
+
+    return render(
+        request,
+        "admin_delete_user.html",
+        {"account": account}
+    )
+
 @admin_required
 def admin_transactions(request):
 
@@ -198,6 +242,7 @@ def admin_transactions(request):
         "admin_transactions.html",
         context
     )
+# Show an administrator the details of a selected transaction.
 @admin_required
 def admin_transaction_details(request, transaction_id):
 
@@ -353,3 +398,147 @@ def register(request):
         "register.html",
         {"form": form}
     )
+
+@admin_required
+def admin_categories(request):
+
+    categories = Category.objects.all().order_by("type", "name")
+
+    return render(
+        request,
+        "admin_categories.html",
+        {"categories": categories}
+    )
+
+
+@admin_required
+def admin_category_form(request, category_id=None):
+
+    category = None
+
+    if category_id is not None:
+        category = get_object_or_404(Category, pk=category_id)
+
+    if request.method == "POST":
+        form = CategoryForm(request.POST, instance=category)
+
+        if form.is_valid():
+            form.save()
+            messages.success(
+                request,
+                "Category saved successfully."
+            )
+            return redirect("admin_categories")
+
+    else:
+        form = CategoryForm(instance=category)
+
+    return render(
+        request,
+        "admin_category_form.html",
+        {
+            "form": form,
+            "category": category
+        }
+    )
+
+
+@admin_required
+@require_POST
+def admin_delete_category(request, category_id):
+
+    category = get_object_or_404(Category, pk=category_id)
+
+    if (
+        category.transactions.exists()
+        or category.budgets.exists()
+    ):
+        messages.error(
+            request,
+            "This category is in use and cannot be deleted."
+        )
+    else:
+        category.delete()
+        messages.success(
+            request,
+            "Category deleted successfully."
+        )
+
+    return redirect("admin_categories")
+
+@admin_required
+def admin_learning(request):
+
+    lessons = LearningContent.objects.all()
+
+    search = request.GET.get("search", "").strip()
+
+    if search:
+        lessons = lessons.filter(title__icontains=search)
+
+    context = {
+        "lessons": lessons,
+        "total_lessons": lessons.count(),
+        "search": search,
+    }
+
+    return render(request, "admin_learning.html", context)
+
+
+@admin_required
+def admin_learning_form(request, lesson_id=None):
+
+    lesson = None
+
+    if lesson_id is not None:
+        lesson = get_object_or_404(
+            LearningContent,
+            pk=lesson_id
+        )
+
+    if request.method == "POST":
+        form = LearningContentForm(
+            request.POST,
+            instance=lesson
+        )
+
+        if form.is_valid():
+            form.save()
+
+            messages.success(
+                request,
+                "Learning content saved successfully."
+            )
+
+            return redirect("admin_learning")
+
+    else:
+        form = LearningContentForm(instance=lesson)
+
+    return render(
+        request,
+        "admin_learning_form.html",
+        {
+            "form": form,
+            "lesson": lesson,
+        }
+    )
+
+
+@admin_required
+@require_POST
+def admin_delete_learning(request, lesson_id):
+
+    lesson = get_object_or_404(
+        LearningContent,
+        pk=lesson_id
+    )
+
+    lesson.delete()
+
+    messages.success(
+        request,
+        "Learning content deleted successfully."
+    )
+
+    return redirect("admin_learning")
