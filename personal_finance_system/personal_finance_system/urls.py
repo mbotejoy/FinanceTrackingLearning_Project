@@ -20,8 +20,11 @@ from . import views
 
 urlpatterns = [
 
-    # Admin
+    #Django built-in admin
     path("admin/", admin.site.urls),
+    #FinanceWise custom admin dashboard
+    path("admin-dashboard/", views.admin_dashboard, name="admin_dashboard"),
+
 
     # Landing Page
     path("", views.landing, name="landing"),
@@ -113,5 +116,12 @@ urlpatterns = [
         "user/",
         views.user,
         name="user"
+    ),
+
+    # Manage Users
+    path(
+    "admin-dashboard/users/",
+    views.admin_users,
+    name="admin_users"
     ),
 ]

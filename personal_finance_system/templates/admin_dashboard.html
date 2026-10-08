@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Admin Dashboard | FinanceWise{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/admin_dashboard.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<div class="admin-dashboard">
+
+    <div class="admin-header">
+        <div>
+            <h1>Admin Dashboard</h1>
+            <p>Manage and monitor the FinanceWise system.</p>
+        </div>
+    </div>
+
+    <div class="admin-stats">
+
+        <div class="admin-stat-card">
+            <h3>Total Users</h3>
+            <p>{{ total_users }}</p>
+        </div>
+
+        <div class="admin-stat-card">
+            <h3>Students</h3>
+            <p>{{ total_students }}</p>
+        </div>
+
+        <div class="admin-stat-card">
+            <h3>Administrators</h3>
+            <p>{{ total_admins }}</p>
+        </div>
+
+    </div>
+
+    <section class="admin-management">
+
+        <h2>System Management</h2>
+
+        <div class="management-grid">
+
+            <div class="management-card">
+                <h3>Manage Users</h3>
+                <p>View and manage registered students.</p>
+                <span>Coming next</span>
+            </div>
+
+            <div class="management-card">
+                <h3>Transactions</h3>
+                <p>Monitor transaction activity.</p>
+                <span>Coming soon</span>
+            </div>
+
+            <div class="management-card">
+                <h3>Learning Materials</h3>
+                <p>Manage financial literacy resources.</p>
+                <span>Coming soon</span>
+            </div>
+
+            <div class="management-card">
+                <h3>Quizzes</h3>
+                <p>Manage financial literacy quizzes.</p>
+                <span>Coming soon</span>
+            </div>
+
+            <div class="management-card">
+                <h3>Recommendation Rules</h3>
+                <p>Manage financial guidance rules.</p>
+                <span>Coming soon</span>
+            </div>
+
+            <div class="management-card">
+                <h3>System Reports</h3>
+                <p>View system usage and statistics.</p>
+                <span>Coming soon</span>
+            </div>
+
+        </div>
+
+    </section>
+
+</div>
+
+{% endblock %}

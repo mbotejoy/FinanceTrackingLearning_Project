@@ -24,3 +24,14 @@ class RegisterForm(UserCreationForm):
             "password1",
             "password2",
         ]
+    # This automatically assigns the student role     
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        user.role = "student"
+        user.is_staff = False
+        user.is_superuser = False
+
+        if commit:
+            user.save()
+
+        return user
