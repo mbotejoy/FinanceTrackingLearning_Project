@@ -51,6 +51,17 @@ urlpatterns = [
         views.add_transaction,
         name="add_transaction"
     ),
+    path(
+    "transactions/<int:transaction_id>/edit/",
+    views.edit_transaction,
+    name="edit_transaction"
+    ),
+
+    path(
+    "transactions/<int:transaction_id>/delete/",
+    views.delete_transaction,
+    name="delete_transaction"
+    ),
 
 
     # Budgets
@@ -64,6 +75,17 @@ urlpatterns = [
         "budgets/create/",
         views.create_budget,
         name="create_budget"
+    ),
+    path(
+    "budgets/<int:budget_id>/edit/",
+    views.edit_budget,
+    name="edit_budget"
+    ),
+
+    path(
+    "budgets/<int:budget_id>/delete/",
+    views.delete_budget,
+    name="delete_budget"
     ),
 
 

@@ -35,7 +35,7 @@
                     of your finances.
                 </p>
 
-                <strong>KES 0.00</strong>
+                <strong>KES {{ monthly_income|floatformat:2 }}</strong>
 
                 <div class="card-action">
 
@@ -58,7 +58,7 @@
                     areas for improvement.
                 </p>
 
-                <strong>KES 0.00</strong>
+                <strong>KES {{ monthly_expenses|floatformat:2 }}</strong>
 
                 <div class="card-action">
 
@@ -81,7 +81,7 @@
                     for income and expenses.
                 </p>
 
-                <strong>KES 0.00</strong>
+                <strong>KES {{ available_balance|floatformat:2 }}</strong>
 
                 <div class="card-action">
 

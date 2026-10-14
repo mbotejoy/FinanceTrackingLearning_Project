@@ -1,3 +1,4 @@
+
 {% extends "base.html" %}
 {% load static %}
 
@@ -21,87 +22,59 @@
 
     <div class="transaction-form">
 
-        <form method="POST"
-              class="transaction-form-card">
+        <form method="POST" class="transaction-form-card">
 
             {% csrf_token %}
+            {{ form.non_field_errors }}
 
             <div class="form-group">
-                <label for="amount">Amount</label>
-
-                <input
-                    type="number"
-                    id="amount"
-                    name="amount"
-                    step="0.01"
-                    placeholder="Enter amount"
-                    required>
+                <label for="{{ form.amount.id_for_label }}">
+                    Amount
+                </label>
+                {{ form.amount }}
+                {{ form.amount.errors }}
             </div>
 
             <div class="form-group">
-                <label for="transaction_type">
+                <label for="{{ form.type.id_for_label }}">
                     Transaction Type
                 </label>
-
-                <select id="transaction_type"
-                        name="transaction_type"
-                        required>
-
-                    <option value="">
-                        Select transaction type
-                    </option>
-
-                    <option value="income">Income</option>
-                    <option value="expense">Expense</option>
-
-                </select>
+                {{ form.type }}
+                {{ form.type.errors }}
             </div>
 
             <div class="form-group">
-                <label for="category">Category</label>
-
-                <select id="category"
-                        name="category"
-                        required>
-
-                    <option value="">
-                        Select category
-                    </option>
-
-                    <option>Food</option>
-                    <option>Transport</option>
-                    <option>Education</option>
-                    <option>Entertainment</option>
-                    <option>Bills</option>
-                    <option>Savings</option>
-                    <option>Other</option>
-
-                </select>
+                <label for="{{ form.category.id_for_label }}">
+                    Category
+                </label>
+                {{ form.category }}
+                {{ form.category.errors }}
             </div>
 
             <div class="form-group">
-                <label for="transaction_date">Date</label>
-
-                <input
-                    type="date"
-                    id="transaction_date"
-                    name="transaction_date"
-                    required>
+                <label for="{{ form.date.id_for_label }}">
+                    Date
+                </label>
+                {{ form.date }}
+                {{ form.date.errors }}
             </div>
 
             <div class="form-group">
-                <label for="description">Description</label>
-
-                <textarea
-                    id="description"
-                    name="description"
-                    placeholder="Enter a short description"></textarea>
+                <label for="{{ form.description.id_for_label }}">
+                    Description
+                </label>
+                {{ form.description }}
+                {{ form.description.errors }}
             </div>
 
             <div class="form-actions">
-                <button type="submit"
-                        class="btn btn-primary">
-                    Save Transaction
+
+                <button type="submit" class="btn btn-primary">
+                    {% if editing %}
+                        Update Transaction
+                    {% else %}
+                        Save Transaction
+                    {% endif %}
                 </button>
 
 
@@ -109,7 +82,6 @@
                    class="btn btn-outline">
                     Cancel
                 </a>
-
 
             </div>
 

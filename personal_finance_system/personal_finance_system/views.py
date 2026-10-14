@@ -1,4 +1,3 @@
-from django.http import request
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
@@ -8,10 +7,10 @@ from users.forms import RegisterForm
 from django.core.exceptions import PermissionDenied
 from functools import wraps
 from django.db import transaction
-from django.db.models import Q
+from django.db.models import Q, Sum
 from django.views.decorators.http import require_POST
-from finance.models import Transaction, Category
-from finance.forms import CategoryForm
+from finance.models import Transaction, Category, Budget
+from finance.forms import CategoryForm, TransactionForm, BudgetForm
 from learning.models import LearningContent
 from learning.forms import LearningContentForm
 from django.utils import timezone
@@ -263,67 +262,282 @@ def admin_transaction_details(request, transaction_id):
 # Show the student dashboard, or redirect administrators to theirs.
 @login_required
 def user(request):
+
     if is_admin(request.user):
         return redirect("admin_dashboard")
     today = timezone.localdate()
+
+
+    monthly_transactions = Transaction.objects.filter(
+        user=request.user,
+        date__year=today.year,
+        date__month=today.month
+    )
+
+    monthly_income = (
+        monthly_transactions.filter(type="income")
+        .aggregate(total=Sum("amount"))["total"] or 0
+    )
+
+    monthly_expenses = (
+        monthly_transactions.filter(type="expense")
+        .aggregate(total=Sum("amount"))["total"] or 0
+    )
+
+    available_balance = monthly_income - monthly_expenses
+
     spending_analysis = classify_student_spending(
         user=request.user,
         year=today.year,
-        month=today.month,
+        month=today.month
     )
+
     context = {
-        "spending_analysis": spending_analysis
+        "monthly_income": monthly_income,
+        "monthly_expenses": monthly_expenses,
+        "available_balance": available_balance,
+        "spending_analysis": spending_analysis,
     }
-    return render(request, 'user.html', context)
+
+    return render(request, "user.html", context)
 
 
 
 # Display the transactions page.
+# Retrieve only the currently logged-in student's records 
+#and passes them to the template for rendering.
+@login_required
 def transactions(request):
-    return render(request, "transactions.html")
+    student_transactions = Transaction.objects.filter(
+        user=request.user
+    ).select_related("category").order_by("-date")
 
+    return render(request, "transactions.html", {
+        "transactions": student_transactions
+    })
 
 # Display the form for adding a transaction.
+@login_required
 def add_transaction(request):
-    return render(request, "add_transaction.html")
 
+    if request.method == "POST":
 
-# Display the budgets page.
+        form = TransactionForm(request.POST)
+
+        if form.is_valid():
+
+            transaction = form.save(commit=False)
+            transaction.user = request.user
+            transaction.save()
+
+            messages.success(
+                request,
+                "Transaction saved successfully."
+            )
+
+            return redirect("transactions")
+
+    else:
+        form = TransactionForm()
+
+    return render(
+        request,
+        "add_transaction.html",
+        {"form": form}
+    )
+
+# Retrieve only the currently logged-in student's records 
+#and passes them to the template for rendering.
+@login_required
 def budgets(request):
-    return render(request, "budgets.html")
+    student_budgets = Budget.objects.filter(
+        user=request.user
+    ).select_related("category").order_by("-start_date")
 
+    return render(request, "budgets.html", {
+        "budgets": student_budgets
+    })
 
 # Display the form for creating a budget.
+@login_required
 def create_budget(request):
-    return render(request, "create_budget.html")
+
+    if request.method == "POST":
+
+        form = BudgetForm(request.POST)
+
+        if form.is_valid():
+
+            budget = form.save(commit=False)
+            budget.user = request.user
+            budget.save()
+
+            messages.success(
+                request,
+                "Budget saved successfully."
+            )
+
+            return redirect("budgets")
+
+    else:
+        form = BudgetForm()
+
+    return render(
+        request,
+        "create_budget.html",
+        {"form": form}
+    )
+
+# Edit an existing transaction
+@login_required
+def edit_transaction(request, transaction_id):
+
+    transaction = get_object_or_404(
+        Transaction,
+        id=transaction_id,
+        user=request.user #ensures you only edit your own record
+    )
+
+    if request.method == "POST":
+        form = TransactionForm(
+            request.POST,
+            instance=transaction
+        )
+
+        if form.is_valid():
+            form.save()
+
+            messages.success(
+                request,
+                "Transaction updated successfully."
+            )
+
+            return redirect("transactions")
+
+    else:
+        form = TransactionForm(instance=transaction)
+
+    return render(
+        request,
+        "add_transaction.html",
+        {
+            "form": form,
+            "editing": True
+        }
+    )
 
 
+# Delete an existing transaction
+@login_required
+@require_POST
+def delete_transaction(request, transaction_id):
+
+    transaction = get_object_or_404(
+        Transaction,
+        id=transaction_id,
+        user=request.user
+    )
+
+    transaction.delete()
+
+    messages.success(
+        request,
+        "Transaction deleted successfully."
+    )
+
+    return redirect("transactions")
+
+
+# Edit an existing budget
+@login_required
+def edit_budget(request, budget_id):
+
+    budget = get_object_or_404(
+        Budget,
+        id=budget_id,
+        user=request.user
+    )
+
+    if request.method == "POST":
+        form = BudgetForm(
+            request.POST,
+            instance=budget
+        )
+
+        if form.is_valid():
+            form.save()
+
+            messages.success(
+                request,
+                "Budget updated successfully."
+            )
+
+            return redirect("budgets")
+
+    else:
+        form = BudgetForm(instance=budget)
+
+    return render(
+        request,
+        "create_budget.html",
+        {
+            "form": form,
+            "editing": True
+        }
+    )
+
+
+# Delete an existing budget
+@login_required
+@require_POST
+def delete_budget(request, budget_id):
+
+    budget = get_object_or_404(
+        Budget,
+        id=budget_id,
+        user=request.user
+    )
+
+    budget.delete()
+
+    messages.success(
+        request,
+        "Budget deleted successfully."
+    )
+
+    return redirect("budgets")
 # Display the user's savings goals.
+@login_required
 def savings_goals(request):
     return render(request, "savings_goals.html")
 
 
 # Display the form for creating a savings goal.
+@login_required
 def create_savings_goal(request):
     return render(request, "create_savings_goal.html")
 
 
 # Display financial insights.
+@login_required
 def financial_insights(request):
     return render(request, "financial_insights.html")
 
 
 # Display the financial learning page.
+@login_required
 def learning(request):
     return render(request, "learning.html")
 
 
 # Display the quiz page.
+@login_required
 def quiz(request):
     return render(request, "quiz.html")
 
 
 # Display personalized recommendations.
+@login_required
 def recommendations(request):
     return render(request, "recommendations.html")
 

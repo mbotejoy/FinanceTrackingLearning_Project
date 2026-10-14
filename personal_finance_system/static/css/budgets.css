@@ -19,12 +19,39 @@
 }
 
 .budget-card {
-    padding: 28px;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 22px;
+    margin-bottom: 18px;
+}
 
-    background: var(--white);
+.budget-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 18px;
+}
 
-    border: 1px solid var(--border);
-    border-radius: 8px;
+.budget-card-header h3 {
+    margin: 0;
+    font-size: 18px;
+    color: #1e293b;
+}
+
+.budget-category {
+    background: #e0f2fe;
+    color: #0369a1;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 13px;
+}
+
+.budget-card-body p {
+    margin: 8px 0;
+    color: #475569;
+    font-size: 14px;
 }
 
 .budget-card h3 {
@@ -84,11 +111,6 @@
     color: var(--muted);
 }
 
-@media (max-width: 800px) {
-    .budget-list {
-        grid-template-columns: 1fr;
-    }
-}
 /* ========================================
    CREATE BUDGET
 ======================================== */
@@ -107,4 +129,39 @@
 
     border: 1px solid var(--border);
     border-radius: 8px;
+}
+/* RECORD ACTIONS */
+.record-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.record-actions form {
+    margin: 0;
+}
+
+.record-delete-btn {
+    background: #dc2626;
+    color: #ffffff;
+    border: 1px solid #dc2626;
+    cursor: pointer;
+}
+
+.record-delete-btn:hover {
+    background: #b91c1c;
+    border-color: #b91c1c;
+}
+
+@media (max-width: 800px) {
+    .budget-list {
+        grid-template-columns: 1fr;
+    }
+}
+@media (max-width: 600px) {
+    .budget-card-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
 }

@@ -1,3 +1,4 @@
+
 {% extends "base.html" %}
 {% load static %}
 
@@ -31,6 +32,61 @@
 
     <div class="budget-list">
 
+        {% for budget in budgets %}
+
+        <div class="budget-card">
+
+            <div class="budget-card-header">
+                <h3>{{ budget.name }}</h3>
+
+                <span class="budget-category">
+                    {{ budget.category.name|default:"General" }}
+                </span>
+            </div>
+
+            <div class="budget-card-body">
+
+                <p>
+                    <strong>Budget Amount:</strong>
+                    KES {{ budget.amount|floatformat:2 }}
+                </p>
+
+                <p>
+                    <strong>Start Date:</strong>
+                    {{ budget.start_date|date:"d M Y" }}
+                </p>
+
+                <p>
+                    <strong>End Date:</strong>
+                    {{ budget.end_date|date:"d M Y" }}
+                </p>
+
+            </div>
+                <div class="record-actions">
+
+        <a href="{% url 'edit_budget' budget.id %}"
+        class="btn btn-outline">
+            Edit Budget
+        </a>
+
+        <form method="POST"
+            action="{% url 'delete_budget' budget.id %}"
+            onsubmit="return confirm('Are you sure you want to delete this budget?');">
+
+            {% csrf_token %}
+
+            <button type="submit" class="btn record-delete-btn">
+                Delete
+            </button>
+
+        </form>
+
+    </div>
+
+        </div>
+
+        {% empty %}
+
         <div class="empty-budget">
 
             <h3>No Budgets Yet</h3>
@@ -41,6 +97,28 @@
             </p>
 
         </div>
+            <div class="record-actions">
+
+        <a href="{% url 'edit_budget' budget.id %}"
+        class="btn btn-outline">
+            Edit Budget
+        </a>
+
+        <form method="POST"
+            action="{% url 'delete_budget' budget.id %}"
+            onsubmit="return confirm('Are you sure you want to delete this budget?');">
+
+            {% csrf_token %}
+
+            <button type="submit" class="btn record-delete-btn">
+                Delete
+            </button>
+
+        </form>
+
+    </div>
+
+        {% endfor %}
 
     </div>
 

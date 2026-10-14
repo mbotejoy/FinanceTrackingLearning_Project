@@ -55,3 +55,26 @@
     border: 1px solid var(--border);
     border-radius: 8px;
 }
+/* RECORD ACTIONS */
+.record-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.record-actions form {
+    margin: 0;
+}
+
+.record-delete-btn {
+    background: #dc2626;
+    color: #ffffff;
+    border: 1px solid #dc2626;
+    cursor: pointer;
+}
+
+.record-delete-btn:hover {
+    background: #b91c1c;
+    border-color: #b91c1c;
+}
