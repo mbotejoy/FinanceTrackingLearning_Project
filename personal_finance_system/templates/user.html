@@ -96,6 +96,79 @@
 
         </div>
 
+        <!-- Spending Behaviour Classification -->
+        <section class="spending-classification">
+
+        <div class="classification-heading">
+            <h2>Your Spending Behaviour</h2>
+            <p>
+                Understand how your monthly spending compares
+                to your income.
+            </p>
+        </div>
+
+        {% if spending_analysis.classification %}
+
+        <div class="classification-result">
+
+            <span class="classification-badge
+                {% if spending_analysis.classification == 'Low' %}
+                    low-spending
+                {% elif spending_analysis.classification == 'Moderate' %}
+                    moderate-spending
+                {% elif spending_analysis.classification == 'High' %}
+                    high-spending
+                {% endif %}">
+
+                {{ spending_analysis.classification }} Spending
+
+            </span>
+
+            <p class="classification-description">
+                Your spending behaviour has been classified as
+                <strong>{{ spending_analysis.classification }}</strong>
+                based on your monthly expenses relative to your income.
+            </p>
+
+            <div class="classification-stats">
+
+                <div class="classification-stat">
+                    <span>Monthly Income</span>
+                    <strong>
+                        KES {{ spending_analysis.monthly_income|floatformat:2 }}
+                    </strong>
+                </div>
+
+                <div class="classification-stat">
+                    <span>Monthly Expenses</span>
+                    <strong>
+                        KES {{ spending_analysis.monthly_expenses|floatformat:2 }}
+                    </strong>
+                </div>
+
+                <div class="classification-stat">
+                    <span>Spending-to-Income Ratio</span>
+                    <strong>
+                        {{ spending_analysis.spending_ratio|floatformat:2 }}
+                    </strong>
+                </div>
+
+            </div>
+
+        </div>
+
+        {% else %}
+
+        <div class="classification-empty">
+            <p>
+                {{ spending_analysis.message|default:"Record your income and expenses to view your spending behaviour." }}
+            </p>
+        </div>
+
+        {% endif %}
+
+        </section>
+
 
         <!-- Learning Preview -->
 
