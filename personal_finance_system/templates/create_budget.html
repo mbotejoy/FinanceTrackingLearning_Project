@@ -1,3 +1,4 @@
+
 {% extends "base.html" %}
 {% load static %}
 
@@ -13,7 +14,6 @@
 
     <div class="page-header">
         <h1>Create Your Budget</h1>
-
         <p>
             Set a spending limit for a category and monitor
             your progress throughout the selected period.
@@ -22,58 +22,49 @@
 
     <div class="budget-form">
 
-        <form method="POST"
-              class="budget-form-card">
+        <form method="POST" class="budget-form-card">
 
             {% csrf_token %}
+            {{ form.non_field_errors }}
 
             <div class="form-group">
-                <label>Budget Name</label>
-
-                <input type="text"
-                       name="budget_name"
-                       placeholder="e.g. Monthly Food Budget">
+                <label for="{{ form.name.id_for_label }}">
+                    Budget Name
+                </label>
+                {{ form.name }}
+                {{ form.name.errors }}
             </div>
 
             <div class="form-group">
-                <label>Category</label>
-
-                <select name="category">
-
-                    <option value="">
-                        Select category
-                    </option>
-
-                    <option>Food</option>
-                    <option>Transport</option>
-                    <option>Education</option>
-                    <option>Entertainment</option>
-                    <option>Bills</option>
-
-                </select>
+                <label for="{{ form.category.id_for_label }}">
+                    Category
+                </label>
+                {{ form.category }}
+                {{ form.category.errors }}
             </div>
 
             <div class="form-group">
-                <label>Budget Amount</label>
-
-                <input type="number"
-                       name="budget_amount"
-                       step="0.01"
-                       placeholder="Enter amount">
+                <label for="{{ form.amount.id_for_label }}">
+                    Budget Amount
+                </label>
+                {{ form.amount }}
+                {{ form.amount.errors }}
             </div>
 
             <div class="form-group">
-                <label>Start Date</label>
-
-                <input type="date"
-                       name="start_date">
+                <label for="{{ form.start_date.id_for_label }}">
+                    Start Date
+                </label>
+                {{ form.start_date }}
+                {{ form.start_date.errors }}
             </div>
 
             <div class="form-group">
-                <label>End Date</label>
-
-                <input type="date"
-                       name="end_date">
+                <label for="{{ form.end_date.id_for_label }}">
+                    End Date
+                </label>
+                {{ form.end_date }}
+                {{ form.end_date.errors }}
             </div>
 
             <div class="form-actions">
@@ -82,10 +73,12 @@
                    class="btn btn-outline">
                     Cancel
                 </a>
-
-                <button type="submit"
-                        class="btn btn-primary">
-                    Save Budget
+                <button type="submit" class="btn btn-primary">
+                    {% if editing %}
+                        Update Budget
+                    {% else %}
+                        Save Budget
+                    {% endif %}
                 </button>
 
             </div>
