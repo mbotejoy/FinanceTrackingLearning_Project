@@ -56,13 +56,9 @@
 
 .summary-grid {
     width: 100%;
-
     display: grid;
-
-    grid-template-columns: repeat(3, 1fr);
-
-    gap: 28px;
-
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 30px;
     margin-top: 45px;
 }
 
@@ -145,14 +141,11 @@
 
 .learning-section {
     width: 100%;
-
-    margin-top: 40px;
-
-    padding: 35px 40px;
-
+    box-sizing: border-box;
+    margin-top: 0;
+    padding: 45px 40px;
     background: var(--mint);
-
-    border-radius: 8px;
+    border-radius: 10px;
 }
 
 
@@ -236,6 +229,129 @@
     padding-top: 20px;
 }
 
+/* ========================================
+  Spending Behaviour Classification Section
+======================================== */
+.spending-classification {
+    width: 100%;
+    box-sizing: border-box;
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 45px 40px;
+    margin-top: 45px;
+    margin-bottom: 45px;
+    text-align: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+}
+
+.classification-heading h2 {
+    color: #082e55;
+    font-size: 32px;
+    margin-bottom: 12px;
+}
+
+.classification-heading p {
+    color: #64748b;
+    font-size: 17px;
+    margin-bottom: 28px;
+}
+
+.classification-result {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+
+.classification-badge {
+    display: inline-block;
+    padding: 12px 28px;
+    border-radius: 30px;
+    font-size: 17px;
+    font-weight: 700;
+}
+
+/* Classification levels */
+
+.low-spending {
+    background: #dcfce7;
+    color: #166534;
+}
+
+.moderate-spending {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.high-spending {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+.classification-description {
+    color: #64748b;
+    font-size: 16px;
+    max-width: 650px;
+    line-height: 1.7;
+}
+
+.classification-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    width: 100%;
+    margin-top: 10px;
+}
+
+.classification-stat {
+    background: #f3f8f7;
+    border-radius: 10px;
+    padding: 22px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.classification-stat span {
+    color: #64748b;
+    font-size: 15px;
+}
+
+.classification-stat strong {
+    color: #082e55;
+    font-size: 21px;
+}
+
+.classification-empty {
+    background: #f3f8f7;
+    padding: 30px;
+    border-radius: 8px;
+    max-width: 750px;
+    margin: 0 auto;
+    color: var(--muted);
+    font-size: 17px;
+    line-height: 1.7;
+}
+.classification-empty p {
+    margin: 0;
+}
+
+/* Responsive design */
+
+@media (max-width: 768px) {
+    .spending-classification {
+        padding: 25px 18px;
+    }
+
+    .classification-heading h2 {
+        font-size: 25px;
+    }
+
+    .classification-stats {
+        grid-template-columns: 1fr;
+    }
+}
 
 /* ========================================
    RESPONSIVE DASHBOARD
@@ -268,6 +384,19 @@
     .welcome > h1 {
         font-size: 34px;
     }
+        .spending-classification {
+        margin-top: 30px;
+        margin-bottom: 30px;
+        padding: 30px 20px;
+    }
+
+    .classification-stats {
+        grid-template-columns: 1fr;
+    }
+
+    .learning-section {
+        padding: 30px 20px;
+    }
 
 }
 
@@ -287,5 +416,22 @@
     .learning-section {
         padding: 25px 18px;
     }
+    .spending-classification {
+        padding: 25px 16px;
+    }
+
+    .classification-heading h2 {
+        font-size: 26px;
+    }
+
+    .classification-empty {
+        padding: 20px 15px;
+        font-size: 15px;
+    }
+
+    .summary-card {
+        min-height: 280px;
+    }
+
 
 }

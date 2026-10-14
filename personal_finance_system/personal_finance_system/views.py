@@ -1,3 +1,4 @@
+from django.http import request
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
@@ -13,6 +14,8 @@ from finance.models import Transaction, Category
 from finance.forms import CategoryForm
 from learning.models import LearningContent
 from learning.forms import LearningContentForm
+from django.utils import timezone
+from .classification_service import classify_student_spending
 
 
 # Display the public landing page.
@@ -262,7 +265,18 @@ def admin_transaction_details(request, transaction_id):
 def user(request):
     if is_admin(request.user):
         return redirect("admin_dashboard")
-    return render(request, 'user.html')
+    today = timezone.localdate()
+    spending_analysis = classify_student_spending(
+        user=request.user,
+        year=today.year,
+        month=today.month,
+    )
+    context = {
+        "spending_analysis": spending_analysis
+    }
+    return render(request, 'user.html', context)
+
+
 
 # Display the transactions page.
 def transactions(request):
