@@ -11,7 +11,7 @@ from django.db.models import Q, Sum
 from django.views.decorators.http import require_POST
 from finance.models import Transaction, Category, Budget, SavingsGoal
 from finance.forms import CategoryForm, TransactionForm, BudgetForm,SavingsGoalForm
-from learning.models import LearningContent
+from learning.models import LearningContent, QuizQuestion
 from learning.forms import LearningContentForm
 from django.utils import timezone
 from .classification_service import classify_student_spending
@@ -797,17 +797,116 @@ def financial_insights(request):
     )
 
 
-
 # Display the financial learning page.
 @login_required
 def learning(request):
-    return render(request, "learning.html")
+    lessons = LearningContent.objects.filter(
+        is_published=True
+    ).order_by("topic", "title")
 
+    return render(
+        request,
+        "learning.html",
+        {"lessons": lessons}
+    )
 
-# Display the quiz page.
+# Allow user to read a lesson in detail.
+@login_required
+def lesson_detail(request, lesson_id):
+    lesson = get_object_or_404(
+        LearningContent,
+        pk=lesson_id,
+        is_published=True
+    )
+
+    return render(
+        request,
+        "lesson_detail.html",
+        {"lesson": lesson}
+    )
+
+#Allows the user to take a quiz
 @login_required
 def quiz(request):
-    return render(request, "quiz.html")
+    topics = LearningContent.TOPIC_CHOICES
+
+    selected_topic = request.GET.get(
+        "topic",
+        request.POST.get("topic", "budgeting")
+    )
+
+    valid_topics = [value for value, label in topics]
+
+    if selected_topic not in valid_topics:
+        selected_topic = "budgeting"
+
+    questions = list(
+        QuizQuestion.objects.filter(
+            topic=selected_topic,
+            is_published=True
+        ).order_by("id")
+    )
+
+    if request.method == "POST":
+        if not questions:
+            messages.error(
+                request,
+                "There are no published questions for this topic yet."
+            )
+            return redirect("quiz")
+
+        score = 0
+        results = []
+
+        for question in questions:
+            submitted_answer = request.POST.get(
+                f"question_{question.id}",
+                ""
+            )
+
+            is_correct = (
+                submitted_answer == question.correct_answer
+            )
+
+            if is_correct:
+                score += 1
+
+            results.append({
+                "question": question,
+                "selected_answer": submitted_answer,
+                "is_correct": is_correct,
+                "correct_answer": question.correct_answer,
+                "explanation": question.explanation,
+            })
+
+        percentage = round((score / len(questions)) * 100)
+
+        return render(
+            request,
+            "quiz.html",
+            {
+                "topics": topics,
+                "selected_topic": selected_topic,
+                "questions": questions,
+                "results": results,
+                "score": score,
+                "total_questions": len(questions),
+                "percentage": percentage,
+                "submitted": True,
+            }
+        )
+
+    return render(
+        request,
+        "quiz.html",
+        {
+            "topics": topics,
+            "selected_topic": selected_topic,
+            "questions": questions,
+            "submitted": False,
+        }
+    )
+
 
 
 # Display personalized recommendations.
