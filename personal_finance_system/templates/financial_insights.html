@@ -8,44 +8,48 @@
 {% endblock %}
 
 {% block content %}
-<!-- page where the predictive analysis will be displayed -->
+
 <div class="page-container">
 
     <div class="page-header">
-
         <h1>Your Financial Insights</h1>
-
         <p>
             Understand your spending behaviour and view
             insights generated from your financial activity.
         </p>
-
     </div>
 
     <div class="insights-grid">
 
         <article class="insight-card">
-
             <h3>Highest Spending Category</h3>
 
-            <strong>No Data</strong>
+            <strong>{{ highest_spending_category }}</strong>
 
+            <p>
+                KES {{ highest_category_amount|floatformat:2 }}
+                spent this month
+            </p>
         </article>
 
         <article class="insight-card">
-
             <h3>Monthly Spending</h3>
 
-            <strong>KES 0.00</strong>
+            <strong>
+                KES {{ monthly_spending|floatformat:2 }}
+            </strong>
 
+            <p>Total expenses for the current month</p>
         </article>
 
         <article class="insight-card">
+            <h3>Estimated Next Month's Spending</h3>
 
-            <h3>Predicted Spending</h3>
+            <strong>
+                KES {{ predicted_spending|floatformat:2 }}
+            </strong>
 
-            <strong>KES 0.00</strong>
-
+            <p>Based on the previous three completed months</p>
         </article>
 
     </div>
@@ -55,10 +59,36 @@
         <h2>Spending Trend</h2>
 
         <p>
-            Your spending analysis and prediction will
-            appear here once enough transaction data
-            has been recorded.
+            Your expenses over the last six calendar months.
         </p>
+
+        <div class="spending-trend">
+
+            {% for item in spending_trend %}
+
+            <div class="trend-item">
+
+                <div class="trend-label">
+                    {{ item.label }}
+                </div>
+
+                <div class="trend-track">
+                    <progress
+                        class="trend-progress"
+                        value="{{ item.total }}"
+                        max="{{ max_trend_spending }}">
+                    </progress>
+                </div>
+
+                <div class="trend-amount">
+                    KES {{ item.total|floatformat:2 }}
+                </div>
+
+            </div>
+
+            {% endfor %}
+
+        </div>
 
     </section>
 
