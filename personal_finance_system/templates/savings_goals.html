@@ -12,40 +12,128 @@
 <div class="page-container">
 
     <div class="page-header">
-
         <h1>Your Savings Goals</h1>
-
         <p>
-            Create savings targets and track your progress
-            towards achieving your financial goals.
+            Set savings targets, track your progress and work
+            towards your financial goals.
         </p>
-
     </div>
 
-    <div class="savings-toolbar">
 
+    <div class="goal-toolbar">
         <a href="{% url 'create_savings_goal' %}"
            class="btn btn-primary">
             + Create Savings Goal
         </a>
-
     </div>
 
-    <div class="goals-grid">
+    <div class="savings-content">
 
-        <div class="goal-empty">
+        <div class="goals-grid">
 
-            <h3>No Savings Goals Yet</h3>
+            {% for goal in goals %}
 
-            <p>
-                Create your first savings goal to begin
-                tracking your progress.
-            </p>
+            <article class="goal-card">
+
+                <div class="goal-card-header">
+                    <h2>{{ goal.name }}</h2>
+
+                    <span class="goal-status status-{{ goal.status }}">
+                        {{ goal.get_status_display }}
+                    </span>
+                </div>
+
+                <div class="goal-amounts">
+                    <p>
+                        Saved:
+                        <strong>KES {{ goal.current_amount|floatformat:2 }}</strong>
+                    </p>
+
+                    <p>
+                        Target:
+                        <strong>KES {{ goal.target_amount|floatformat:2 }}</strong>
+                    </p>
+                </div>
+
+                {% widthratio goal.current_amount goal.target_amount 100 as progress %}
+
+                <div class="goal-progress-track"
+                     role="progressbar"
+                     aria-valuemin="0"
+                     aria-valuemax="100"
+                     aria-valuenow="{{ progress }}">
+                    <progress class="goal-progress-native"
+                            value="{{ progress }}"
+                            max="100">
+                        {{ progress }}%
+                    </progress>
+                </div>
+
+                <p class="goal-progress-text">
+                    {{ progress }}% of your target
+                </p>
+
+                <p class="goal-date">
+                    Target date: {{ goal.target_date|date:"d M Y" }}
+                </p>
+
+                <div class="goal-actions">
+
+                    <a href="{% url 'edit_savings_goal' goal.id %}"
+                       class="btn btn-outline">
+                        Edit
+                    </a>
+
+                    <form method="POST"
+                          action="{% url 'update_savings_progress' goal.id %}"
+                          class="progress-form">
+                        {% csrf_token %}
+
+                        <label for="saved-{{ goal.id }}">
+                            Update amount saved (KES)
+                        </label>
+
+                        <input id="saved-{{ goal.id }}"
+                               type="number"
+                               name="current_amount"
+                               min="0"
+                               max="{{ goal.target_amount }}"
+                               step="0.01"
+                               value="{{ goal.current_amount }}"
+                               required>
+
+                        <button type="submit" class="btn btn-primary">
+                            Update Progress
+                        </button>
+                    </form>
+
+                    <form method="POST"
+                          action="{% url 'delete_savings_goal' goal.id %}"
+                          onsubmit="return confirm('Are you sure you want to delete this savings goal?');">
+                        {% csrf_token %}
+
+                        <button type="submit" class="btn goal-delete-btn">
+                            Delete Goal
+                        </button>
+                    </form>
+
+                </div>
+
+            </article>
+
+            {% empty %}
+
+            <div class="empty-goals">
+                <h2>No Savings Goals Yet</h2>
+                <p>
+                    Create your first savings goal to start tracking
+                    progress towards something important to you.
+                </p>
+            </div>
+
+            {% endfor %}
 
         </div>
-
     </div>
-
-</div>
 
 {% endblock %}

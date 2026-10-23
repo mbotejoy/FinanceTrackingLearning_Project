@@ -9,8 +9,8 @@ from functools import wraps
 from django.db import transaction
 from django.db.models import Q, Sum
 from django.views.decorators.http import require_POST
-from finance.models import Transaction, Category, Budget
-from finance.forms import CategoryForm, TransactionForm, BudgetForm
+from finance.models import Transaction, Category, Budget, SavingsGoal
+from finance.forms import CategoryForm, TransactionForm, BudgetForm,SavingsGoalForm
 from learning.models import LearningContent
 from learning.forms import LearningContentForm
 from django.utils import timezone
@@ -506,16 +506,180 @@ def delete_budget(request, budget_id):
     )
 
     return redirect("budgets")
-# Display the user's savings goals.
+
+# Display only the logged-in student's savings goals.
 @login_required
 def savings_goals(request):
-    return render(request, "savings_goals.html")
+
+    goals = SavingsGoal.objects.filter(
+        user=request.user
+    ).order_by("target_date")
+
+    return render(
+        request,
+        "savings_goals.html",
+        {"goals": goals}
+    )
 
 
-# Display the form for creating a savings goal.
+# Create a new savings goal.
+
 @login_required
 def create_savings_goal(request):
-    return render(request, "create_savings_goal.html")
+    if request.method == "POST":
+        form = SavingsGoalForm(request.POST)
+
+        if form.is_valid():
+            goal = form.save(commit=False)
+            goal.user = request.user
+
+            # Automatically assign the status for new goals
+            if goal.current_amount >= goal.target_amount:
+                goal.status = "completed"
+            else:
+                goal.status = "active"
+
+            goal.save()
+
+            messages.success(
+                request,
+                "Savings goal created successfully."
+            )
+
+            return redirect("savings_goals")
+
+        messages.error(
+            request,
+            "Please correct the errors below and try again."
+        )
+    else:
+        form = SavingsGoalForm()
+
+    return render(
+        request,
+        "create_savings_goal.html",
+        {"form": form}
+    )
+
+
+# Edit a savings goal.
+@login_required
+def edit_savings_goal(request, goal_id):
+
+    goal = get_object_or_404(
+        SavingsGoal,
+        pk=goal_id,
+        user=request.user
+    )
+
+    if request.method == "POST":
+        form = SavingsGoalForm(request.POST, instance=goal)
+
+        if form.is_valid():
+            updated_goal = form.save(commit=False)
+
+            if updated_goal.current_amount >= updated_goal.target_amount:
+                updated_goal.status = "completed"
+
+            updated_goal.save()
+
+            messages.success(
+                request,
+                "Savings goal updated successfully."
+            )
+
+            return redirect("savings_goals")
+
+    else:
+        form = SavingsGoalForm(instance=goal)
+
+    return render(
+        request,
+        "create_savings_goal.html",
+        {
+            "form": form,
+            "goal": goal,
+            "editing": True,
+        }
+    )
+
+
+# Update the amount saved toward a goal.
+@login_required
+def update_savings_progress(request, goal_id):
+
+    goal = get_object_or_404(
+        SavingsGoal,
+        pk=goal_id,
+        user=request.user
+    )
+
+    if request.method == "POST":
+        amount_text = request.POST.get("current_amount", "").strip()
+
+        try:
+            from decimal import Decimal, InvalidOperation
+
+            current_amount = Decimal(amount_text)
+
+            if not current_amount.is_finite():
+                raise InvalidOperation
+
+            if current_amount < 0:
+                raise InvalidOperation
+
+            if current_amount > goal.target_amount:
+                messages.error(
+                    request,
+                    "The saved amount cannot exceed your target."
+                )
+
+            else:
+                goal.current_amount = current_amount
+
+                if current_amount >= goal.target_amount:
+                    goal.status = "completed"
+                elif goal.status == "completed":
+                    goal.status = "active"
+
+                goal.save(
+                    update_fields=["current_amount", "status"]
+                )
+
+                messages.success(
+                    request,
+                    "Savings progress updated successfully."
+                )
+
+        except (InvalidOperation, ValueError):
+            messages.error(
+                request,
+                "Enter a valid, non-negative amount."
+            )
+
+    return redirect("savings_goals")
+
+
+# Delete a savings goal.
+@login_required
+@require_POST
+def delete_savings_goal(request, goal_id):
+
+    goal = get_object_or_404(
+        SavingsGoal,
+        pk=goal_id,
+        user=request.user
+    )
+
+    goal.delete()
+
+    messages.success(
+        request,
+        "Savings goal deleted successfully."
+    )
+
+    return redirect("savings_goals")
+
 
 
 # Display financial insights.
