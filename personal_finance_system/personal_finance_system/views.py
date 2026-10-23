@@ -15,6 +15,7 @@ from learning.models import LearningContent
 from learning.forms import LearningContentForm
 from django.utils import timezone
 from .classification_service import classify_student_spending
+from datetime import date
 
 
 # Display the public landing page.
@@ -680,12 +681,121 @@ def delete_savings_goal(request, goal_id):
 
     return redirect("savings_goals")
 
-
-
-# Display financial insights.
+# Display financial insights for the logged-in user.
 @login_required
 def financial_insights(request):
-    return render(request, "financial_insights.html")
+    today = timezone.localdate()
+
+    # Get this month's transactions for the logged-in user.
+    monthly_transactions = Transaction.objects.filter(
+        user=request.user,
+        date__year=today.year,
+        date__month=today.month
+    )
+
+    # Calculate monthly income and expenses.
+    monthly_income = (
+        monthly_transactions
+        .filter(type="income")
+        .aggregate(total=Sum("amount"))["total"] or 0
+    )
+
+    monthly_spending = (
+        monthly_transactions
+        .filter(type="expense")
+        .aggregate(total=Sum("amount"))["total"] or 0
+    )
+
+    # Find the category with the highest spending this month.
+    highest_category = (
+        monthly_transactions
+        .filter(type="expense", category__isnull=False)
+        .values("category__name")
+        .annotate(total=Sum("amount"))
+        .order_by("-total")
+        .first()
+    )
+
+    highest_spending_category = (
+        highest_category["category__name"]
+        if highest_category
+        else "No Data"
+    )
+
+    highest_category_amount = (
+        highest_category["total"]
+        if highest_category
+        else 0
+    )
+
+    # Prepare spending totals for the last six calendar months.
+    spending_trend = []
+
+    for offset in range(5, -1, -1):
+        month_index = today.year * 12 + (today.month - 1) - offset
+        year = month_index // 12
+        month = month_index % 12 + 1
+
+        month_spending = (
+            Transaction.objects.filter(
+                user=request.user,
+                type="expense",
+                date__year=year,
+                date__month=month
+            )
+            .aggregate(total=Sum("amount"))["total"] or 0
+        )
+
+        spending_trend.append({
+            "label": date(year, month, 1).strftime("%b %Y"),
+            "total": month_spending,
+        })
+
+    # Estimate next month's spending using the average of
+    # the previous three completed calendar months.
+    previous_months = []
+
+    for offset in range(1, 4):
+        month_index = today.year * 12 + (today.month - 1) - offset
+        year = month_index // 12
+        month = month_index % 12 + 1
+
+        previous_spending = (
+            Transaction.objects.filter(
+                user=request.user,
+                type="expense",
+                date__year=year,
+                date__month=month
+            )
+            .aggregate(total=Sum("amount"))["total"] or 0
+        )
+
+        previous_months.append(previous_spending)
+
+    predicted_spending = sum(previous_months) / 3
+
+    # Find the largest monthly value to scale the trend bars.
+    max_trend_spending = max(
+        (item["total"] for item in spending_trend),
+        default=0
+    )
+
+    context = {
+        "monthly_income": monthly_income,
+        "monthly_spending": monthly_spending,
+        "highest_spending_category": highest_spending_category,
+        "highest_category_amount": highest_category_amount,
+        "predicted_spending": predicted_spending,
+        "spending_trend": spending_trend,
+        "max_trend_spending": max(max_trend_spending, 1),
+    }
+
+    return render(
+        request,
+        "financial_insights.html",
+        context
+    )
+
 
 
 # Display the financial learning page.
