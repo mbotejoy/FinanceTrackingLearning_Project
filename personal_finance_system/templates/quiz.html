@@ -1,10 +1,11 @@
 {% extends "base.html" %}
 {% load static %}
+
+{% block title %}Financial Literacy Quiz | FinanceWise{% endblock %}
+
 {% block extra_css %}
-<link rel="stylesheet"
-      href="{% static 'css/quiz.css' %}">
+<link rel="stylesheet" href="{% static 'css/quiz.css' %}">
 {% endblock %}
-{% block title %}Quiz | FinanceWise{% endblock %}
 
 {% block content %}
 
@@ -12,72 +13,186 @@
 
     <div class="page-header">
         <h1>Financial Literacy Quiz</h1>
-        <p>Test what you have learned.</p>
+        <p>Test your financial knowledge and learn from your answers.</p>
     </div>
 
-    <div class="form-container">
+    {% if not submitted %}
 
-        <section class="page-card">
+    <form method="GET" class="quiz-topic-form">
+        <label for="topic">Choose a topic:</label>
+
+        <select name="topic" id="topic" onchange="this.form.submit()">
+            {% for value, label in topics %}
+            <option value="{{ value }}"
+                {% if selected_topic == value %}selected{% endif %}>
+                {{ label }}
+            </option>
+            {% endfor %}
+        </select>
+    </form>
+
+    {% endif %}
+
+    {% if submitted %}
+
+    <section class="quiz-result">
+        <h2>Quiz Results</h2>
+
+        <p class="quiz-score">
+            You scored {{ score }} out of {{ total_questions }}
+        </p>
+
+        <p class="quiz-percentage">{{ percentage }}%</p>
+
+        <h3>Review Your Answers</h3>
+
+        {% for result in results %}
+        <article class="quiz-review">
+            <h4>{{ forloop.counter }}. {{ result.question.question_text }}</h4>
+
+            <p>
+                Your answer:
+                {% if result.selected_answer %}
+                    {{ result.selected_answer }}
+                {% else %}
+                    Not answered
+                {% endif %}
+            </p>
+
+            <p>
+                Correct answer: {{ result.correct_answer }}
+            </p>
+
+            {% if result.is_correct %}
+                <p class="answer-correct">Correct!</p>
+            {% else %}
+                <p class="answer-incorrect">Incorrect</p>
+            {% endif %}
+
+            {% if result.explanation %}
+                <p>{{ result.explanation }}</p>
+            {% endif %}
+        </article>
+        {% endfor %}
+
+        <a href="{% url 'quiz' %}?topic={{ selected_topic }}"
+           class="btn btn-primary">
+            Try Again
+        </a>
+
+        <a href="{% url 'learning' %}" class="btn btn-outline">
+            Back to Learning
+        </a>
+    </section>
+
+    {% elif questions %}
+
+    <form method="POST" id="quizForm">
+        {% csrf_token %}
+        <input type="hidden" name="topic" value="{{ selected_topic }}">
+
+        <section class="page-card quiz-card">
 
             <div class="quiz-heading">
-                <strong>Topic: Budgeting</strong>
-                <span>Question 1 of 5</span>
+                <strong>
+                    Topic:
+                    {% for value, label in topics %}
+                        {% if selected_topic == value %}{{ label }}{% endif %}
+                    {% endfor %}
+                </strong>
+
+                <span id="questionCounter">
+                    Question 1 of {{ questions|length }}
+                </span>
             </div>
 
-            <div class="quiz-question">
+            {% for question in questions %}
 
-                <h2>Question</h2>
+            <div class="quiz-question"
+                 {% if not forloop.first %}hidden{% endif %}>
 
-                <p>
-                    Your quiz question will appear here.
-                </p>
+                <h2>{{ forloop.counter }}. {{ question.question_text }}</h2>
 
-                <label>
-                    <input type="radio" name="answer">
-                    Option A
-                </label>
+                <div class="quiz-options">
 
-                <label>
-                    <input type="radio" name="answer">
-                    Option B
-                </label>
+                    <label>
+                        <input type="radio"
+                               name="question_{{ question.id }}"
+                               value="A">
+                        {{ question.option_a }}
+                    </label>
 
-                <label>
-                    <input type="radio" name="answer">
-                    Option C
-                </label>
+                    <label>
+                        <input type="radio"
+                               name="question_{{ question.id }}"
+                               value="B">
+                        {{ question.option_b }}
+                    </label>
 
-                <label>
-                    <input type="radio" name="answer">
-                    Option D
-                </label>
+                    <label>
+                        <input type="radio"
+                               name="question_{{ question.id }}"
+                               value="C">
+                        {{ question.option_c }}
+                    </label>
 
+                    <label>
+                        <input type="radio"
+                               name="question_{{ question.id }}"
+                               value="D">
+                        {{ question.option_d }}
+                    </label>
+
+                </div>
             </div>
+
+            {% endfor %}
 
             <div class="form-actions">
-
-                <button class="btn btn-outline" id="previousQuestion" type="button">
+                <button type="button"
+                        class="btn btn-outline"
+                        id="previousQuestion"
+                        disabled>
                     Previous
                 </button>
 
-                <button class="btn btn-primary" id="nextQuestion" type="button">
+                <button type="button"
+                        class="btn btn-primary"
+                        id="nextQuestion">
                     Next
                 </button>
 
-                <button class="btn btn-outline" type="button">
-                    Quit
+                <button type="submit"
+                        class="btn btn-primary"
+                        id="submitQuiz"
+                        hidden>
+                    Submit Quiz
                 </button>
-
             </div>
 
         </section>
+    </form>
 
-    </div>
+    {% else %}
+
+    <section class="page-card quiz-empty">
+        <h2>No Questions Available</h2>
+        <p>
+            There are currently no published questions for this topic.
+            Please try another topic or check back later.
+        </p>
+
+        <a href="{% url 'learning' %}" class="btn btn-outline">
+            Back to Learning
+        </a>
+    </section>
+
+    {% endif %}
 
 </div>
 
+{% if not submitted and questions %}
+<script src="{% static 'js/quiz.js' %}" defer></script>
+{% endif %}
+
 {% endblock %}
-
-<script src="{% static 'js/quiz.js' %}"></script>
-
-

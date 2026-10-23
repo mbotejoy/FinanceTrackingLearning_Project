@@ -1,0 +1,43 @@
+
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}{{ lesson.title }} | FinanceWise{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/learning.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<div class="page-container">
+
+    <div class="page-header">
+        <p>{{ lesson.get_topic_display }}</p>
+        <h1>{{ lesson.title }}</h1>
+        <p>{{ lesson.description }}</p>
+    </div>
+
+    <article class="lesson-content-card">
+
+        <div class="lesson-body">
+            {{ lesson.content|linebreaks }}
+        </div>
+
+        <div class="lesson-actions">
+            <a href="{% url 'learning' %}"
+               class="btn btn-outline">
+                Back to Learning
+            </a>
+
+            <a href="{% url 'quiz' %}"
+               class="btn btn-primary">
+                Take a Quiz
+            </a>
+        </div>
+
+    </article>
+
+</div>
+
+{% endblock %}

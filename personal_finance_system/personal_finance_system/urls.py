@@ -135,7 +135,11 @@ urlpatterns = [
         views.learning,
         name="learning"
     ),
-
+    path(
+        "learning/<int:lesson_id>/",
+        views.lesson_detail,
+        name="lesson_detail"
+    ),
 
     # Quiz
     path(
