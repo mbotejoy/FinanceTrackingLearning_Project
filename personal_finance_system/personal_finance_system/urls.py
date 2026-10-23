@@ -102,6 +102,24 @@ urlpatterns = [
         name="create_savings_goal"
     ),
 
+    path(
+        "savings-goals/<int:goal_id>/edit/",
+        views.edit_savings_goal,
+        name="edit_savings_goal"
+    ),
+
+    path(
+        "savings-goals/<int:goal_id>/progress/",
+        views.update_savings_progress,
+        name="update_savings_progress"
+    ),
+
+    path(
+        "savings-goals/<int:goal_id>/delete/",
+        views.delete_savings_goal,
+        name="delete_savings_goal"
+    ),
+
 
     # Financial Insights
     path(

@@ -1,6 +1,6 @@
 
 from django import forms
-from .models import Category, Transaction, Budget
+from .models import Category, Transaction, Budget, SavingsGoal
 
 
 class CategoryForm(forms.ModelForm):
@@ -136,6 +136,73 @@ class BudgetForm(forms.ModelForm):
             self.add_error(
                 "end_date",
                 "End date cannot be before the start date."
+            )
+
+        return cleaned_data
+
+class SavingsGoalForm(forms.ModelForm):
+    status = forms.ChoiceField(
+    choices=SavingsGoal.STATUS_CHOICES,
+    required=False
+)
+
+    class Meta:
+        model = SavingsGoal
+
+        fields = [
+            "name",
+            "target_amount",
+            "current_amount",
+            "target_date",
+            "status",
+        ]
+
+        widgets = {
+            "name": forms.TextInput(attrs={
+                "placeholder": "e.g. New laptop"
+            }),
+
+            "target_amount": forms.NumberInput(attrs={
+                "min": "0.01",
+                "step": "0.01",
+                "placeholder": "Enter your target amount"
+            }),
+
+            "current_amount": forms.NumberInput(attrs={
+                "min": "0",
+                "step": "0.01",
+                "placeholder": "Amount saved so far"
+            }),
+
+            "target_date": forms.DateInput(attrs={
+                "type": "date"
+            }),
+
+            "status": forms.Select(),
+        }
+
+    def clean(self):
+        cleaned_data = super().clean()
+
+        target = cleaned_data.get("target_amount")
+        current = cleaned_data.get("current_amount")
+
+        if target is not None and target <= 0:
+            self.add_error(
+                "target_amount",
+                "Your savings target must be greater than zero."
+            )
+
+        if current is not None and current < 0:
+            self.add_error(
+                "current_amount",
+                "The amount saved cannot be negative."
+            )
+
+        if target is not None and current is not None and current > target:
+            self.add_error(
+                "current_amount",
+                "The amount saved cannot exceed the target amount."
             )
 
         return cleaned_data
