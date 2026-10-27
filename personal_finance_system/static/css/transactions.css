@@ -1,80 +1,209 @@
 /* ========================================
-   TRANSACTIONS
+   TRANSACTION TABLE LAYOUT
 ======================================== */
-
-.transactions-section {
-    width: 100%;
-}
-
 .transaction-toolbar {
     display: flex;
     justify-content: flex-end;
-    margin-bottom: 25px;
+    align-items: center;
+    width: 100%;
+    margin: 0 0 20px;
 }
+
 
 .transactions-card {
     width: 100%;
     padding: 30px;
-
     background: var(--white);
     border: 1px solid var(--border);
     border-radius: 8px;
+    clear: both;
 }
 
-.transaction-empty {
-    padding: 45px 20px;
+
+/* Allow horizontal scrolling when needed */
+.table-container {
+    width: 100%;
+    overflow-x: auto;
+}
+
+/* Keep the table columns consistent */
+.data-table {
+    width: 100%;
+    min-width: 850px;
+    table-layout: fixed;
+    border-collapse: collapse;
+}
+
+/* Consistent spacing and vertical alignment */
+.data-table th,
+.data-table td {
+    padding: 14px 16px;
+    text-align: left;
+    vertical-align: middle;
+    border-bottom: 1px solid var(--border);
+    box-sizing: border-box;
+}
+
+/* Date */
+.data-table th:nth-child(1),
+.data-table td:nth-child(1) {
+    width: 11%;
+}
+
+/* Description */
+.data-table th:nth-child(2),
+.data-table td:nth-child(2) {
+    width: 30%;
+}
+
+/* Category */
+.data-table th:nth-child(3),
+.data-table td:nth-child(3) {
+    width: 15%;
+}
+
+/* Type */
+.data-table th:nth-child(4),
+.data-table td:nth-child(4) {
+    width: 10%;
+}
+
+/* Amount */
+.data-table th:nth-child(5),
+.data-table td:nth-child(5) {
+    width: 15%;
+}
+
+/* Actions */
+.data-table th:nth-child(6),
+.data-table td:nth-child(6) {
+    width: 19%;
+}
+
+/* Prevent long descriptions from stretching the table */
+.data-table td:nth-child(2) {
+    overflow-wrap: anywhere;
+    word-break: normal;
+    line-height: 1.5;
+}
+
+/* Keep amounts on one line */
+.data-table td:nth-child(5) {
+    overflow-wrap: anywhere;
+}
+
+/* Keep action buttons neatly aligned */
+.data-table .record-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.data-table .record-delete-btn {
+    background-color: #dc2626;
+    color: #ffffff;
+    border: 1px solid #dc2626;
+    border-radius: 5px;
+    padding: 10px 18px;
+    font: inherit;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.data-table .record-delete-btn:hover {
+    background-color: #b91c1c;
+    border-color: #b91c1c;
+    color: #ffffff;
+}
+
+
+.data-table .record-actions form {
+    display: inline-flex;
+    margin: 0;
+}
+
+.data-table .record-actions .btn {
+    white-space: nowrap;
+}
+
+/* Keep the empty-state message centered */
+.data-table .transaction-empty {
     text-align: center;
-    color: var(--muted);
-}
-
-.transaction-empty h3 {
-    margin-top: 0;
-    color: var(--navy);
-}
-
-@media (max-width: 700px) {
-    .transaction-toolbar {
-        justify-content: center;
-    }
+    padding: 45px 20px;
 }
 /* ========================================
-   TRANSACTION FORM
+   CENTERED TRANSACTION FORM
 ======================================== */
 
 .transaction-form {
     width: 100%;
-    max-width: 700px;
-
+    max-width: 750px;
     margin: 0 auto;
 }
 
+/* White container around the form */
 .transaction-form-card {
+    width: 100%;
     padding: 35px;
-
     background: var(--white);
     border: 1px solid var(--border);
-    border-radius: 8px;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(23, 50, 77, 0.06);
 }
-/* RECORD ACTIONS */
-.record-actions {
+
+/* Keep form fields inside the card */
+.transaction-form-card .form-group {
+    width: 100%;
+    margin-bottom: 22px;
+}
+
+/* Labels */
+.transaction-form-card label {
+    display: block;
+    margin-bottom: 8px;
+    color: var(--navy);
+    font-weight: 600;
+}
+
+/* Inputs, dropdowns and text areas */
+.transaction-form-card input,
+.transaction-form-card select,
+.transaction-form-card textarea {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+}
+
+/* Form buttons */
+.transaction-form-card .form-actions {
     display: flex;
+    justify-content: flex-end;
     align-items: center;
-    gap: 10px;
+    gap: 12px;
     flex-wrap: wrap;
+    margin-top: 25px;
 }
 
-.record-actions form {
-    margin: 0;
-}
 
-.record-delete-btn {
-    background: #dc2626;
-    color: #ffffff;
-    border: 1px solid #dc2626;
-    cursor: pointer;
-}
+/* Smaller screens */
+@media (max-width: 700px) {
+    .transactions-card {
+        padding: 15px;
+    }
 
-.record-delete-btn:hover {
-    background: #b91c1c;
-    border-color: #b91c1c;
+    .data-table {
+        min-width: 850px;
+    }
+    .transaction-toolbar {
+        justify-content: flex-start;
+    }
+    .transaction-form {
+        max-width: 100%;
+    }
+
+    .transaction-form-card {
+        padding: 22px;
+    }
 }

@@ -175,18 +175,7 @@ urlpatterns = [
         views.toggle_user_status,
         name="toggle_user_status"
     ),
-    # Admin Transaction Management
-path(
-    "admin-dashboard/transactions/",
-    views.admin_transactions,
-    name="admin_transactions"
-),
-
-path(
-    "admin-dashboard/transactions/<int:transaction_id>/",
-    views.admin_transaction_details,
-    name="admin_transaction_details"
-),
+   
 path(
     "admin-dashboard/users/<int:user_id>/delete/",
     views.admin_delete_user,

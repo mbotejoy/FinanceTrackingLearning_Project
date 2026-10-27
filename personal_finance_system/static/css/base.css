@@ -403,6 +403,180 @@ body {
     background: var(--mint);
 }
 
+/* ========================================
+   NOTIFICATIOONS 
+======================================== */
+/* Keep the FinanceWise logo from looking like a default link */
+.brand,
+.brand:visited,
+.brand:hover,
+.brand:focus,
+.brand:active {
+    color: var(--navy);
+    text-decoration: none;
+}
+/* FinanceWise logo */
+.landing-logo,
+.landing-logo:visited,
+.landing-logo:hover,
+.landing-logo:focus,
+.landing-logo:active {
+    color: var(--navy);
+    text-decoration: none;
+}
+
+.landing-logo {
+    font-size: 26px;
+    font-weight: bold;
+}
+.landing-logo span {
+    color: var(--blue);
+}
+
+/* Notification bell */
+.notification-bell,
+.notification-bell:visited,
+.notification-bell:hover,
+.notification-bell:focus,
+.notification-bell:active {
+    color: var(--navy);
+    text-decoration: none;
+}
+
+.notification-bell {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 6px;
+    border: none;
+    background: transparent;
+    font: inherit;
+    cursor: pointer;
+}
+
+/* Notification number */
+.notification-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 20px;
+    height: 20px;
+    padding: 0 5px;
+    border-radius: 50%;
+    background: #d9534f;
+    color: #ffffff;
+    font-family: Arial, sans-serif;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+/* Hide a zero count */
+.notification-badge[data-count="0"] {
+    display: none;
+}
+
+/* NOTIFICATION BANNER */
+
+.notification-container {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+
+    width: 100%;
+    margin: 0 auto 25px;
+    padding: 18px 22px;
+
+    background: #fff8e9;
+    border: 1px solid #f4d49a;
+    border-left: 5px solid #f59e0b;
+    border-radius: 8px;
+
+    box-shadow: 0 3px 10px rgb(0 0 0 / 5%);
+}
+
+.notification-container[hidden] {
+    display: none !important;
+}
+
+.notification-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    flex-shrink: 0;
+    width: 45px;
+    height: 45px;
+
+    background: #ffedc9;
+    border-radius: 50%;
+
+    font-size: 23px;
+}
+
+.notification-content {
+    flex: 1;
+    min-width: 0;
+}
+
+.notification-content h3 {
+    margin: 0 0 6px;
+    color: var(--navy);
+    font-size: 18px;
+}
+
+.notification-content p {
+    margin: 0 0 8px;
+    color: var(--muted);
+    line-height: 1.5;
+    overflow-wrap: anywhere;
+}
+
+.notification-link {
+    color: var(--blue);
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.notification-link:hover {
+    text-decoration: underline;
+}
+
+.notification-close {
+    align-self: flex-start;
+    flex-shrink: 0;
+
+    padding: 0 5px;
+
+    border: none;
+    background: transparent;
+    color: var(--muted);
+
+    font-size: 26px;
+    cursor: pointer;
+}
+
+.notification-close:hover {
+    color: var(--navy);
+}
+
+@media (max-width: 600px) {
+    .notification-container {
+        align-items: flex-start;
+        gap: 10px;
+        padding: 14px;
+    }
+
+    .notification-icon {
+        width: 36px;
+        height: 36px;
+        font-size: 19px;
+    }
+
+    .notification-content h3 {
+        font-size: 16px;
+    }
+}
 
 /* ========================================
    RESPONSIVE DESIGN

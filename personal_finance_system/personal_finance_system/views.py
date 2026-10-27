@@ -9,13 +9,14 @@ from functools import wraps
 from django.db import transaction
 from django.db.models import Q, Sum
 from django.views.decorators.http import require_POST
-from finance.models import Transaction, Category, Budget, SavingsGoal
+from finance.models import Transaction, Category, Budget, SavingsGoal, Notification
 from finance.forms import CategoryForm, TransactionForm, BudgetForm,SavingsGoalForm
 from learning.models import LearningContent, QuizQuestion
 from learning.forms import LearningContentForm
 from django.utils import timezone
 from .classification_service import classify_student_spending
 from datetime import date
+from decimal import Decimal
 
 
 # Display the public landing page.
@@ -181,83 +182,6 @@ def admin_delete_user(request, user_id):
         request,
         "admin_delete_user.html",
         {"account": account}
-    )
-
-@admin_required
-def admin_transactions(request):
-
-    transactions = Transaction.objects.select_related(
-        "user", "category"
-    ).all()
-
-    search = request.GET.get("search", "").strip()
-    transaction_type = request.GET.get("type", "")
-    category_id = request.GET.get("category", "")
-    start_date = request.GET.get("start_date", "")
-    end_date = request.GET.get("end_date", "")
-
-    # Search transactions by user or description
-    if search:
-        transactions = transactions.filter(
-            Q(user__first_name__icontains=search)
-            | Q(user__last_name__icontains=search)
-            | Q(user__email__icontains=search)
-            | Q(description__icontains=search)
-        )
-
-    # Filter by transaction type
-    if transaction_type in ["income", "expense"]:
-        transactions = transactions.filter(type=transaction_type)
-
-    # Filter by category
-    if category_id.isdigit():
-        transactions = transactions.filter(category_id=int(category_id))
-
-    # Filter by dates
-    from datetime import date
-
-    try:
-        if start_date:
-            transactions = transactions.filter(
-                date__gte=date.fromisoformat(start_date)
-            )
-
-        if end_date:
-            transactions = transactions.filter(
-                date__lte=date.fromisoformat(end_date)
-            )
-    except ValueError:
-        pass
-
-    context = {
-        "transactions": transactions,
-        "categories": Category.objects.all().order_by("name"),
-        "total_transactions": transactions.count(),
-        "search": search,
-        "selected_type": transaction_type,
-        "selected_category": category_id,
-        "start_date": start_date,
-        "end_date": end_date,
-    }
-
-    return render(
-        request,
-        "admin_transactions.html",
-        context
-    )
-# Show an administrator the details of a selected transaction.
-@admin_required
-def admin_transaction_details(request, transaction_id):
-
-    transaction = get_object_or_404(
-        Transaction.objects.select_related("user", "category"),
-        pk=transaction_id
-    )
-
-    return render(
-        request,
-        "admin_transaction_details.html",
-        {"transaction": transaction}
     )
 
 # Show the student dashboard, or redirect administrators to theirs.
@@ -908,11 +832,298 @@ def quiz(request):
     )
 
 
-
-# Display personalized recommendations.
 @login_required
 def recommendations(request):
-    return render(request, "recommendations.html")
+    # Administrators should use their own dashboard.
+    if is_admin(request.user):
+        return redirect("admin_dashboard")
+
+    today = timezone.localdate()
+    recommendations_list = []
+
+    # Get this month's transactions for the logged-in student.
+    monthly_transactions = Transaction.objects.filter(
+        user=request.user,
+        date__year=today.year,
+        date__month=today.month
+    )
+
+    monthly_income = (
+        monthly_transactions
+        .filter(type="income")
+        .aggregate(total=Sum("amount"))["total"] or 0
+    )
+
+    monthly_expenses = (
+        monthly_transactions
+        .filter(type="expense")
+        .aggregate(total=Sum("amount"))["total"] or 0
+    )
+
+    # Rule 1: Spending compared with income.
+    if monthly_income > 0 and monthly_expenses > monthly_income:
+        recommendations_list.append({
+            "rule_key": "expenses_exceed_income",
+            "type": "warning",
+            "title": "Your expenses exceed your income",
+            "message": (
+                f"You have recorded KES {monthly_expenses:,.2f} "
+                f"in expenses against KES {monthly_income:,.2f} "
+                "in income this month. Review non-essential "
+                "expenses and consider adjusting your budget."
+            )
+        })
+
+    elif monthly_income > 0 and monthly_expenses >= monthly_income * Decimal("0.8"):
+        recommendations_list.append({
+            "rule_key": "high_expense_ratio",
+            "type": "warning",
+            "title": "You are using most of your income",
+            "message": (
+                "Your recorded expenses have reached at least "
+                "80% of your income this month. Review your "
+                "remaining expenses and set aside money for savings "
+                "if you can."
+            )
+        })
+
+    elif monthly_income > 0 and monthly_expenses < monthly_income * Decimal("0.8"):
+        recommendations_list.append({
+            "rule_key": "moderate_expense_ratio",
+            "type": "success",
+            "title": "Keep managing your spending",
+            "message": (
+                "Your recorded expenses are below 80% of your "
+                "income this month. Continue tracking your spending "
+                "and plan how to use the remaining money."
+            )
+        })
+
+    elif monthly_expenses > 0 and monthly_income == 0:
+        recommendations_list.append({
+            "rule_key": "no_income_recorded",
+            "type": "info",
+            "title": "Record your income",
+            "message": (
+                "You have recorded expenses but no income this month. "
+                "If you received income, record it to get a clearer "
+                "picture of your financial position."
+            )
+        })
+
+    # Rule 2: Check active budgets.
+    active_budgets = Budget.objects.filter(
+        user=request.user,
+        start_date__lte=today,
+        end_date__gte=today
+    ).select_related("category")
+
+    for budget in active_budgets:
+        budget_expenses = Transaction.objects.filter(
+            user=request.user,
+            type="expense",
+            date__gte=budget.start_date,
+            date__lte=budget.end_date
+        )
+
+        # Category-specific budgets only count matching expenses.
+        if budget.category_id:
+            budget_expenses = budget_expenses.filter(
+                category_id=budget.category_id
+            )
+
+        spent = (
+            budget_expenses
+            .aggregate(total=Sum("amount"))["total"] or 0
+        )
+
+        if budget.amount > 0:
+            percentage_used = (spent / budget.amount) * 100
+        else:
+            percentage_used = 0
+
+        if spent > budget.amount:
+            recommendations_list.append({
+                "rule_key": "budget_exceeded",
+                "type": "warning",
+                "title": f"Budget exceeded: {budget.name}",
+                "message": (
+                    f"You have spent KES {spent:,.2f} against "
+                    f"your KES {budget.amount:,.2f} budget. "
+                    "Review your expenses and adjust your remaining "
+                    "spending where possible."
+                )
+            })
+
+        elif percentage_used >= 80:
+            recommendations_list.append({
+                "rule_key": "budget_nearly_exhausted",
+                "type": "warning",
+                "title": f"Budget nearly exhausted: {budget.name}",
+                "message": (
+                    f"You have used {percentage_used:.0f}% of this "
+                    "budget. You have KES "
+                    f"{max(budget.amount - spent, 0):,.2f} remaining "
+                    "for the budget period."
+                )
+            })
+
+    # Rule 3: Check savings goals.
+    active_goals = SavingsGoal.objects.filter(
+        user=request.user,
+        status="active"
+    )
+
+    if not active_goals.exists():
+        recommendations_list.append({
+            "rule_key": "no_active_savings_goal",
+            "type": "info",
+            "title": "Start a savings goal",
+            "message": (
+                "Create a savings goal for something important to you, "
+                "such as tuition, an emergency fund, or a laptop. "
+                "Set a realistic target and target date."
+            )
+        })
+
+    for goal in active_goals:
+        remaining = goal.target_amount - goal.current_amount
+        days_remaining = (goal.target_date - today).days
+
+        if remaining <= 0:
+            recommendations_list.append({
+                "rule_key": "savings_goal_reached",
+                "type": "success",
+                "title": f"You have reached your goal: {goal.name}",
+                "message": (
+                    "Your recorded savings meet or exceed your target. "
+                    "Update the goal status if it has not been marked "
+                    "as completed."
+                )
+            })
+
+        elif days_remaining < 0:
+            recommendations_list.append({
+                "rule_key": "savings_goal_target_date_passed",
+                "type": "warning",
+                "title": f"Review your goal: {goal.name}",
+                "message": (
+                    f"Your target date has passed and KES "
+                    f"{remaining:,.2f} remains to be saved. "
+                    "Consider setting a new target date."
+                )
+            })
+
+        elif days_remaining <= 30:
+            recommendations_list.append({
+                "rule_key": "savings_goal_approaching",
+                "type": "info",
+                "title": f"Savings goal approaching: {goal.name}",
+                "message": (
+                    f"You have KES {remaining:,.2f} left to reach "
+                    f"your target, with {days_remaining} days "
+                    "remaining. Review whether your target is still "
+                    "realistic for your circumstances."
+                )
+            })
+    # Rule 4: Provide a useful next step when no rule is triggered.
+    if not recommendations_list:
+        recommendations_list.append({
+            "rule_key": "no_recommendations",
+            "type": "info",
+            "title": "Keep building your financial picture",
+            "message": (
+                "Continue recording your income and expenses, "
+                "maintaining budgets, and updating savings goals. "
+                "More complete records can help FinanceWise provide "
+                "more relevant guidance."
+            )
+        })
+
+    # Save generated recommendations as persistent notifications.
+    now = timezone.now()
+    period_key = today.strftime("%Y-%m")
+
+    # Collect the rule keys currently triggered.
+    current_rule_keys = {
+        item["rule_key"] for item in recommendations_list
+    }
+
+    # Get the user's active notifications.
+    active_notifications = Notification.objects.filter(
+        user=request.user,
+        is_active=True
+    )
+
+    new_notifications = []
+
+    # 1. Resolve notifications whose conditions no longer exist.
+    for existing_notification in active_notifications:
+        if existing_notification.rule_key not in current_rule_keys:
+            existing_notification.is_active = False
+            existing_notification.resolved_at = now
+
+            existing_notification.save(
+                update_fields=["is_active", "resolved_at"]
+            )
+
+    # 2. Create new notifications or update existing active ones.
+    for recommendation in recommendations_list:
+
+        notification = Notification.objects.filter(
+            user=request.user,
+            rule_key=recommendation["rule_key"],
+            is_active=True
+        ).first()
+
+        if notification is None:
+            # No active notification exists for this rule.
+            # Create a new notification.
+            notification = Notification.objects.create(
+                user=request.user,
+                rule_key=recommendation["rule_key"],
+                period_key=period_key,
+                title=recommendation["title"],
+                message=recommendation["message"],
+                notification_type=recommendation["type"],
+                is_active=True,
+                is_read=False,
+            )
+
+            new_notifications.append(notification)
+
+        else:
+            # The condition is still active.
+            # Update the existing notification if its content changed.
+            changed = (
+                notification.title != recommendation["title"]
+                or notification.message != recommendation["message"]
+                or notification.notification_type != recommendation["type"]
+            )
+
+            if changed:
+                notification.title = recommendation["title"]
+                notification.message = recommendation["message"]
+                notification.notification_type = recommendation["type"]
+
+                notification.save(
+                    update_fields=[
+                        "title",
+                        "message",
+                        "notification_type",
+                    ]
+                )
+
+    # Display the recommendations on the page.
+    context = {
+        "recommendations": recommendations_list,
+        "monthly_income": monthly_income,
+        "monthly_expenses": monthly_expenses,
+        "new_notifications": new_notifications,
+    }
+
+    return render(request, "recommendations.html", context)
+
 
 
 # Send users to the dashboard that matches their role.

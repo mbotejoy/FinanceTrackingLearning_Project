@@ -4,39 +4,117 @@
 {% block title %}Recommendations | FinanceWise{% endblock %}
 
 {% block extra_css %}
-<link rel="stylesheet"
-      href="{% static 'css/recommendations.css' %}">
+<link rel="stylesheet" href="{% static 'css/recommendations.css' %}">
 {% endblock %}
 
 {% block content %}
 
-<div class="page-container">
+<div class="page-container recommendations-page">
 
+    <!-- Page heading -->
     <div class="page-header">
-
         <h1>Your Personalized Recommendations</h1>
 
         <p>
-            Receive practical financial guidance based on
-            your spending, budgets, savings and learning activity.
+            Receive practical financial guidance based on your
+            spending, budgets and savings.
         </p>
-
     </div>
 
-    <div class="recommendations-container">
+    <!-- Income and expense summary -->
+    <div class="recommendation-summary">
 
-        <div class="recommendation-empty">
+        <div class="summary-card income-card">
 
-            <h3>No Recommendations Yet</h3>
+            <div class="summary-icon income-icon">
+                <span>↗</span>
+            </div>
 
-            <p>
-                Start recording transactions and creating
-                budgets to receive personalized guidance.
-            </p>
+            <div class="summary-information">
+                <p>Income this month</p>
+                <h2>
+                    KES {{ monthly_income|default:0|floatformat:2 }}
+                </h2>
+            </div>
+
+        </div>
+
+        <div class="summary-card expenses-card">
+
+            <div class="summary-icon expenses-icon">
+                <span>↘</span>
+            </div>
+
+            <div class="summary-information">
+                <p>Expenses this month</p>
+                <h2>
+                    KES {{ monthly_expenses|default:0|floatformat:2 }}
+                </h2>
+            </div>
 
         </div>
 
     </div>
+
+    <!-- Recommendations -->
+    <section class="recommendation-section">
+
+        <div class="recommendation-heading">
+            <h2>Recommendations</h2>
+            <p>Actionable insights to help you improve your financial health.</p>
+        </div>
+
+        <div class="recommendations-container">
+
+            {% for recommendation in recommendations %}
+
+            <article class="recommendation-card
+                {% if recommendation.type == 'warning' %}
+                    warning-card
+                {% elif recommendation.type == 'saving' %}
+                    saving-card
+                {% else %}
+                    general-card
+                {% endif %}">
+
+                <div class="recommendation-icon">
+                    {% if recommendation.type == "warning" %}
+                        !
+                    {% elif recommendation.type == "saving" %}
+                        $
+                    {% elif recommendation.type == "budget" %}
+                        %
+                    {% else %}
+                        ✓
+                    {% endif %}
+                </div>
+
+                <div class="recommendation-content">
+                    <h3>{{ recommendation.title }}</h3>
+                    <p>{{ recommendation.message }}</p>
+                </div>
+
+                <div class="recommendation-arrow">
+                    &#8250;
+                </div>
+
+            </article>
+
+            {% empty %}
+
+            <div class="recommendation-empty">
+                <h3>No Recommendations Yet</h3>
+                <p>
+                    Start recording transactions and creating budgets
+                    to receive personalized financial guidance.
+                </p>
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+    </section>
 
 </div>
 
