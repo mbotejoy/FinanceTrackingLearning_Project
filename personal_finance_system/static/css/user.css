@@ -2,7 +2,6 @@
    FINANCEWISE - DASHBOARD
 ======================================== */
 
-
 /* ---------- DASHBOARD WRAPPER ---------- */
 
 .welcome {
@@ -76,8 +75,31 @@
     border-radius: 8px;
 
     text-align: left;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+/* Soft blue: Monthly Income */
+.summary-card:nth-child(1) {
+    background: #edf5ff;
+    border-color: #c5ddfa;
 }
 
+/* Soft mint green: Monthly Expenses */
+.summary-card:nth-child(2) {
+    background: #edf8f2;
+    border-color: #c4e7d5;
+}
+
+/* Soft lavender: Available Balance */
+.summary-card:nth-child(3) {
+    background: #f4f0fb;
+    border-color: #ded1f0;
+}
+
+/* Gentle hover effect */
+.summary-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 16px rgba(23, 50, 77, 0.08);
+}
 
 /* Card headings */
 
@@ -144,7 +166,8 @@
     box-sizing: border-box;
     margin-top: 0;
     padding: 45px 40px;
-    background: var(--mint);
+    background: #eef6f2;
+    border: 1px solid #d5e8de;  
     border-radius: 10px;
 }
 
@@ -305,9 +328,11 @@
 }
 
 .classification-stat {
-    background: #f3f8f7;
+    background: #f0f6fc;
+    border: 1px solid #dce8f5;
     border-radius: 10px;
     padding: 22px;
+
     display: flex;
     flex-direction: column;
     gap: 12px;
@@ -324,7 +349,7 @@
 }
 
 .classification-empty {
-    background: #f3f8f7;
+   background: #f0f6fc;
     padding: 30px;
     border-radius: 8px;
     max-width: 750px;

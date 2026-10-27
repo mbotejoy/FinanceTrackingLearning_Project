@@ -114,3 +114,50 @@ class SavingsGoal(models.Model):
 
     def __str__(self):
         return self.name
+
+class Notification(models.Model):
+
+    NOTIFICATION_TYPES = [
+        ("warning", "Warning"),
+        ("success", "Success"),
+        ("info", "Information"),
+    ]
+
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="finance_notifications"
+    )
+
+    rule_key = models.CharField(max_length=100)
+
+    title = models.CharField(max_length=200)
+
+    message = models.TextField()
+
+    notification_type = models.CharField(
+        max_length=20,
+        choices=NOTIFICATION_TYPES,
+        default="info"
+    )
+
+    period_key = models.CharField(max_length=20)
+
+    is_read = models.BooleanField(default=False)
+
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    is_active = models.BooleanField(default=True)
+
+    resolved_at = models.DateTimeField(
+        null=True,
+        blank=True
+    )
+
+    class Meta:
+        db_table = "finance_notifications"
+        ordering = ["-created_at"]
+
+
+    def __str__(self):
+        return self.title
