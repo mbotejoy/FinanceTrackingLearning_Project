@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+    {% if question %}Edit Quiz Question{% else %}Add Quiz Question{% endif %}
+    | FinanceWise
+{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/admin_dashboard.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<div class="admin-dashboard">
+
+    <div class="admin-header">
+        <div>
+            <h1>
+                {% if question %}
+                    Edit Quiz Question
+                {% else %}
+                    Add Quiz Question
+                {% endif %}
+            </h1>
+
+            <p>Provide the question, answer options and explanation.</p>
+        </div>
+    </div>
+
+    <div class="management-card admin-form-card">
+
+        <form method="post">
+            {% csrf_token %}
+
+            {{ form.non_field_errors }}
+
+            {% for field in form %}
+                <div class="admin-form-group">
+
+                    <label for="{{ field.id_for_label }}">
+                        {{ field.label }}
+                    </label>
+
+                    {{ field }}
+
+                    {% if field.help_text %}
+                        <small>{{ field.help_text }}</small>
+                    {% endif %}
+
+                    {% for error in field.errors %}
+                        <p class="form-error">{{ error }}</p>
+                    {% endfor %}
+
+                </div>
+            {% endfor %}
+
+            <button type="submit" class="admin-action-btn">
+                Save Question
+            </button>
+
+            <a href="{% url 'admin_quizzes' %}">
+                Cancel
+            </a>
+
+        </form>
+
+    </div>
+
+</div>
+
+{% endblock %}

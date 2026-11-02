@@ -1,6 +1,6 @@
 
 from django import forms
-from .models import Category, Transaction, Budget, SavingsGoal
+from .models import Category, Transaction, Budget, SavingsGoal, RecommendationRule
 
 
 class CategoryForm(forms.ModelForm):
@@ -206,3 +206,54 @@ class SavingsGoalForm(forms.ModelForm):
             )
 
         return cleaned_data
+class RecommendationRuleForm(forms.ModelForm):
+
+    class Meta:
+        model = RecommendationRule
+
+        fields = [
+            "rule_key",
+            "name",
+            "description",
+            "threshold_percent",
+            "message",
+            "is_active",
+        ]
+
+        widgets = {
+            "rule_key": forms.Select(attrs={
+                "class": "form-control",
+                "id": "id_rule_key",
+            }),
+
+            "name": forms.TextInput(attrs={
+                "class": "form-control",
+                "placeholder": "Enter the rule name",
+            }),
+
+            "description": forms.Textarea(attrs={
+                "class": "form-control",
+                "rows": 3,
+                "id": "id_description",
+                "placeholder": "Description of the rule",
+            }),
+
+            "threshold_percent": forms.NumberInput(attrs={
+                "class": "form-control",
+                "id": "id_threshold_percent",
+                "min": "0",
+                "max": "100",
+                "step": "0.01",
+            }),
+
+            "message": forms.Textarea(attrs={
+                "class": "form-control",
+                "rows": 4,
+                "id": "id_message",
+                "placeholder": "Message displayed to the student",
+            }),
+
+            "is_active": forms.CheckboxInput(attrs={
+                "class": "form-check-input",
+            }),
+        }

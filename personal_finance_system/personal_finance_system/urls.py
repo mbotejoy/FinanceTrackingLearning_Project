@@ -1,19 +1,3 @@
-"""
-URL configuration for personal_finance_system project.
-
-The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/6.1/topics/http/urls/
-Examples:
-Function views
-    1. Add an import:  from my_app import views
-    2. Add a URL to urlpatterns:  path('', views.home, name='home')
-Class-based views
-    1. Add an import:  from other_app.views import Home
-    2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
-Including another URLconf
-    1. Import the include() function: from django.urls import include, path
-    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
-"""
 from django.contrib import admin
 from django.urls import path
 from . import views
@@ -148,12 +132,33 @@ urlpatterns = [
         name="quiz"
     ),
 
-
-    # Recommendations
+# Recommendations
     path(
-        "recommendations/",
-        views.recommendations,
-        name="recommendations"
+    "recommendations/",
+    views.recommendations,
+    name="recommendations"
+    ),
+
+# Admin Recommendation Rules
+    path(
+    "admin-recommendation-rules/",
+    views.admin_recommendation_rules,
+    name="admin_recommendation_rules"
+    ),
+    path(
+    "admin-recommendation-rules/add/",
+    views.admin_recommendation_rule_form,
+    name="admin_recommendation_rule_add"
+    ),
+    path(
+    "admin-recommendation-rules/<int:rule_id>/edit/",
+    views.admin_recommendation_rule_form,
+    name="admin_recommendation_rule_edit"
+    ),
+    path(
+    "admin-recommendation-rules/<int:rule_id>/toggle/",
+    views.admin_recommendation_rule_toggle,
+    name="admin_recommendation_rule_toggle"
     ),
 
     path(
@@ -227,5 +232,33 @@ path(
     views.admin_delete_learning,
     name="admin_learning_delete"
 ),
+# Admin quiz management
+path(
+    "admin-dashboard/quizzes/",
+    views.admin_quizzes,
+    name="admin_quizzes"
+),
 
+path(
+    "admin-dashboard/quizzes/add/",
+    views.admin_quiz_form,
+    name="admin_quiz_add"
+),
+
+path(
+    "admin-dashboard/quizzes/<int:question_id>/edit/",
+    views.admin_quiz_form,
+    name="admin_quiz_edit"
+),
+
+path(
+    "admin-dashboard/quizzes/<int:question_id>/delete/",
+    views.admin_delete_quiz,
+    name="admin_quiz_delete"
+),
+path(
+    "admin-dashboard/reports/",
+    views.admin_reports,
+    name="admin_reports"
+),
 ]

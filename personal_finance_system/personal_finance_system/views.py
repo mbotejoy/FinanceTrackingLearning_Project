@@ -9,10 +9,10 @@ from functools import wraps
 from django.db import transaction
 from django.db.models import Q, Sum
 from django.views.decorators.http import require_POST
-from finance.models import Transaction, Category, Budget, SavingsGoal, Notification
-from finance.forms import CategoryForm, TransactionForm, BudgetForm,SavingsGoalForm
+from finance.models import Transaction, Category, Budget, SavingsGoal, Notification, RecommendationRule
+from finance.forms import CategoryForm, TransactionForm, BudgetForm,SavingsGoalForm, RecommendationRuleForm
 from learning.models import LearningContent, QuizQuestion
-from learning.forms import LearningContentForm
+from learning.forms import LearningContentForm, QuizQuestionForm
 from django.utils import timezone
 from .classification_service import classify_student_spending
 from datetime import date
@@ -226,6 +226,133 @@ def user(request):
 
     return render(request, "user.html", context)
 
+# Display and search quiz questions in the admin dashboard.
+@admin_required
+def admin_quizzes(request):
+
+    questions = QuizQuestion.objects.all().order_by("topic", "id")
+
+    search = request.GET.get("search", "").strip()
+    topic = request.GET.get("topic", "")
+    status = request.GET.get("status", "")
+
+    if search:
+        questions = questions.filter(
+            question_text__icontains=search
+        )
+
+    if topic in dict(QuizQuestion.TOPIC_CHOICES):
+        questions = questions.filter(topic=topic)
+
+    if status == "published":
+        questions = questions.filter(is_published=True)
+    elif status == "draft":
+        questions = questions.filter(is_published=False)
+
+    context = {
+        "questions": questions,
+        "total_questions": QuizQuestion.objects.count(),
+        "published_questions": QuizQuestion.objects.filter(
+            is_published=True
+        ).count(),
+        "draft_questions": QuizQuestion.objects.filter(
+            is_published=False
+        ).count(),
+        "search": search,
+        "selected_topic": topic,
+        "selected_status": status,
+        "topics": QuizQuestion.TOPIC_CHOICES,
+    }
+
+    return render(request, "admin_quizzes.html", context)
+
+
+# Add a quiz question or edit an existing one.
+@admin_required
+def admin_quiz_form(request, question_id=None):
+
+    question = None
+
+    if question_id is not None:
+        question = get_object_or_404(
+            QuizQuestion,
+            pk=question_id
+        )
+
+    if request.method == "POST":
+        form = QuizQuestionForm(
+            request.POST,
+            instance=question
+        )
+
+        if form.is_valid():
+            form.save()
+
+            messages.success(
+                request,
+                "Quiz question saved successfully."
+            )
+
+            return redirect("admin_quizzes")
+
+    else:
+        form = QuizQuestionForm(instance=question)
+
+    return render(
+        request,
+        "admin_quiz_form.html",
+        {
+            "form": form,
+            "question": question,
+        }
+    )
+
+
+# Delete a quiz question after confirmation.
+@admin_required
+@require_POST
+def admin_delete_quiz(request, question_id):
+
+    question = get_object_or_404(
+        QuizQuestion,
+        pk=question_id
+    )
+
+    question.delete()
+
+    messages.success(
+        request,
+        "Quiz question deleted successfully."
+    )
+
+    return redirect("admin_quizzes")
+
+# Display aggregate system statistics without exposing
+# individual students' financial records.
+@admin_required
+def admin_reports(request):
+
+    context = {
+        "total_users": User.objects.count(),
+        "total_students": User.objects.filter(
+            role="student"
+        ).count(),
+        "total_admins": User.objects.filter(
+            role="admin",
+            is_staff=True
+        ).count(),
+        "total_categories": Category.objects.count(),
+        "total_learning_materials": LearningContent.objects.count(),
+        "published_learning_materials": LearningContent.objects.filter(
+            is_published=True
+        ).count(),
+        "total_quiz_questions": QuizQuestion.objects.count(),
+        "published_quiz_questions": QuizQuestion.objects.filter(
+            is_published=True
+        ).count(),
+    }
+
+    return render(request, "admin_reports.html", context)
 
 
 # Display the transactions page.
@@ -1123,6 +1250,81 @@ def recommendations(request):
     }
 
     return render(request, "recommendations.html", context)
+
+# Display recommendation rules for administrators.
+@admin_required
+def admin_recommendation_rules(request):
+
+    rules = RecommendationRule.objects.all().order_by("name")
+
+    context = {
+        "rules": rules,
+        "total_rules": rules.count(),
+        "active_rules": rules.filter(is_active=True).count(),
+        "inactive_rules": rules.filter(is_active=False).count(),
+    }
+
+    return render( request,"admin_recommendation_rules.html",context)
+# Create a new recommendation rule or edit an existing one.
+@admin_required
+def admin_recommendation_rule_form(request, rule_id=None):
+
+    rule = None
+
+    if rule_id is not None:
+        rule = get_object_or_404(
+            RecommendationRule,
+            pk=rule_id
+        )
+
+    if request.method == "POST":
+        form = RecommendationRuleForm(
+            request.POST,
+            instance=rule
+        )
+
+        if form.is_valid():
+            form.save()
+
+            messages.success(
+                request,
+                "Recommendation rule saved successfully."
+            )
+
+            return redirect("admin_recommendation_rules")
+
+    else:
+        form = RecommendationRuleForm(instance=rule)
+
+    return render(
+        request,
+        "admin_recommendation_rule_form.html",
+        {
+            "form": form,
+            "rule": rule,
+        }
+    )
+# Enable or disable a recommendation rule.
+@admin_required
+@require_POST
+def admin_recommendation_rule_toggle(request, rule_id):
+
+    rule = get_object_or_404(
+        RecommendationRule,
+        pk=rule_id
+    )
+
+    rule.is_active = not rule.is_active
+    rule.save(update_fields=["is_active", "updated_at"])
+
+    status = "enabled" if rule.is_active else "disabled"
+
+    messages.success(
+        request,
+        f"The recommendation rule has been {status} successfully."
+    )
+
+    return redirect("admin_recommendation_rules")
 
 
 
