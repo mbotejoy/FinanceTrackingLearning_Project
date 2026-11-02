@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}System Reports | FinanceWise{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/admin_dashboard.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<div class="admin-dashboard">
+
+    <div class="admin-header">
+        <div>
+            <h1>System Reports</h1>
+            <p>Overview of FinanceWise usage and available resources.</p>
+        </div>
+    </div>
+
+    <div class="admin-stats">
+
+        <div class="admin-stat-card">
+            <h3>Total Users</h3>
+            <p>{{ total_users }}</p>
+        </div>
+
+        <div class="admin-stat-card">
+            <h3>Students</h3>
+            <p>{{ total_students }}</p>
+        </div>
+
+        <div class="admin-stat-card">
+            <h3>Administrators</h3>
+            <p>{{ total_admins }}</p>
+        </div>
+
+        <div class="admin-stat-card">
+            <h3>Categories</h3>
+            <p>{{ total_categories }}</p>
+        </div>
+
+        <div class="admin-stat-card">
+            <h3>Learning Materials</h3>
+            <p>{{ total_learning_materials }}</p>
+        </div>
+
+        <div class="admin-stat-card">
+            <h3>Published Materials</h3>
+            <p>{{ published_learning_materials }}</p>
+        </div>
+
+        <div class="admin-stat-card">
+            <h3>Quiz Questions</h3>
+            <p>{{ total_quiz_questions }}</p>
+        </div>
+
+        <div class="admin-stat-card">
+            <h3>Published Questions</h3>
+            <p>{{ published_quiz_questions }}</p>
+        </div>
+
+    </div>
+
+    <div class="management-card">
+        <h3>Privacy Protection</h3>
+        <p>
+            These reports display aggregate system statistics only.
+            Individual student transactions and personal financial
+            records are not displayed on this page.
+        </p>
+    </div>
+
+    <p>
+        <a href="{% url 'admin_dashboard' %}">&larr; Back to Dashboard</a>
+    </p>
+
+</div>
+
+{% endblock %}

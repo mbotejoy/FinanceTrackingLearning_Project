@@ -8,6 +8,7 @@
 
     <link rel="stylesheet" href="{% static 'css/base.css' %}">
     <link rel="stylesheet" href="{%static 'css/forms.css'%}">
+    <link rel="stylesheet" href="{%static 'css/admin_dashboard.css'%}">
     {% block extra_css %}{% endblock %}
 
 </head>
@@ -97,25 +98,25 @@
             <span class="nav-icon">&#128218;</span>
             <span class="nav-label">Learning Materials</span>
         </a>
-        {% comment %}
+        
         <a href="{% url 'admin_quizzes' %}"
            class="{% if request.resolver_match.url_name == 'admin_quizzes' %}active{% endif %}">
             <span class="nav-icon">?</span>
             <span class="nav-label">Manage Quizzes</span>
         </a>
-
-        <a href="{% url 'admin_rules' %}"
-           class="{% if request.resolver_match.url_name == 'admin_rules' %}active{% endif %}">
+        
+        <a href="{% url 'admin_recommendation_rules' %}"
+           class="{% if request.resolver_match.url_name == 'admin_recommendation_rules' %}active{% endif %}">
             <span class="nav-icon">&#128161;</span>
             <span class="nav-label">Recommendation Rules</span>
         </a>
-
+        
         <a href="{% url 'admin_reports' %}"
            class="{% if request.resolver_match.url_name == 'admin_reports' %}active{% endif %}">
             <span class="nav-icon">&#128200;</span>
-            <span class="nav-label">Reports</span>
+            <span class="nav-label">System Reports</span>
         </a>
-        {% endcomment %}
+        
     {% elif user.is_authenticated %}
 
         <!-- STUDENT SIDEBAR -->

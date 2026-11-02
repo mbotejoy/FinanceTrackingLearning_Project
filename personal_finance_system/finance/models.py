@@ -161,3 +161,50 @@ class Notification(models.Model):
 
     def __str__(self):
         return self.title
+
+class RecommendationRule(models.Model):
+
+    RULE_CHOICES = [
+        ("expenses_exceed_income", "Expenses Exceed Income"),
+        ("moderate_expense_ratio", "Moderate Spending"),
+        ("no_income_recorded", "No Income Recorded"),
+        ("budget_exceeded", "Budget Exceeded"),
+        ("no_active_savings_goal", "No Active Savings Goal"),
+        ("savings_goal_reached", "Savings Goal Reached"),
+        ("savings_goal_target_date_passed", "Savings Goal Overdue"),
+        ("savings_goal_approaching", "Savings Goal Approaching"),
+        ("no_recommendations", "General Financial Guidance"),
+    ]
+
+    rule_key = models.CharField(
+        max_length=100,
+        choices=RULE_CHOICES,
+        unique=True
+    )
+
+    name = models.CharField(max_length=150)
+
+    description = models.TextField(blank=True)
+
+    threshold_percent = models.DecimalField(
+        max_digits=5,
+        decimal_places=2,
+        default=80
+    )
+
+    message = models.TextField(
+        help_text="Guidance displayed to students when this rule is triggered."
+    )
+
+    is_active = models.BooleanField(default=True)
+
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = "recommendation_rules"
+        ordering = ["name"]
+
+    def __str__(self):
+        return self.name

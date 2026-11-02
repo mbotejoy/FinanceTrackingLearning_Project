@@ -11,6 +11,7 @@
 
 <div class="admin-dashboard">
 
+    <!-- Dashboard Header -->
     <div class="admin-header">
         <div>
             <h1>Admin Dashboard</h1>
@@ -18,6 +19,7 @@
         </div>
     </div>
 
+    <!-- System Statistics -->
     <div class="admin-stats">
 
         <div class="admin-stat-card">
@@ -37,40 +39,72 @@
 
     </div>
 
+    <!-- System Management -->
     <section class="admin-management">
 
         <h2>System Management</h2>
 
         <div class="management-grid">
 
-            <div class="management-card">
+            <!-- Manage Users -->
+            <a href="{% url 'admin_users' %}"
+               class="management-card">
+
                 <h3>Manage Users</h3>
-                <p>View and manage registered students.</p>
-                
-            </div>
+                <p>View registered accounts and manage eligible student accounts.</p>
+                <span class="management-link">Manage Users &rarr;</span>
 
-            <div class="management-card">
+            </a>
+
+            <!-- Learning Materials -->
+            <a href="{% url 'admin_learning' %}"
+               class="management-card">
+
                 <h3>Learning Materials</h3>
-                <p>Manage financial literacy resources.</p>
-            </div>
+                <p>Create, edit and manage financial literacy resources.</p>
+                <span class="management-link">Manage Materials &rarr;</span>
 
-            <div class="management-card">
+            </a>
+
+            <!-- Quizzes -->
+            <a href="{% url 'admin_quizzes' %}"
+               class="management-card">
+
                 <h3>Quizzes</h3>
-                <p>Manage financial literacy quizzes.</p>
-                <span>Coming soon</span>
-            </div>
+                <p>Create and manage financial literacy questions, answers and explanations.</p>
+                <span class="management-link">Manage Quizzes &rarr;</span>
 
-            <div class="management-card">
+            </a>
+
+            <!-- Recommendation Rules -->
+            <a href="{% url 'admin_recommendation_rules' %}"
+               class="management-card">
+
                 <h3>Recommendation Rules</h3>
-                <p>Manage financial guidance rules.</p>
-                <span>Coming soon</span>
-            </div>
+                <p>Manage the financial guidance rules used to provide students with recommendations.</p>
+                <span class="management-link">Manage Rules &rarr;</span>
 
-            <div class="management-card">
+            </a>
+
+            <!-- System Reports -->
+            <a href="{% url 'admin_reports' %}"
+               class="management-card">
+
                 <h3>System Reports</h3>
-                <p>View system usage and statistics.</p>
-                <span>Coming soon</span>
-            </div>
+                <p>View aggregate statistics about users, learning resources and system usage.</p>
+                <span class="management-link">View Reports &rarr;</span>
+
+            </a>
+
+            <!-- Manage Categories -->
+            <a href="{% url 'admin_categories' %}"
+               class="management-card">
+
+                <h3>Manage Categories</h3>
+                <p>Add, edit and manage the system-wide transaction categories.</p>
+                <span class="management-link">Manage Categories &rarr;</span>
+
+            </a>
 
         </div>
 

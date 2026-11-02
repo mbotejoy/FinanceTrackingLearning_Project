@@ -1,0 +1,135 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+    {% if rule %}Edit Recommendation Rule{% else %}Add Recommendation Rule{% endif %} | FinanceWise
+{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/admin.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<div class="recommendation-rules-page">
+
+    <div class="page-header">
+        <div>
+            <h1>
+                {% if rule %}
+                    Edit Recommendation Rule
+                {% else %}
+                    Add Recommendation Rule
+                {% endif %}
+            </h1>
+
+            <p>
+                Configure the financial guidance shown to students.
+            </p>
+        </div>
+    </div>
+
+    <div class="recommendation-form-card">
+
+        <form method="post">
+            {% csrf_token %}
+
+            {% if form.non_field_errors %}
+                <div class="alert alert-error">
+                    {{ form.non_field_errors }}
+                </div>
+            {% endif %}
+
+            <div class="recommendation-form-group">
+                <label for="{{ form.rule_key.id_for_label }}">
+                    Rule Type
+                </label>
+
+                {{ form.rule_key }}
+                {{ form.rule_key.errors }}
+
+                <small>
+                    Select the financial situation you want FinanceWise to identify.
+                </small>
+            </div>
+
+            <div class="recommendation-form-group">
+                <label for="{{ form.name.id_for_label }}">
+                    Rule Name
+                </label>
+
+                {{ form.name }}
+                {{ form.name.errors }}
+            </div>
+
+            <div class="recommendation-form-group">
+                <label for="{{ form.description.id_for_label }}">
+                    Rule Description
+                </label>
+
+                {{ form.description }}
+                {{ form.description.errors }}
+
+                <small>
+                    Explain the condition that triggers this recommendation.
+                </small>
+            </div>
+
+            <div class="recommendation-form-group">
+                <label for="{{ form.threshold_percent.id_for_label }}">
+                    Threshold Percentage
+                </label>
+
+                {{ form.threshold_percent }}
+                {{ form.threshold_percent.errors }}
+
+                <small>
+                    Used by percentage-based rules. Its effect depends on how the
+                    selected rule is implemented in the recommendation logic.
+                </small>
+            </div>
+
+            <div class="recommendation-form-group">
+                <label for="{{ form.message.id_for_label }}">
+                    Message Displayed to the Student
+                </label>
+
+                {{ form.message }}
+                {{ form.message.errors }}
+
+                <small>
+                    This is the financial guidance students will see when the
+                    recommendation is triggered.
+                </small>
+            </div>
+
+            <div class="recommendation-form-group recommendation-checkbox">
+                {{ form.is_active }}
+
+                <label for="{{ form.is_active.id_for_label }}">
+                    Enable this recommendation rule
+                </label>
+
+                {{ form.is_active.errors }}
+            </div>
+
+            <div class="recommendation-form-actions">
+                <button type="submit" class="admin-action-btn">
+                    Save Rule
+                </button>
+
+                <a href="{% url 'admin_recommendation_rules' %}"
+                   class="admin-btn admin-btn-secondary">
+                    Cancel
+                </a>
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+<script src="{% static 'JS/recommendation.js' %}"></script>
+
+{% endblock %}

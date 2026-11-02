@@ -1,0 +1,144 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Manage Quizzes | FinanceWise{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/admin_dashboard.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<div class="admin-dashboard">
+
+    <div class="admin-header">
+        <div>
+            <h1>Manage Quizzes</h1>
+            <p>Create and manage financial literacy questions.</p>
+        </div>
+
+        <a href="{% url 'admin_quiz_add' %}" class="admin-action-btn">
+            + Add Question
+        </a>
+    </div>
+
+    <div class="admin-stats">
+
+        <div class="admin-stat-card">
+            <h3>Total Questions</h3>
+            <p>{{ total_questions }}</p>
+        </div>
+
+        <div class="admin-stat-card">
+            <h3>Published Questions</h3>
+            <p>{{ published_questions }}</p>
+        </div>
+
+        <div class="admin-stat-card">
+            <h3>Draft Questions</h3>
+            <p>{{ draft_questions }}</p>
+        </div>
+
+    </div>
+
+    <form method="get" class="admin-filter-form">
+
+        <input
+            type="text"
+            name="search"
+            placeholder="Search questions..."
+            value="{{ search }}"
+        >
+
+        <select name="topic">
+            <option value="">All Topics</option>
+
+            {% for value, label in topics %}
+                <option value="{{ value }}"
+                    {% if selected_topic == value %}selected{% endif %}>
+                    {{ label }}
+                </option>
+            {% endfor %}
+        </select>
+
+        <select name="status">
+            <option value="">All Statuses</option>
+            <option value="published"
+                {% if selected_status == "published" %}selected{% endif %}>
+                Published
+            </option>
+            <option value="draft"
+                {% if selected_status == "draft" %}selected{% endif %}>
+                Draft
+            </option>
+        </select>
+
+        <button type="submit">Filter</button>
+        <a href="{% url 'admin_quizzes' %}">Clear</a>
+
+    </form>
+
+    <div class="admin-table-container">
+
+        <table class="admin-table">
+            <thead>
+                <tr>
+                    <th>Topic</th>
+                    <th>Question</th>
+                    <th>Correct Answer</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for question in questions %}
+                <tr>
+                    <td>{{ question.get_topic_display }}</td>
+                    <td>{{ question.question_text|truncatechars:80 }}</td>
+                    <td>{{ question.correct_answer }}</td>
+
+                    <td>
+                        {% if question.is_published %}
+                            Published
+                        {% else %}
+                            Draft
+                        {% endif %}
+                    </td>
+
+                    <td>
+                        <a href="{% url 'admin_quiz_edit' question.id %}">
+                            Edit
+                        </a>
+
+                        <form
+                            method="post"
+                            action="{% url 'admin_quiz_delete' question.id %}"
+                            onsubmit="return confirm('Delete this quiz question?');"
+                            style="display:inline;"
+                        >
+                            {% csrf_token %}
+                            <button type="submit" class="record-delete-btn">
+                                Delete
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+
+                {% empty %}
+                <tr>
+                    <td colspan="5">No quiz questions found.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+    </div>
+
+    <p>
+        <a href="{% url 'admin_dashboard' %}">&larr; Back to Dashboard</a>
+    </p>
+
+</div>
+
+{% endblock %}
