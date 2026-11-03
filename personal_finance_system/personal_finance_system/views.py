@@ -9,7 +9,7 @@ from functools import wraps
 from django.db import transaction
 from django.db.models import Q, Sum
 from django.views.decorators.http import require_POST
-from finance.models import Transaction, Category, Budget, SavingsGoal, Notification, RecommendationRule
+from finance.models import Subcategory, Transaction, Category, Budget, SavingsGoal, Notification, RecommendationRule
 from finance.forms import CategoryForm, TransactionForm, BudgetForm,SavingsGoalForm, RecommendationRuleForm
 from learning.models import LearningContent, QuizQuestion
 from learning.forms import LearningContentForm, QuizQuestionForm
@@ -17,6 +17,7 @@ from django.utils import timezone
 from .classification_service import classify_student_spending
 from datetime import date
 from decimal import Decimal
+from django.http import JsonResponse
 
 
 # Display the public landing page.
@@ -374,7 +375,10 @@ def add_transaction(request):
 
     if request.method == "POST":
 
-        form = TransactionForm(request.POST)
+        form = TransactionForm(
+            request.POST,
+            user=request.user
+        )
 
         if form.is_valid():
 
@@ -390,13 +394,91 @@ def add_transaction(request):
             return redirect("transactions")
 
     else:
-        form = TransactionForm()
+
+        form = TransactionForm(user=request.user)
 
     return render(
         request,
         "add_transaction.html",
         {"form": form}
     )
+@login_required
+@require_POST
+def add_subcategory(request):
+
+    category_id = request.POST.get("category")
+    name = request.POST.get("name", "").strip()
+
+    if not category_id or not name:
+
+        return JsonResponse({
+            "success": False,
+            "message": "Please select a category and enter a subcategory name."
+        }, status=400)
+
+    if len(name) > 100:
+
+        return JsonResponse({
+            "success": False,
+            "message": "Subcategory name cannot exceed 100 characters."
+        }, status=400)
+
+    category = get_object_or_404(
+        Category,
+        pk=category_id,
+        type="expense"
+    )
+
+    # Prevent duplicate subcategories for the same student and category.
+    subcategory = Subcategory.objects.filter(
+        user=request.user,
+        category=category,
+        name__iexact=name
+    ).first()
+
+    if subcategory:
+
+        created = False
+
+    else:
+
+        subcategory = Subcategory.objects.create(
+            user=request.user,
+            category=category,
+            name=name
+        )
+
+        created = True
+    return JsonResponse({
+        "success": True,
+        "id": subcategory.id,
+        "name": subcategory.name,
+        "message": (
+            "Subcategory created successfully."
+            if created
+            else "This subcategory already exists."
+        )
+    })
+@login_required
+def get_subcategories(request):
+
+    category_id = request.GET.get("category")
+
+    subcategories = Subcategory.objects.filter(
+        user=request.user,
+        category_id=category_id,
+        category__type="expense"
+    ).order_by("name")
+
+    data = [
+        {
+            "id": subcategory.id,
+            "name": subcategory.name
+        }
+        for subcategory in subcategories
+    ]
+
+    return JsonResponse(data, safe=False)
 
 # Retrieve only the currently logged-in student's records 
 #and passes them to the template for rendering.
@@ -447,16 +529,19 @@ def edit_transaction(request, transaction_id):
     transaction = get_object_or_404(
         Transaction,
         id=transaction_id,
-        user=request.user #ensures you only edit your own record
+        user=request.user
     )
 
     if request.method == "POST":
+
         form = TransactionForm(
             request.POST,
-            instance=transaction
+            instance=transaction,
+            user=request.user
         )
 
         if form.is_valid():
+
             form.save()
 
             messages.success(
@@ -467,7 +552,11 @@ def edit_transaction(request, transaction_id):
             return redirect("transactions")
 
     else:
-        form = TransactionForm(instance=transaction)
+
+        form = TransactionForm(
+            instance=transaction,
+            user=request.user
+        )
 
     return render(
         request,
@@ -513,7 +602,8 @@ def edit_budget(request, budget_id):
     if request.method == "POST":
         form = BudgetForm(
             request.POST,
-            instance=budget
+            instance=budget,
+            user=request.user
         )
 
         if form.is_valid():
@@ -527,7 +617,7 @@ def edit_budget(request, budget_id):
             return redirect("budgets")
 
     else:
-        form = BudgetForm(instance=budget)
+        form = BudgetForm(instance=budget, user=request.user)
 
     return render(
         request,
@@ -579,7 +669,7 @@ def savings_goals(request):
 @login_required
 def create_savings_goal(request):
     if request.method == "POST":
-        form = SavingsGoalForm(request.POST)
+        form = SavingsGoalForm(request.POST, user=request.user)
 
         if form.is_valid():
             goal = form.save(commit=False)
@@ -605,7 +695,7 @@ def create_savings_goal(request):
             "Please correct the errors below and try again."
         )
     else:
-        form = SavingsGoalForm()
+        form = SavingsGoalForm(user=request.user)
 
     return render(
         request,
@@ -625,7 +715,7 @@ def edit_savings_goal(request, goal_id):
     )
 
     if request.method == "POST":
-        form = SavingsGoalForm(request.POST, instance=goal)
+        form = SavingsGoalForm(request.POST, instance=goal, user=request.user)
 
         if form.is_valid():
             updated_goal = form.save(commit=False)
@@ -643,7 +733,7 @@ def edit_savings_goal(request, goal_id):
             return redirect("savings_goals")
 
     else:
-        form = SavingsGoalForm(instance=goal)
+        form = SavingsGoalForm(instance=goal, user=request.user)
 
     return render(
         request,

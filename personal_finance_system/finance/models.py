@@ -1,7 +1,6 @@
 from django.conf import settings
 from django.db import models
 
-
 class Category(models.Model):
     TYPE_CHOICES = [
         ("income", "Income"),
@@ -17,6 +16,38 @@ class Category(models.Model):
 
     def __str__(self):
         return f"{self.name} ({self.type})"
+
+class Subcategory(models.Model):
+
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="subcategories"
+    )
+
+    category = models.ForeignKey(
+        Category,
+        on_delete=models.CASCADE,
+        related_name="subcategories"
+    )
+
+    name = models.CharField(max_length=100)
+
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        db_table = "subcategories"
+        ordering = ["name"]
+
+        constraints = [
+            models.UniqueConstraint(
+                fields=["user", "category", "name"],
+                name="unique_user_category_subcategory"
+            )
+        ]
+
+    def __str__(self):
+        return f"{self.category.name} - {self.name}"
 
 
 class Transaction(models.Model):
@@ -37,6 +68,14 @@ class Transaction(models.Model):
         blank=True,
         related_name="transactions"
     )
+    subcategory = models.ForeignKey(
+    Subcategory,
+    on_delete=models.SET_NULL,
+    null=True,
+    blank=True,
+    related_name="transactions"
+    )
+    
 
     type = models.CharField(max_length=10, choices=TRANSACTION_TYPES)
     amount = models.DecimalField(max_digits=12, decimal_places=2)
@@ -208,3 +247,4 @@ class RecommendationRule(models.Model):
 
     def __str__(self):
         return self.name
+

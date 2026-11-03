@@ -46,6 +46,17 @@ urlpatterns = [
     views.delete_transaction,
     name="delete_transaction"
     ),
+    path(
+    "subcategories/",
+    views.get_subcategories,
+    name="get_subcategories"
+    ),
+
+    path(
+    "subcategories/add/",
+    views.add_subcategory,
+    name="add_subcategory"
+    ),
 
 
     # Budgets
