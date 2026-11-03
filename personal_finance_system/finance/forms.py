@@ -1,6 +1,12 @@
-
 from django import forms
-from .models import Category, Transaction, Budget, SavingsGoal, RecommendationRule
+from .models import (
+    Category, 
+    Transaction, 
+    Budget, 
+    SavingsGoal, 
+    RecommendationRule, 
+    Subcategory
+)
 
 
 class CategoryForm(forms.ModelForm):
@@ -17,6 +23,7 @@ class CategoryForm(forms.ModelForm):
 
 
 class TransactionForm(forms.ModelForm):
+
     class Meta:
         model = Transaction
 
@@ -24,6 +31,7 @@ class TransactionForm(forms.ModelForm):
             "amount",
             "type",
             "category",
+            "subcategory",
             "date",
             "description",
         ]
@@ -34,11 +42,17 @@ class TransactionForm(forms.ModelForm):
                 "min": "0.01",
                 "placeholder": "Enter amount"
             }),
+
             "type": forms.Select(),
+
             "category": forms.Select(),
+
+            "subcategory": forms.Select(),
+
             "date": forms.DateInput(attrs={
                 "type": "date"
             }),
+
             "description": forms.Textarea(attrs={
                 "rows": 3,
                 "placeholder": "Enter a short description"
@@ -46,13 +60,46 @@ class TransactionForm(forms.ModelForm):
         }
 
     def __init__(self, *args, **kwargs):
+
+        self.user = kwargs.pop("user", None)
+
         super().__init__(*args, **kwargs)
 
         self.fields["category"].queryset = (
             Category.objects.all().order_by("name")
         )
 
+        # Subcategories are initially restricted to the current student.
+        if self.user:
+            subcategories = Subcategory.objects.filter(
+                user=self.user
+            )
+
+            # When editing, use the transaction's existing category.
+            selected_category = self.data.get(
+                "category",
+                self.instance.category_id if self.instance.pk else None
+            )
+
+            if selected_category:
+                subcategories = subcategories.filter(
+                    category_id=selected_category
+                )
+            else:
+                subcategories = subcategories.none()
+
+            self.fields["subcategory"].queryset = (
+                subcategories.order_by("name")
+            )
+        else:
+            self.fields["subcategory"].queryset = (
+                Subcategory.objects.none()
+            )
+
+        self.fields["subcategory"].required = False
+
     def clean_amount(self):
+
         amount = self.cleaned_data["amount"]
 
         if amount <= 0:
@@ -63,20 +110,43 @@ class TransactionForm(forms.ModelForm):
         return amount
 
     def clean(self):
+
         cleaned_data = super().clean()
 
         transaction_type = cleaned_data.get("type")
         category = cleaned_data.get("category")
+        subcategory = cleaned_data.get("subcategory")
 
+        # Ensure the selected category matches the transaction type.
         if category and transaction_type != category.type:
             self.add_error(
                 "category",
                 "Select a category matching the transaction type."
             )
 
+        # Personalized subcategories are only allowed for expenses.
+        if subcategory:
+
+            if not category or category.type != "expense":
+                self.add_error(
+                    "subcategory",
+                    "Subcategories can only be used for expenses."
+                )
+
+            elif subcategory.category_id != category.id:
+                self.add_error(
+                    "subcategory",
+                    "Select a subcategory belonging to the chosen category."
+                )
+
+            elif subcategory.user_id != self.user.id:
+                self.add_error(
+                    "subcategory",
+                    "You cannot use another student's subcategory."
+                )
+
         return cleaned_data
-
-
+    
 class BudgetForm(forms.ModelForm):
     class Meta:
         model = Budget
