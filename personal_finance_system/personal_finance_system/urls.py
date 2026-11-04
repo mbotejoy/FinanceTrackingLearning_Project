@@ -149,7 +149,13 @@ urlpatterns = [
     views.recommendations,
     name="recommendations"
     ),
+#Spending preference
 
+    path(
+    "spending-preferences/",
+    views.spending_preferences,
+    name="spending_preferences"
+    ),
 # Admin Recommendation Rules
     path(
     "admin-recommendation-rules/",
