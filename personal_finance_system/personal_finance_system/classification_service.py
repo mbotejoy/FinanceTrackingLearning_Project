@@ -1,9 +1,9 @@
 # This service loads your saved model, prepares the 
 # input features and returns a classification.
 
-
 from functools import lru_cache
 from pathlib import Path
+from finance.models import Transaction, SpendingPreference
 
 import joblib
 import pandas as pd
@@ -130,12 +130,43 @@ def classify_student_spending(user, year, month):
         [features],
         columns=config["feature_columns"]
     )
+    # Obtain the original ML model prediction
+    model_prediction = str(model.predict(X)[0])
 
-    prediction = str(model.predict(X)[0])
+    # Retrieve the student's saved spending preferences
+    preference = SpendingPreference.objects.filter(
+        user=user
+    ).first()
+
+    # Use default thresholds if the student has not saved preferences
+    low_threshold = (
+        float(preference.low_threshold) if preference else 50.0
+    )
+
+    moderate_threshold = (
+        float(preference.moderate_threshold) if preference else 75.0
+    )
+
+    # Convert spending ratio into a percentage
+    spending_percentage = features["spending_ratio"] * 100
+
+    # Apply the student's personal classification thresholds
+    if spending_percentage <= low_threshold:
+        final_classification = "Low"
+
+    elif spending_percentage <= moderate_threshold:
+        final_classification = "Moderate"
+
+    else:
+        final_classification = "High"
 
     return {
-        "classification": prediction,
+        "classification": final_classification,
+        "model_prediction": model_prediction,
         "spending_ratio": round(features["spending_ratio"], 3),
+        "spending_percentage": round(spending_percentage, 2),
+        "low_threshold": low_threshold,
+        "moderate_threshold": moderate_threshold,
         "monthly_income": float(income),
         "monthly_expenses": round(total_expenses, 2),
         "message": "Classification successful",

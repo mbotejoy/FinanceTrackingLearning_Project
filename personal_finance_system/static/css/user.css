@@ -267,6 +267,30 @@
     text-align: center;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
 }
+/* ========================================
+   PERSONAL SPENDING CLASSIFICATION BORDERS
+======================================== */
+
+/* Low spender - Green border */
+
+.spending-classification.low-spender {
+    border: 2px solid #28a36a;
+    box-shadow: 0 4px 15px rgba(40, 163, 106, 0.12);
+}
+
+/* Moderate spender - Orange border */
+
+.spending-classification.moderate-spender {
+    border: 2px solid #e6a23c;
+    box-shadow: 0 4px 15px rgba(230, 162, 60, 0.12);
+}
+
+/* High spender - Red border */
+
+.spending-classification.high-spender {
+    border: 2px solid #dc5555;
+    box-shadow: 0 4px 15px rgba(220, 85, 85, 0.12);
+}
 
 .classification-heading h2 {
     color: #082e55;

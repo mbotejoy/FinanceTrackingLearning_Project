@@ -97,7 +97,14 @@
         </div>
 
         <!-- Spending Behaviour Classification -->
-        <section class="spending-classification">
+        <section class="spending-classification
+            {% if spending_analysis.classification == 'Low' %}
+                low-spender
+            {% elif spending_analysis.classification == 'Moderate' %}
+                moderate-spender
+            {% elif spending_analysis.classification == 'High' %}
+                high-spender
+            {% endif %}">
 
         <div class="classification-heading">
             <h2>Your Spending Behaviour</h2>
