@@ -268,6 +268,53 @@
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
 }
 /* ========================================
+   SPENDING CLASSIFICATION ALERTS
+======================================== */
+
+.classification-alert {
+    width: 100%;
+    max-width: 850px;
+    box-sizing: border-box;
+    padding: 18px 24px;
+    margin: 5px auto 15px;
+    border-radius: 8px;
+    text-align: left;
+    border-left: 5px solid;
+}
+
+.classification-alert strong {
+    display: block;
+    font-size: 17px;
+    margin-bottom: 6px;
+}
+
+.classification-alert p {
+    margin: 0;
+    font-size: 15px;
+    line-height: 1.6;
+}
+
+/* Low */
+.alert-low {
+    background: #dcfce7;
+    border-color: #28a36a;
+    color: #166534;
+}
+
+/* Moderate */
+.alert-moderate {
+    background: #fef3c7;
+    border-color: #e6a23c;
+    color: #92400e;
+}
+
+/* High */
+.alert-high {
+    background: #fee2e2;
+    border-color: #dc5555;
+    color: #991b1b;
+}
+/* ========================================
    PERSONAL SPENDING CLASSIFICATION BORDERS
 ======================================== */
 

@@ -1,51 +1,73 @@
 document.addEventListener("DOMContentLoaded", function () {
+
     const notification = document.getElementById(
         "recommendationNotification"
     );
 
-    const titleElement = document.getElementById("notificationTitle");
-    const messageElement = document.getElementById("notificationMessage");
-    const closeButton = document.getElementById("closeNotification");
-
-    if (!notification || !titleElement || !messageElement || !closeButton) {
-        return;
-    }
-
-    const savedNotification = sessionStorage.getItem(
-        "financeWiseNotification"
+    const titleElement = document.getElementById(
+        "notificationTitle"
     );
 
-    if (!savedNotification) {
+    const messageElement = document.getElementById(
+        "notificationMessage"
+    );
+
+    const closeButton = document.getElementById(
+        "closeNotification"
+    );
+
+    const classificationData = document.getElementById(
+        "classificationAlertData"
+    );
+
+    if (
+        !notification ||
+        !titleElement ||
+        !messageElement ||
+        !closeButton ||
+        !classificationData
+    ) {
         return;
     }
 
-    try {
-        const alertData = JSON.parse(savedNotification);
+    const classification =
+        classificationData.dataset.classification;
 
-        titleElement.textContent = alertData.title;
-        messageElement.textContent = alertData.message;
+    const messages = {
+        "Low": {
+            title: "Low Spending Behaviour",
+            message: "You are managing your spending well. Keep maintaining your financial discipline."
+        },
 
-        notification.hidden = false;
+        "Moderate": {
+            title: "Moderate Spending Behaviour",
+            message: "Your spending is moderate. Review your expenses to maintain a healthy financial balance."
+        },
 
-        function hideNotification() {
-            notification.hidden = true;
-
-            sessionStorage.removeItem("financeWiseNotification");
+        "High": {
+            title: "High Spending Behaviour",
+            message: "Your spending is high. Consider reducing unnecessary expenses and reviewing your budget."
         }
+    };
 
-        const notificationTimer = setTimeout(
-            hideNotification,
-            8000
-        );
+    const alert = messages[classification];
 
-        closeButton.addEventListener("click", function () {
-            clearTimeout(notificationTimer);
-            hideNotification();
-        });
+    if (!alert) return;
 
-    } catch (error) {
-        console.error("Could not display notification:", error);
+    titleElement.textContent = alert.title;
+    messageElement.textContent = alert.message;
 
-        sessionStorage.removeItem("financeWiseNotification");
+    notification.hidden = false;
+
+    function hideNotification() {
+        notification.hidden = true;
     }
+
+    const timer = setTimeout(hideNotification, 8000);
+
+    closeButton.addEventListener("click", function () {
+        clearTimeout(timer);
+        hideNotification();
+    });
+
 });
