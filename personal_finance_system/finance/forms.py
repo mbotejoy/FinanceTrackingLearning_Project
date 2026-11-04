@@ -5,7 +5,8 @@ from .models import (
     Budget, 
     SavingsGoal, 
     RecommendationRule, 
-    Subcategory
+    Subcategory,
+    SpendingPreference
 )
 
 
@@ -327,3 +328,50 @@ class RecommendationRuleForm(forms.ModelForm):
                 "class": "form-check-input",
             }),
         }
+
+class SpendingPreferenceForm(forms.ModelForm):
+
+    class Meta:
+        model = SpendingPreference
+
+        fields = [
+            "low_threshold",
+            "moderate_threshold",
+        ]
+
+        widgets = {
+            "low_threshold": forms.NumberInput(attrs={
+                "min": "1",
+                "max": "99",
+                "step": "1",
+                "placeholder": "e.g. 50"
+            }),
+
+            "moderate_threshold": forms.NumberInput(attrs={
+                "min": "2",
+                "max": "100",
+                "step": "1",
+                "placeholder": "e.g. 75"
+            }),
+        }
+
+    def clean(self):
+        cleaned_data = super().clean()
+
+        low = cleaned_data.get("low_threshold")
+        moderate = cleaned_data.get("moderate_threshold")
+
+        if low is not None and moderate is not None:
+
+            if low >= moderate:
+                raise forms.ValidationError(
+                    "The low spending threshold must be "
+                    "less than the moderate spending threshold."
+                )
+
+            if low <= 0 or moderate > 100:
+                raise forms.ValidationError(
+                    "Thresholds must be between 0 and 100."
+                )
+
+        return cleaned_data

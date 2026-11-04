@@ -1,0 +1,148 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Spending Preferences | FinanceWise{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/transactions.css' %}">
+<link rel="stylesheet" href="{% static 'css/spending_preferences.css' %}">
+
+<div class="page-container">
+
+    <div class="page-header">
+        <h1>Spending Preferences</h1>
+        <p>Manage your personal spending classification thresholds.</p>
+    </div>
+
+{% if preference and not edit_mode %}
+
+<div class="preferences-card">
+
+    <div class="preferences-card-header">
+        <div>
+            <h2>Your Saved Preferences</h2>
+            <p>These thresholds personalise your spending classification.</p>
+        </div>
+        <span class="saved-badge">Saved</span>
+    </div>
+
+    <div class="preferences-table-wrapper">
+        <table class="preferences-table">
+            <thead>
+                <tr>
+                    <th>Classification</th>
+                    <th>Spending Threshold</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr>
+                    <td>
+                        <span class="classification-indicator low"></span>
+                        Low Spending
+                    </td>
+                    <td>At or below {{ preference.low_threshold }}%</td>
+                </tr>
+
+                <tr>
+                    <td>
+                        <span class="classification-indicator moderate"></span>
+                        Moderate Spending
+                    </td>
+                    <td>
+                        Above {{ preference.low_threshold }}%
+                        up to {{ preference.moderate_threshold }}%
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        <span class="classification-indicator high"></span>
+                        High Spending
+                    </td>
+                    <td>Above {{ preference.moderate_threshold }}%</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="preferences-actions">
+        <a href="{% url 'spending_preferences' %}?edit=1"
+           class="preferences-edit-btn">
+            <i class="fas fa-edit"></i> Edit Preferences
+        </a>
+
+        <form method="POST"
+              onsubmit="return confirm('Are you sure you want to delete your spending preferences?');">
+            {% csrf_token %}
+            <button type="submit"
+                    name="delete"
+                    class="preferences-delete-btn">
+                <i class="fas fa-trash"></i> Delete Preferences
+            </button>
+        </form>
+    </div>
+
+</div>
+
+{% else %}
+
+        <!-- CREATE OR EDIT PREFERENCES -->
+        <div class="transaction-form-card">
+
+            <h2>
+                {% if preference %}
+                    Edit Your Preferences
+                {% else %}
+                    Set Your Preferences
+                {% endif %}
+            </h2>
+
+            <form method="POST">
+                {% csrf_token %}
+
+                {{ form.non_field_errors }}
+
+                <div class="form-group">
+                    <label for="{{ form.low_threshold.id_for_label }}">
+                        Low Spending Threshold (%)
+                    </label>
+                    {{ form.low_threshold }}
+                    {{ form.low_threshold.errors }}
+                    <small>Spending at or below this percentage is classified as Low.</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.moderate_threshold.id_for_label }}">
+                        Moderate Spending Threshold (%)
+                    </label>
+                    {{ form.moderate_threshold }}
+                    {{ form.moderate_threshold.errors }}
+                    <small>Spending above the low threshold and at or below this percentage is classified as Moderate.</small>
+                </div>
+
+                <p>Spending above the moderate threshold is classified as High.</p>
+
+                <div class="form-actions">
+                    <button type="submit"
+                            name="save"
+                            class="btn btn-primary">
+                        Save Preferences
+                    </button>
+
+                    {% if preference %}
+                        <a href="{% url 'spending_preferences' %}"
+                           class="btn btn-outline">
+                            Cancel
+                        </a>
+                    {% endif %}
+                </div>
+
+            </form>
+        </div>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}

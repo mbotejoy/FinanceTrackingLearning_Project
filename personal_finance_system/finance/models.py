@@ -247,4 +247,47 @@ class RecommendationRule(models.Model):
 
     def __str__(self):
         return self.name
+#Allows users to set their spending preference so that 
+# the classification model is able to classify them 
+# depending their expenses and income
+class SpendingPreference(models.Model):
 
+    user = models.OneToOneField(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="spending_preference"
+    )
+# the defaults are set at 50% and 75% but a student can change that
+    low_threshold = models.DecimalField(
+        max_digits=5,
+        decimal_places=2,
+        default=50.00
+    )
+
+    moderate_threshold = models.DecimalField(
+        max_digits=5,
+        decimal_places=2,
+        default=75.00
+    )
+
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = "spending_preferences"
+
+    def __str__(self):
+        return f"{self.user} - Spending Preferences"
+
+    def clean(self):
+        from django.core.exceptions import ValidationError
+
+        if self.low_threshold >= self.moderate_threshold:
+            raise ValidationError(
+                "The low spending threshold must be lower "
+                "than the moderate spending threshold."
+            )
+
+        if self.low_threshold <= 0 or self.moderate_threshold > 100:
+            raise ValidationError(
+                "Thresholds must be between 0 and 100."
+            )

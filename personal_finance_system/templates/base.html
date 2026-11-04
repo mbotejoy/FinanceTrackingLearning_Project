@@ -160,6 +160,11 @@
             <span class="nav-icon">&#128161;</span>
             <span class="nav-label">Recommendations</span>
         </a>
+        <a href="{% url 'spending_preferences' %}"
+        class="{% if request.resolver_match.url_name == 'spending_preferences' %}active{% endif %}">
+            <span class="nav-icon">&#9881;</span>
+            <span class="nav-label">Spending Preferences</span>
+        </a>
 
     {% endif %}
 

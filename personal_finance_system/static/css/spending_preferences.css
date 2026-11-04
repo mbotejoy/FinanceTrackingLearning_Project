@@ -1,0 +1,193 @@
+/* =====================================
+   SPENDING PREFERENCES PAGE
+===================================== */
+
+.preferences-card {
+    background: #ffffff;
+    border-radius: 14px;
+    padding: 30px;
+    margin: 30px auto;
+    max-width: 1100px;
+    border: 1px solid #e3eaf0;
+    box-shadow: 0 4px 15px rgba(20, 50, 80, 0.07);
+}
+
+/* Card heading */
+
+.preferences-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 15px;
+    margin-bottom: 25px;
+}
+
+.preferences-card-header h2 {
+    color: #193650;
+    font-size: 25px;
+    margin-bottom: 8px;
+}
+
+.preferences-card-header p {
+    color: #718096;
+    font-size: 15px;
+    margin: 0;
+}
+
+.saved-badge {
+    background: #e5f5ec;
+    color: #23834e;
+    padding: 7px 15px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+/* Preferences table */
+
+.preferences-table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.preferences-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+}
+
+.preferences-table thead {
+    background: #193650;
+    color: #ffffff;
+}
+
+.preferences-table th {
+    padding: 16px 20px;
+    text-align: left;
+    font-size: 15px;
+    font-weight: 600;
+}
+
+.preferences-table td {
+    padding: 18px 20px;
+    border-bottom: 1px solid #e9eef2;
+    color: #34495e;
+    font-size: 15px;
+}
+
+.preferences-table tbody tr:hover {
+    background: #f5f9fc;
+}
+
+.preferences-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+/* Classification indicators */
+
+.classification-indicator {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+.classification-indicator.low {
+    background: #28a36a;
+}
+
+.classification-indicator.moderate {
+    background: #e5a323;
+}
+
+.classification-indicator.high {
+    background: #dc5555;
+}
+
+/* Action buttons */
+
+.preferences-actions {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 15px;
+    margin-top: 30px;
+    padding-top: 22px;
+    border-top: 1px solid #e5ebf0;
+}
+
+.preferences-actions form {
+    margin: 0;
+}
+
+.preferences-edit-btn,
+.preferences-delete-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 12px 22px;
+    border-radius: 7px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+
+.preferences-edit-btn {
+    background: #236da8;
+    color: #ffffff;
+    border: 1px solid #236da8;
+}
+
+.preferences-edit-btn:hover {
+    background: #194f7e;
+    color: #ffffff;
+}
+
+.preferences-delete-btn {
+    background: #ffffff;
+    color: #c0392b;
+    border: 1px solid #c0392b;
+}
+
+.preferences-delete-btn:hover {
+    background: #c0392b;
+    color: #ffffff;
+}
+
+/* Responsive design */
+
+@media (max-width: 768px) {
+
+    .preferences-card {
+        padding: 20px;
+        margin: 20px 10px;
+    }
+
+    .preferences-card-header {
+        flex-direction: column;
+    }
+
+    .preferences-table th,
+    .preferences-table td {
+        padding: 13px 10px;
+        font-size: 13px;
+    }
+
+    .preferences-actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .preferences-actions form {
+        width: 100%;
+    }
+
+    .preferences-edit-btn,
+    .preferences-delete-btn {
+        width: 100%;
+    }
+}

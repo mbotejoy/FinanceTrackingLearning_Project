@@ -9,8 +9,8 @@ from functools import wraps
 from django.db import transaction
 from django.db.models import Q, Sum
 from django.views.decorators.http import require_POST
-from finance.models import Subcategory, Transaction, Category, Budget, SavingsGoal, Notification, RecommendationRule
-from finance.forms import CategoryForm, TransactionForm, BudgetForm,SavingsGoalForm, RecommendationRuleForm
+from finance.models import Subcategory, Transaction, Category, Budget, SavingsGoal, Notification, RecommendationRule, SpendingPreference
+from finance.forms import CategoryForm, TransactionForm, BudgetForm,SavingsGoalForm, RecommendationRuleForm, SpendingPreferenceForm
 from learning.models import LearningContent, QuizQuestion
 from learning.forms import LearningContentForm, QuizQuestionForm
 from django.utils import timezone
@@ -1646,3 +1646,46 @@ def admin_delete_learning(request, lesson_id):
     )
 
     return redirect("admin_learning")
+
+@login_required
+def spending_preferences(request):
+    preference = SpendingPreference.objects.filter(
+        user=request.user
+    ).first()
+
+    # Delete preference
+    if request.method == "POST" and "delete" in request.POST:
+        if preference:
+            preference.delete()
+            messages.success(request, "Spending preferences deleted successfully.")
+
+        return redirect("spending_preferences")
+
+    # Save or update preference
+    if request.method == "POST" and "save" in request.POST:
+        form = SpendingPreferenceForm(
+            request.POST,
+            instance=preference
+        )
+
+        if form.is_valid():
+            saved_preference = form.save(commit=False)
+            saved_preference.user = request.user
+            saved_preference.save()
+
+            messages.success(
+                request,
+                "Spending preferences saved successfully."
+            )
+            return redirect("spending_preferences")
+
+    else:
+        form = SpendingPreferenceForm(instance=preference)
+
+    context = {
+        "preference": preference,
+        "form": form,
+        "edit_mode": request.GET.get("edit") == "1",
+    }
+
+    return render(request, "spending_preferences.html", context)
