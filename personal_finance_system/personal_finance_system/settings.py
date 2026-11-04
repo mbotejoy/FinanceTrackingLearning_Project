@@ -69,6 +69,7 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
                 # Keep existing context processors.
                 "finance.context_processors.finance_notifications",
+                "personal_finance_system.context_processors.spending_classification",
             ],
         },
     },

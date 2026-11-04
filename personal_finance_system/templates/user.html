@@ -117,6 +117,33 @@
         {% if spending_analysis.classification %}
 
         <div class="classification-result">
+            <div class="classification-alert
+                {% if spending_analysis.classification == 'Low' %}
+                    alert-low
+                {% elif spending_analysis.classification == 'Moderate' %}
+                    alert-moderate
+                {% elif spending_analysis.classification == 'High' %}
+                    alert-high
+                {% endif %}">
+
+                {% if spending_analysis.classification == 'Low' %}
+
+                    <strong>Good Spending Behaviour!</strong>
+                    <p>Your spending is within your preferred threshold. Keep maintaining your financial habits.</p>
+
+                {% elif spending_analysis.classification == 'Moderate' %}
+
+                    <strong>Watch Your Spending!</strong>
+                    <p>Your spending has reached your moderate threshold. Review your expenses to maintain financial control.</p>
+
+                {% elif spending_analysis.classification == 'High' %}
+
+                    <strong>High Spending Alert!</strong>
+                    <p>Your spending has exceeded your preferred threshold. Consider reviewing your expenses and adjusting your budget.</p>
+
+                {% endif %}
+
+            </div>
 
             <span class="classification-badge
                 {% if spending_analysis.classification == 'Low' %}

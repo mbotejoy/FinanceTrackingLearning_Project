@@ -1054,6 +1054,13 @@ def recommendations(request):
     # Administrators should use their own dashboard.
     if is_admin(request.user):
         return redirect("admin_dashboard")
+    # Mark existing active notifications as read when the user
+    # opens the Recommendations page.
+    Notification.objects.filter(
+        user=request.user,
+        is_active=True,
+        is_read=False
+    ).update(is_read=True)
 
     today = timezone.localdate()
     recommendations_list = []
@@ -1266,10 +1273,13 @@ def recommendations(request):
         item["rule_key"] for item in recommendations_list
     }
 
-    # Get the user's active notifications.
+    # Get active recommendation notifications only.
+    # Classification notifications are managed separately.
     active_notifications = Notification.objects.filter(
         user=request.user,
         is_active=True
+    ).exclude(
+        rule_key="spending_classification"
     )
 
     new_notifications = []
@@ -1330,6 +1340,13 @@ def recommendations(request):
                         "notification_type",
                     ]
                 )
+    # Mark the recommendations displayed on this page as read.
+    Notification.objects.filter(
+        user=request.user,
+        rule_key__in=current_rule_keys,
+        is_active=True,
+        is_read=False
+    ).update(is_read=True)
 
     # Display the recommendations on the page.
     context = {
@@ -1338,6 +1355,14 @@ def recommendations(request):
         "monthly_expenses": monthly_expenses,
         "new_notifications": new_notifications,
     }
+    # Mark the classification notification as read after
+    # all recommendation and classification processing.
+    Notification.objects.filter(
+        user=request.user,
+        rule_key="spending_classification",
+        is_active=True,
+        is_read=False
+    ).update(is_read=True)
 
     return render(request, "recommendations.html", context)
 

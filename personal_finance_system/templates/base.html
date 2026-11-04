@@ -172,46 +172,46 @@
     </aside>
 
     <main class="main-content" id="mainContent">
-
-        {% if user.is_authenticated and user.role != "admin" %}
-        <div
+    {% if user.is_authenticated and user.role != "admin" %}
+         
+         <!-- Spending Behaviour Notification -->
+        <div id="recommendationNotification"
             class="notification-container"
-            id="recommendationNotification"
-            role="status"
+            role="alert"
             aria-live="polite"
-            hidden
-        >
+            hidden>
+
             <div class="notification-icon">&#128161;</div>
 
             <div class="notification-content">
-                <h3 id="notificationTitle">
-                    Financial Recommendation
-                </h3>
-
+                <h3 id="notificationTitle">Spending Behaviour Alert</h3>
                 <p id="notificationMessage"></p>
 
-                <a
-                    href="{% url 'recommendations' %}"
-                    class="notification-link"
-                >
+                <a href="{% url 'recommendations' %}"
+                class="notification-link">
                     View All Recommendations
                 </a>
             </div>
 
-            <button
-                type="button"
-                class="notification-close"
-                id="closeNotification"
-                aria-label="Close notification"
-            >
+            <button type="button"
+                    class="notification-close"
+                    id="closeNotification"
+                    aria-label="Close notification">
                 &times;
             </button>
         </div>
+        <!-- Classification data for JavaScript -->
+        {% if classification_alert %}
+            <div id="classificationAlertData"
+                data-classification="{{ classification_alert.classification }}"
+                hidden>
+            </div>
         {% endif %}
 
-        {% block content %}
-        {% endblock %}
+    {% endif %}
 
+    {% block content %}
+    {% endblock %}
     </main>
 
     <script src="{% static 'JS/sidebar.js' %}"></script>
