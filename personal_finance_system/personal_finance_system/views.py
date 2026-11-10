@@ -1152,6 +1152,7 @@ def learning(request):
     )
 
 # Allow user to read a lesson in detail.
+
 @login_required
 def lesson_detail(request, lesson_id):
     lesson = get_object_or_404(
@@ -1160,11 +1161,20 @@ def lesson_detail(request, lesson_id):
         is_published=True
     )
 
+    # Mark the recommended lesson notification as read.
+    Notification.objects.filter(
+        user=request.user,
+        rule_key=f"lesson_{lesson.id}",
+        is_active=True,
+        is_read=False
+    ).update(is_read=True)
+
     return render(
         request,
         "lesson_detail.html",
         {"lesson": lesson}
     )
+
 
 #Allows the user to take a quiz
 @login_required
@@ -1488,6 +1498,8 @@ def recommendations(request):
         is_active=True
     ).exclude(
         rule_key="spending_classification"
+    ).exclude(
+        rule_key__startswith="lesson_"
     )
 
     new_notifications = []

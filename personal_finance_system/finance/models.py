@@ -52,8 +52,11 @@ class Subcategory(models.Model):
 
 class Transaction(models.Model):
     TRANSACTION_TYPES = [
-        ("income", "Income"),
-        ("expense", "Expense"),
+        ('income/allowance', 'Income/Allowance'),
+        ('expense', 'Expense'),
+        ('savings', 'Savings'),
+        ('investment', 'Investment'),
+        ('debt_repayment', 'Debt Repayment'),
     ]
 
     user = models.ForeignKey(
@@ -77,7 +80,7 @@ class Transaction(models.Model):
     )
     
 
-    type = models.CharField(max_length=10, choices=TRANSACTION_TYPES)
+    type = models.CharField(max_length=30, choices=TRANSACTION_TYPES)
     amount = models.DecimalField(max_digits=12, decimal_places=2)
     description = models.CharField(max_length=255, blank=True)
     date = models.DateField()

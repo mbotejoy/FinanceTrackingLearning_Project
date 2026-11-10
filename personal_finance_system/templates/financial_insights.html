@@ -1,3 +1,4 @@
+
 {% extends "base.html" %}
 {% load static %}
 
@@ -19,6 +20,7 @@
         </p>
     </div>
 
+    <!-- Financial Insight Cards -->
     <div class="insights-grid">
 
         <article class="insight-card">
@@ -54,6 +56,7 @@
 
     </div>
 
+    <!-- Spending Trend Chart -->
     <section class="insights-panel">
 
         <h2>Spending Trend</h2>
@@ -62,36 +65,23 @@
             Your expenses over the last six calendar months.
         </p>
 
-        <div class="spending-trend">
-
-            {% for item in spending_trend %}
-
-            <div class="trend-item">
-
-                <div class="trend-label">
-                    {{ item.label }}
-                </div>
-
-                <div class="trend-track">
-                    <progress
-                        class="trend-progress"
-                        value="{{ item.total }}"
-                        max="{{ max_trend_spending }}">
-                    </progress>
-                </div>
-
-                <div class="trend-amount">
-                    KES {{ item.total|floatformat:2 }}
-                </div>
-
-            </div>
-
-            {% endfor %}
-
+        <div class="chart-container">
+            <canvas id="spendingTrendChart"></canvas>
         </div>
 
     </section>
 
 </div>
+
+{% endblock %}
+
+
+{% block extra_js %}
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+{{ spending_trend|json_script:"spending-trend-data" }}
+
+<script src="{% static 'js/financial_insights.js' %}"></script>
 
 {% endblock %}

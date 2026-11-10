@@ -174,7 +174,7 @@
     <main class="main-content" id="mainContent">
     {% if user.is_authenticated and user.role != "admin" %}
          
-         <!-- Spending Behaviour Notification -->
+         <!-- Global Notification Popup -->
         <div id="recommendationNotification"
             class="notification-container"
             role="alert"
@@ -184,10 +184,11 @@
             <div class="notification-icon">&#128161;</div>
 
             <div class="notification-content">
-                <h3 id="notificationTitle">Spending Behaviour Alert</h3>
+                <h3 id="notificationTitle">Financial Alert</h3>
                 <p id="notificationMessage"></p>
 
-                <a href="{% url 'recommendations' %}"
+                <a id="notificationLink"
+                href="{% url 'recommendations' %}"
                 class="notification-link">
                     View All Recommendations
                 </a>
@@ -200,10 +201,21 @@
                 &times;
             </button>
         </div>
+
         <!-- Classification data for JavaScript -->
         {% if classification_alert %}
             <div id="classificationAlertData"
                 data-classification="{{ classification_alert.classification }}"
+                hidden>
+            </div>
+        {% endif %}
+
+        <!-- Lesson recommendation data for JavaScript -->
+        {% if lesson_alert %}
+            <div id="lessonAlertData"
+                data-title="{{ lesson_alert.title }}"
+                data-message="{{ lesson_alert.message }}"
+                data-lesson-id="{{ lesson_alert.rule_key|cut:'lesson_' }}"
                 hidden>
             </div>
         {% endif %}
