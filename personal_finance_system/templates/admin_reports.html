@@ -1,3 +1,4 @@
+
 {% extends "base.html" %}
 {% load static %}
 
@@ -14,54 +15,115 @@
     <div class="admin-header">
         <div>
             <h1>System Reports</h1>
-            <p>Overview of FinanceWise usage and available resources.</p>
+            <p>Overview of FinanceWise usage and student financial activity.</p>
+        </div>
+    </div>
+        <!-- User Registration Analysis -->
+    <div class="management-card report-chart-card">
+        <h3>User Registrations by Month and Year</h3>
+        <p>Track the number of students and administrators joining FinanceWise.</p>
+
+        <div class="chart-container">
+            <canvas id="registrationChart"></canvas>
         </div>
     </div>
 
-    <div class="admin-stats">
+    <!-- Student Spending Analysis -->
+    <div class="management-card report-chart-card">
 
-        <div class="admin-stat-card">
-            <h3>Total Users</h3>
-            <p>{{ total_users }}</p>
+        <h2>Student Spending Analysis</h2>
+        <p>Overview of expenditure patterns across all students.</p>
+
+        <!-- Spending Summary -->
+        <div class="admin-stats">
+
+            <div class="admin-stat-card">
+                <h3>Total Student Expenditure</h3>
+                <p>KES {{ total_student_expenses|floatformat:2 }}</p>
+            </div>
+
+            <div class="admin-stat-card">
+                <h3>Highest Spending Category</h3>
+                <p>{{ highest_spending_category }}</p>
+            </div>
+
+            <div class="admin-stat-card">
+                <h3>Most Used Category</h3>
+                <p>{{ most_used_category }}</p>
+            </div>
+
+            <div class="admin-stat-card">
+                <h3>Total Expense Transactions</h3>
+                <p>{{ total_student_transactions }}</p>
+            </div>
+
         </div>
 
-        <div class="admin-stat-card">
-            <h3>Students</h3>
-            <p>{{ total_students }}</p>
+        <!-- Expenditure Bar Chart -->
+        <div class="report-chart-card">
+            <h3>Total Expenditure by Category</h3>
+            <div class="chart-container">
+                <canvas id="spendingCategoryChart"></canvas>
+            </div>
         </div>
 
-        <div class="admin-stat-card">
-            <h3>Administrators</h3>
-            <p>{{ total_admins }}</p>
+        <!-- Expenditure Doughnut Chart -->
+        <div class="report-chart-card">
+            <h3>Percentage of Student Expenditure</h3>
+            <div class="chart-container">
+                <canvas id="spendingPercentageChart"></canvas>
+            </div>
         </div>
 
-        <div class="admin-stat-card">
-            <h3>Categories</h3>
-            <p>{{ total_categories }}</p>
-        </div>
+        <!-- Category Breakdown -->
+        <div class="management-card">
+            <h3>Category Breakdown</h3>
 
-        <div class="admin-stat-card">
-            <h3>Learning Materials</h3>
-            <p>{{ total_learning_materials }}</p>
-        </div>
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Category</th>
+                            <th>Total Spent (KES)</th>
+                            <th>Transactions</th>
+                            <th>Percentage</th>
+                        </tr>
+                    </thead>
 
-        <div class="admin-stat-card">
-            <h3>Published Materials</h3>
-            <p>{{ published_learning_materials }}</p>
-        </div>
-
-        <div class="admin-stat-card">
-            <h3>Quiz Questions</h3>
-            <p>{{ total_quiz_questions }}</p>
-        </div>
-
-        <div class="admin-stat-card">
-            <h3>Published Questions</h3>
-            <p>{{ published_quiz_questions }}</p>
+                    <tbody>
+                        {% for category in spending_categories %}
+                        <tr>
+                            <td>{{ category.name }}</td>
+                            <td>{{ category.total_spent|floatformat:2 }}</td>
+                            <td>{{ category.transaction_count }}</td>
+                            <td>{{ category.percentage }}%</td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="4">
+                                No student expense records available yet.
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
         </div>
 
     </div>
 
+    <!-- Quiz Activity Analysis -->
+    <div class="management-card report-chart-card">
+        <h3>Quiz Activity Over Time</h3>
+        <p>Monitor student engagement through monthly quiz attempts.</p>
+
+        <div class="chart-container">
+            <canvas id="quizActivityChart"></canvas>
+        </div>
+    </div>
+
+
+    <!-- Privacy Protection -->
     <div class="management-card">
         <h3>Privacy Protection</h3>
         <p>
@@ -76,5 +138,25 @@
     </p>
 
 </div>
+
+{% endblock %}
+
+
+{% block extra_js %}
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+{{ registration_labels|json_script:"registration-labels" }}
+{{ registration_datasets|json_script:"registration-datasets" }}
+
+{{ learning_labels|json_script:"learning-labels" }}
+{{ learning_datasets|json_script:"learning-datasets" }}
+
+{{ quiz_labels|json_script:"quiz-labels" }}
+{{ quiz_datasets|json_script:"quiz-datasets" }}
+
+{{ spending_categories|json_script:"spending-category-data" }}
+
+<script src="{% static 'js/reports.js' %}"></script>
 
 {% endblock %}

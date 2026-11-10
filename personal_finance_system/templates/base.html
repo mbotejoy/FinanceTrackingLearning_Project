@@ -214,7 +214,11 @@
     {% endblock %}
     </main>
 
-    <script src="{% static 'JS/sidebar.js' %}"></script>
-    <script src="{% static 'JS/notifications.js' %}"></script>
+<script src="{% static 'JS/sidebar.js' %}"></script>
+<script src="{% static 'JS/notifications.js' %}"></script>
+
+<!-- Additional JavaScript for individual pages -->
+{% block extra_js %}{% endblock %}
+
 </body>
 </html>

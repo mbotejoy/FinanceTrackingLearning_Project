@@ -1,4 +1,5 @@
 from django.db import models
+from django.conf import settings
 
 
 class LearningContent(models.Model):
@@ -84,3 +85,28 @@ class QuizQuestion(models.Model):
 
     def __str__(self):
         return self.question_text
+    
+class QuizAttempt(models.Model):
+
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="quiz_attempts"
+    )
+
+    topic = models.CharField(max_length=30)
+
+    score = models.PositiveIntegerField()
+
+    total_questions = models.PositiveIntegerField()
+
+    percentage = models.FloatField(default=0.0)
+
+    attempted_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        db_table = "quiz_attempts"
+        ordering = ["-attempted_at"]
+
+    def __str__(self):
+        return f"{self.user} - {self.topic} - {self.percentage}%"

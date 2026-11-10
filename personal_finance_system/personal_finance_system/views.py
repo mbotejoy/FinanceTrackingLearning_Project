@@ -1,23 +1,24 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
-from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth import authenticate, login, logout, get_user_model
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import get_user_model
 from users.forms import RegisterForm
 from django.core.exceptions import PermissionDenied
 from functools import wraps
 from django.db import transaction
-from django.db.models import Q, Sum
+from django.db.models import Q, Sum, Count
 from django.views.decorators.http import require_POST
 from finance.models import Subcategory, Transaction, Category, Budget, SavingsGoal, Notification, RecommendationRule, SpendingPreference
 from finance.forms import CategoryForm, TransactionForm, BudgetForm,SavingsGoalForm, RecommendationRuleForm, SpendingPreferenceForm
-from learning.models import LearningContent, QuizQuestion
+from learning.models import LearningContent, QuizQuestion, QuizAttempt
 from learning.forms import LearningContentForm, QuizQuestionForm
 from django.utils import timezone
 from .classification_service import classify_student_spending
 from datetime import date
 from decimal import Decimal
 from django.http import JsonResponse
+from django.db.models.functions import TruncMonth
 
 
 # Display the public landing page.
@@ -328,29 +329,228 @@ def admin_delete_quiz(request, question_id):
 
     return redirect("admin_quizzes")
 
+
 # Display aggregate system statistics without exposing
 # individual students' financial records.
 @admin_required
 def admin_reports(request):
 
+    # Get total system statistics.
+    total_users = User.objects.count()
+
+    total_students = User.objects.filter(
+        role="student"
+    ).count()
+
+    total_admins = User.objects.filter(
+        role="admin",
+        is_staff=True
+    ).count()
+
+    # Group user registrations by month and year.
+    registration_data = list(
+        User.objects
+        .annotate(month=TruncMonth("date_joined"))
+        .values("month", "role", "is_staff")
+        .annotate(total=Count("id"))
+        .order_by("month")
+    )
+
+    registration_months = sorted({
+        item["month"] for item in registration_data
+        if item["month"] is not None
+    })
+
+    registration_labels = [
+        month.strftime("%B %Y")
+        for month in registration_months
+    ]
+
+    student_counts = []
+    admin_counts = []
+
+    for month in registration_months:
+
+        student_count = sum(
+            item["total"]
+            for item in registration_data
+            if item["month"] == month
+            and item["role"] == "student"
+        )
+
+        admin_count = sum(
+            item["total"]
+            for item in registration_data
+            if item["month"] == month
+            and item["role"] == "admin"
+            and item["is_staff"] is True
+        )
+
+        student_counts.append(student_count)
+        admin_counts.append(admin_count)
+
+    registration_datasets = [
+        {
+            "label": "Students",
+            "data": student_counts,
+            "backgroundColor": "#7CB9E8"
+        },
+        {
+            "label": "Administrators",
+            "data": admin_counts,
+            "backgroundColor": "#F4B183"
+        }
+    ]
+
+    # Group learning materials by month.
+    learning_data = (
+        LearningContent.objects
+        .annotate(month=TruncMonth("created_at"))
+        .values("month")
+        .annotate(total=Count("id"))
+        .order_by("month")
+    )
+
+    learning_labels = [
+        item["month"].strftime("%B %Y")
+        for item in learning_data
+        if item["month"] is not None
+    ]
+
+    learning_datasets = [
+        {
+            "label": "Learning Materials Added",
+            "data": [
+                item["total"] for item in learning_data
+            ],
+            "borderColor": "#4CAF50"
+        }
+    ]
+
+    # Get monthly quiz attempt records.
+    quiz_data = list(
+        QuizAttempt.objects
+        .annotate(month=TruncMonth("attempted_at"))
+        .values("month")
+        .annotate(total=Count("id"))
+        .order_by("month")
+    )
+
+    quiz_labels = [
+        item["month"].strftime("%b %Y")
+        for item in quiz_data
+        if item["month"] is not None
+    ]
+
+    quiz_datasets = [
+        {
+            "label": "Quiz Attempts",
+            "data": [item["total"] for item in quiz_data],
+            "borderColor": "#4F46E5",
+            "backgroundColor": "rgba(79, 70, 229, 0.1)",
+            "tension": 0.3,
+            "fill": True,
+        }
+    ]
+
+    # ----------------------------------------
+    # STUDENT SPENDING ANALYSIS
+    # ----------------------------------------
+
+    # Calculate total expenditure across all students.
+    total_student_expenses = (
+        Transaction.objects.filter(
+            user__role="student",
+            type="expense"
+        ).aggregate(total=Sum("amount"))["total"] or 0
+    )
+
+    # Group student expenses by category.
+    category_data = (
+        Transaction.objects.filter(
+            user__role="student",
+            type="expense"
+        )
+        .values("category__name")
+        .annotate(
+            total_spent=Sum("amount"),
+            transaction_count=Count("id")
+        )
+        .order_by("-total_spent")
+    )
+
+    spending_categories = []
+
+    for item in category_data:
+
+        amount = item["total_spent"]
+
+        percentage = (
+            float(amount / total_student_expenses * 100)
+            if total_student_expenses else 0
+        )
+
+        spending_categories.append({
+            "name": item["category__name"] or "Uncategorised",
+            "total_spent": float(amount),
+            "transaction_count": item["transaction_count"],
+            "percentage": round(percentage, 2),
+        })
+
+    # Category with the highest total expenditure.
+    highest_spending_category = (
+        spending_categories[0]["name"]
+        if spending_categories else "No data available"
+    )
+
+    # Category with the highest number of transactions.
+    most_used_category = (
+        max(
+            spending_categories,
+            key=lambda item: item["transaction_count"]
+        )["name"]
+        if spending_categories else "No data available"
+    )
+
+    # Count all student expense transactions.
+    total_student_transactions = sum(
+        item["transaction_count"]
+        for item in spending_categories
+    )
+
+    # Prepare the report context.
     context = {
-        "total_users": User.objects.count(),
-        "total_students": User.objects.filter(
-            role="student"
-        ).count(),
-        "total_admins": User.objects.filter(
-            role="admin",
-            is_staff=True
-        ).count(),
+        "total_users": total_users,
+        "total_students": total_students,
+        "total_admins": total_admins,
+
         "total_categories": Category.objects.count(),
+
         "total_learning_materials": LearningContent.objects.count(),
         "published_learning_materials": LearningContent.objects.filter(
             is_published=True
         ).count(),
+
         "total_quiz_questions": QuizQuestion.objects.count(),
         "published_quiz_questions": QuizQuestion.objects.filter(
             is_published=True
         ).count(),
+
+        "registration_labels": registration_labels,
+        "registration_datasets": registration_datasets,
+
+        "learning_labels": learning_labels,
+        "learning_datasets": learning_datasets,
+
+        "quiz_labels": quiz_labels,
+        "quiz_datasets": quiz_datasets,
+
+        # Student spending analysis
+        "total_student_expenses": float(total_student_expenses),
+        "highest_spending_category": highest_spending_category,
+        "most_used_category": most_used_category,
+        "total_student_transactions": total_student_transactions,
+        "spending_categories": spending_categories,
     }
 
     return render(request, "admin_reports.html", context)
@@ -1022,6 +1222,14 @@ def quiz(request):
 
         percentage = round((score / len(questions)) * 100)
 
+        # Save the completed quiz attempt for reporting.
+        QuizAttempt.objects.create(
+            user=request.user,
+            topic=selected_topic,
+            score=score,
+            total_questions=len(questions),
+            percentage=percentage
+        )
         return render(
             request,
             "quiz.html",

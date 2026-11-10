@@ -13,6 +13,29 @@
 .admin-dashboard * {
     box-sizing: border-box;
 }
+.clickable-card {
+    display: block;
+    text-decoration: none;
+    color: lightblue;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.clickable-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.10);
+    text-decoration: none;
+    color: #2563EB;
+}
+
+.clickable-card:focus-visible {
+    outline: 2px solid #4F46E5;
+    outline-offset: 4px;
+}
+.clickable-card:hover h3,
+.clickable-card:hover p {
+    color: #2563EB;
+}
 
 /* =========================================
    ADMIN HEADER
@@ -1181,8 +1204,21 @@
 .recommendation-form-actions .admin-btn {
     min-height: 42px;
 }
+/* =========================================
+   REPORT CHART CONTAINERS
+========================================= */
+/* Report chart containers */
+.report-chart-card {
+    margin-bottom: 25px;
+    padding: 25px;
+}
 
-
+.chart-container {
+    position: relative;
+    width: 100%;
+    height: 350px;
+    margin-top: 20px;
+}
 
 
 /* =========================================
@@ -1237,6 +1273,9 @@
 
     .admin-header {
         align-items: flex-start;
+    }
+    .chart-container {
+        height: 280px;
     }
 }
 

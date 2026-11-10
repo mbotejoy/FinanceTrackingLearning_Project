@@ -20,24 +20,28 @@
     </div>
 
     <!-- System Statistics -->
-    <div class="admin-stats">
+<div class="admin-stats">
 
-        <div class="admin-stat-card">
-            <h3>Total Users</h3>
-            <p>{{ total_users }}</p>
-        </div>
+    <!-- Total Users -->
+    <a href="{% url 'admin_reports' %}" class="admin-stat-card clickable-card">
+        <h3>Total Users</h3>
+        <p>{{ total_users }}</p>
+    </a>
 
-        <div class="admin-stat-card">
-            <h3>Students</h3>
-            <p>{{ total_students }}</p>
-        </div>
+    <!-- Students -->
+    <a href="{% url 'admin_reports' %}" class="admin-stat-card clickable-card">
+        <h3>Students</h3>
+        <p>{{ total_students }}</p>
+    </a>
 
-        <div class="admin-stat-card">
-            <h3>Administrators</h3>
-            <p>{{ total_admins }}</p>
-        </div>
+    <!-- Administrators -->
+    <a href="{% url 'admin_reports' %}" class="admin-stat-card clickable-card">
+        <h3>Administrators</h3>
+        <p>{{ total_admins }}</p>
+    </a>
 
-    </div>
+</div>
+
 
     <!-- System Management -->
     <section class="admin-management">
