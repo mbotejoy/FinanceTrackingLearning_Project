@@ -1,4 +1,5 @@
 from django import forms
+from django.db.models import Q
 from .models import (
     Category, 
     Transaction, 
@@ -8,6 +9,7 @@ from .models import (
     Subcategory,
     SpendingPreference
 )
+
 
 
 class CategoryForm(forms.ModelForm):
@@ -66,9 +68,16 @@ class TransactionForm(forms.ModelForm):
 
         super().__init__(*args, **kwargs)
 
-        self.fields["category"].queryset = (
-            Category.objects.all().order_by("name")
-        )
+        # Show shared default categories and categories created
+        # by the currently logged-in user.
+        if self.user:
+            self.fields["category"].queryset = (
+                Category.objects.filter(
+                    Q(user__isnull=True) | Q(user=self.user)
+                ).order_by("name")
+            )
+        else:
+            self.fields["category"].queryset = Category.objects.none()
 
         # Subcategories are initially restricted to the current student.
         if self.user:
@@ -118,8 +127,20 @@ class TransactionForm(forms.ModelForm):
         category = cleaned_data.get("category")
         subcategory = cleaned_data.get("subcategory")
 
-        # Ensure the selected category matches the transaction type.
-        if category and transaction_type != category.type:
+        # Map transaction choices to their corresponding category types.
+        category_type_mapping = {
+            "income/allowance": "income",
+            "expense": "expense",
+            "savings": "savings",
+            "investment": "investment",
+            "debt_repayment": "debt_repayment",
+        }
+
+        expected_category_type = category_type_mapping.get(
+            transaction_type
+        )
+
+        if category and category.type != expected_category_type:
             self.add_error(
                 "category",
                 "Select a category matching the transaction type."
@@ -147,6 +168,37 @@ class TransactionForm(forms.ModelForm):
                 )
 
         return cleaned_data
+    
+class UserCategoryForm(forms.ModelForm):
+
+    class Meta:
+        model = Category
+        fields = ["name", "type"]
+
+        widgets = {
+            "name": forms.TextInput(attrs={
+                "placeholder": "Enter category name"
+            }),
+            "type": forms.Select()
+        }
+
+    def clean_name(self):
+        name = self.cleaned_data["name"].strip()
+
+        if Category.objects.filter(
+            user=self.user,
+            name__iexact=name,
+            type=self.cleaned_data.get("type")
+        ).exists():
+            raise forms.ValidationError(
+                "You already have a category with this name and type."
+            )
+
+        return name
+
+    def __init__(self, *args, **kwargs):
+        self.user = kwargs.pop("user", None)
+        super().__init__(*args, **kwargs)
     
 class BudgetForm(forms.ModelForm):
     class Meta:

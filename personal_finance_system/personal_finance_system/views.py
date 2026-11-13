@@ -10,7 +10,7 @@ from django.db import transaction
 from django.db.models import Q, Sum, Count
 from django.views.decorators.http import require_POST
 from finance.models import Subcategory, Transaction, Category, Budget, SavingsGoal, Notification, RecommendationRule, SpendingPreference
-from finance.forms import CategoryForm, TransactionForm, BudgetForm,SavingsGoalForm, RecommendationRuleForm, SpendingPreferenceForm
+from finance.forms import CategoryForm, UserCategoryForm, TransactionForm, BudgetForm, SavingsGoalForm, RecommendationRuleForm, SpendingPreferenceForm
 from learning.models import LearningContent, QuizQuestion, QuizAttempt
 from learning.forms import LearningContentForm, QuizQuestionForm
 from django.utils import timezone
@@ -602,6 +602,37 @@ def add_transaction(request):
         "add_transaction.html",
         {"form": form}
     )
+
+
+# Allow a student to create a private transaction category.
+@login_required
+def create_user_category(request):
+    if request.method == "POST":
+        form = UserCategoryForm(
+            request.POST,
+            user=request.user
+        )
+
+        if form.is_valid():
+            category = form.save(commit=False)
+            category.user = request.user
+            category.save()
+
+            messages.success(
+                request,
+                f'"{category.name}" category created successfully.'
+            )
+            return redirect("add_transaction")
+    else:
+        form = UserCategoryForm(user=request.user)
+
+    return render(
+        request,
+        "create_user_category.html",
+        {"form": form}
+    )
+
+
 @login_required
 @require_POST
 def add_subcategory(request):
@@ -624,7 +655,9 @@ def add_subcategory(request):
         }, status=400)
 
     category = get_object_or_404(
-        Category,
+        Category.objects.filter(
+            Q(user__isnull=True) | Q(user=request.user)
+        ),
         pk=category_id,
         type="expense"
     )
