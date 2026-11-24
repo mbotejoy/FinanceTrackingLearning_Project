@@ -1,2 +1,10 @@
-# Large machine learning datasets
+# Python virtual environments
+personal_finance_system/venv/
+venv/
+
+# Python cache files
+__pycache__/
+*.py[cod]
+
+# Large raw dataset - keep locally, not in Git
 personal_finance_system/machine_learning/dataset/raw/2024_Finaccess_Publicdata.dta
