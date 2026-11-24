@@ -231,13 +231,19 @@ class BudgetForm(forms.ModelForm):
         }
 
     def __init__(self, *args, **kwargs):
+        self.user = kwargs.pop("user", None)
         super().__init__(*args, **kwargs)
 
-        self.fields["category"].queryset = (
-            Category.objects.filter(
-                type="expense"
-            ).order_by("name")
-        )
+        categories = Category.objects.filter(type="expense")
+
+        if self.user:
+            categories = categories.filter(
+                Q(user__isnull=True) | Q(user=self.user)
+            )
+        else:
+            categories = categories.filter(user__isnull=True)
+
+        self.fields["category"].queryset = categories.order_by("name")
 
     def clean_amount(self):
         amount = self.cleaned_data["amount"]
@@ -303,6 +309,9 @@ class SavingsGoalForm(forms.ModelForm):
 
             "status": forms.Select(),
         }
+    def __init__(self, *args, **kwargs):
+        self.user = kwargs.pop("user", None)
+        super().__init__(*args, **kwargs)
 
     def clean(self):
         cleaned_data = super().clean()

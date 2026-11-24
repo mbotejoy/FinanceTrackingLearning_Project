@@ -304,6 +304,23 @@
         font-size: 26px;
     }
 }
+/* Personalised Learning Recommendations */
+.recommendation-section {
+    margin-top: 40px;
+    padding-top: 25px;
+    border-top: 2px solid #dce5ed;
+}
+.lesson-badge {
+    display: inline-block;
+    background: #e3f0ff;
+    color: #2474bd;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 5px 10px;
+    border-radius: 20px;
+    vertical-align: middle;
+    margin-left: 8px;
+}
 
 @media (max-width: 420px) {
 

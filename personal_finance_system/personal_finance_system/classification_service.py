@@ -62,7 +62,7 @@ def classify_student_spending(user, year, month):
     ).select_related("category")
 
     income = transactions.filter(
-        type="income"
+        type__in=["income/allowance", "income"]
     ).aggregate(total=Sum("amount"))["total"] or 0
 
     if income <= 0:

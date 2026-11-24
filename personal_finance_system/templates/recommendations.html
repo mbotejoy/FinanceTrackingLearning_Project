@@ -116,6 +116,83 @@
 
     </section>
 
+    <!-- Personalised Learning Recommendations -->
+    <section class="recommendation-section">
+
+        <div class="recommendation-heading">
+            <h2>
+                Lessons Recommended for You
+                <span class="lesson-badge">
+                    {{ recommended_lessons|length }} Recommended
+                </span>
+            </h2>
+            <p>Discover lessons selected according to your spending behaviour and financial activities.</p>
+        </div>
+
+        <div class="recommendations-container">
+
+            {% for item in recommended_lessons %}
+
+                <article class="recommendation-card saving-card">
+
+                    <div class="recommendation-icon">
+                        📚
+                    </div>
+
+                    <div class="recommendation-content">
+
+                        <span class="learning-topic">
+                            {{ item.lesson.get_topic_display }}
+                        </span>
+
+                        <h3>{{ item.lesson.title }}</h3>
+
+                        <p>{{ item.lesson.description }}</p>
+
+                        <p>
+                            <strong>Why this lesson?</strong>
+                        </p>
+
+                        {% for reason in item.reasons %}
+                            <p>{{ reason }}</p>
+                        {% endfor %}
+
+                        <a href="{% url 'lesson_detail' item.lesson.id %}"
+                           class="btn btn-primary">
+                            Start Learning
+                        </a>
+
+                    </div>
+
+                </article>
+
+            {% empty %}
+
+                <div class="recommendation-empty">
+
+                    <h3>No Recommended Lessons Yet</h3>
+
+                    <p>
+                        Once your financial activities are recorded
+                        and relevant lessons are published,
+                        FinanceWise will recommend learning materials
+                        suited to your needs.
+                    </p>
+
+                    <a href="{% url 'learning' %}"
+                       class="btn btn-primary">
+                        Explore All Lessons
+                    </a>
+
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+    </section>
+
+
 </div>
 
 {% endblock %}

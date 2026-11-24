@@ -731,7 +731,10 @@ def create_budget(request):
 
     if request.method == "POST":
 
-        form = BudgetForm(request.POST)
+        form = BudgetForm(
+            request.POST,
+            user=request.user
+        )
 
         if form.is_valid():
 
@@ -747,7 +750,7 @@ def create_budget(request):
             return redirect("budgets")
 
     else:
-        form = BudgetForm()
+        form = BudgetForm(user=request.user)
 
     return render(
         request,
@@ -796,7 +799,8 @@ def edit_transaction(request, transaction_id):
         "add_transaction.html",
         {
             "form": form,
-            "editing": True
+            "editing": True,
+            "user": request.user
         }
     )
 
@@ -1325,7 +1329,7 @@ def recommendations(request):
 
     monthly_income = (
         monthly_transactions
-        .filter(type="income")
+        .filter(type__in=["income/allowance", "income"])
         .aggregate(total=Sum("amount"))["total"] or 0
     )
 
@@ -1501,6 +1505,150 @@ def recommendations(request):
                     "realistic for your circumstances."
                 )
             })
+
+    # ----------------------------------------
+    # PERSONALIZED LESSON RECOMMENDATIONS
+    # ----------------------------------------
+
+    # Get the student's current spending classification.
+    spending_analysis = classify_student_spending(
+        user=request.user,
+        year=today.year,
+        month=today.month
+    )
+
+    # Store lesson topics and the reasons for recommending them.
+    lesson_topic_reasons = {}
+
+    def add_lesson_reason(topic, reason):
+
+        if topic not in lesson_topic_reasons:
+            lesson_topic_reasons[topic] = []
+
+        if reason not in lesson_topic_reasons[topic]:
+            lesson_topic_reasons[topic].append(reason)
+
+    # 1. Recommendations based on spending classification.
+    classification = spending_analysis.get("classification")
+
+    if classification == "Low":
+
+        add_lesson_reason(
+            "saving",
+            "Your spending behaviour is classified as low. "
+            "Learn how to strengthen your savings habits."
+        )
+
+        add_lesson_reason(
+            "investing",
+            "Explore how you can learn about investing "
+            "and growing your money."
+        )
+
+    elif classification == "Moderate":
+
+        add_lesson_reason(
+            "budgeting",
+            "Learn how to plan and manage your monthly budget."
+        )
+
+        add_lesson_reason(
+            "saving",
+            "Learn strategies for maintaining consistent savings."
+        )
+
+    elif classification == "High":
+
+        add_lesson_reason(
+            "spending",
+            "Your spending behaviour is classified as high. "
+            "Learn how to control unnecessary expenses."
+        )
+
+        add_lesson_reason(
+            "budgeting",
+            "Learn how to create a realistic budget "
+            "and manage your spending."
+        )
+
+    # 2. Recommendations when expenses exceed income.
+    if monthly_income > 0 and monthly_expenses > monthly_income:
+
+        add_lesson_reason(
+            "budgeting",
+            "Your expenses exceed your recorded income. "
+            "Learn how to plan your finances."
+        )
+
+        add_lesson_reason(
+            "spending",
+            "Learn how to identify and reduce unnecessary expenses."
+        )
+
+        add_lesson_reason(
+            "debt",
+            "Understand debt management and how to avoid "
+            "relying on borrowing to cover expenses."
+        )
+
+    # 3. Recommendations when the student has exceeded a budget.
+    if any(
+        item["rule_key"] == "budget_exceeded"
+        for item in recommendations_list
+    ):
+
+        add_lesson_reason(
+            "budgeting",
+            "You have exceeded at least one budget. "
+            "Learn how to monitor and control your spending."
+        )
+
+        add_lesson_reason(
+            "spending",
+            "Learn how to make more informed spending decisions."
+        )
+
+    # 4. Recommendations when there is no active savings goal.
+    if not active_goals.exists():
+
+        add_lesson_reason(
+            "saving",
+            "You do not have an active savings goal. "
+            "Learn how to set realistic financial goals."
+        )
+
+    # 5. Recommend debt lessons when debt repayments are recorded.
+    has_debt_repayments = Transaction.objects.filter(
+        user=request.user,
+        type="debt_repayment",
+        date__year=today.year,
+        date__month=today.month
+    ).exists()
+
+    if has_debt_repayments:
+
+        add_lesson_reason(
+            "debt",
+            "You have recorded debt repayments. "
+            "Learn strategies for managing and reducing debt."
+        )
+
+    # Retrieve only published lessons matching the identified topics.
+    published_lessons = LearningContent.objects.filter(
+        is_published=True,
+        topic__in=lesson_topic_reasons.keys()
+    ).order_by("topic", "title")
+
+    # Attach the reason each lesson is recommended.
+    recommended_lessons = []
+
+    for lesson in published_lessons:
+
+        recommended_lessons.append({
+            "lesson": lesson,
+            "reasons": lesson_topic_reasons[lesson.topic]
+        })
+
     # Rule 4: Provide a useful next step when no rule is triggered.
     if not recommendations_list:
         recommendations_list.append({
@@ -1514,6 +1662,7 @@ def recommendations(request):
                 "more relevant guidance."
             )
         })
+
 
     # Save generated recommendations as persistent notifications.
     now = timezone.now()
@@ -1603,10 +1752,14 @@ def recommendations(request):
 
     # Display the recommendations on the page.
     context = {
-        "recommendations": recommendations_list,
-        "monthly_income": monthly_income,
-        "monthly_expenses": monthly_expenses,
-        "new_notifications": new_notifications,
+    "recommendations": recommendations_list,
+    "monthly_income": monthly_income,
+    "monthly_expenses": monthly_expenses,
+    "new_notifications": new_notifications,
+
+    # Personalised learning recommendations
+    "recommended_lessons": recommended_lessons,
+    "spending_analysis": spending_analysis,
     }
     # Mark the classification notification as read after
     # all recommendation and classification processing.

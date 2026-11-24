@@ -1,3 +1,4 @@
+
 document.addEventListener("DOMContentLoaded", function () {
 
     const form = document.getElementById("transactionForm");
@@ -21,9 +22,71 @@ document.addEventListener("DOMContentLoaded", function () {
     const getUrl = form.dataset.getSubcategoriesUrl;
     const addUrl = form.dataset.addSubcategoryUrl;
 
+    // Keep a copy of all categories before filtering.
+    const allCategoryOptions = Array.from(category.options)
+        .filter(option => option.value !== "")
+        .map(option => option.cloneNode(true));
+
+    // Match transaction types to category types.
+    const categoryTypeMapping = {
+        "income/allowance": "income",
+        "expense": "expense",
+        "savings": "savings",
+        "investment": "investment",
+        "debt_repayment": "debt_repayment"
+    };
+
     function showMessage(text, isError = false) {
         message.textContent = text;
         message.style.color = isError ? "red" : "green";
+    }
+
+    // Filter categories according to the selected transaction type.
+    function filterCategories(clearSelection = false) {
+
+        const selectedType = transactionType.value;
+
+        const expectedCategoryType = categoryTypeMapping[selectedType];
+
+        const previousCategory = clearSelection ? "" : category.value;
+
+        category.innerHTML = "";
+
+        const placeholder = document.createElement("option");
+        placeholder.value = "";
+        placeholder.textContent = "Select a category";
+
+        category.appendChild(placeholder);
+
+        allCategoryOptions.forEach(function (option) {
+
+            // Category labels are displayed as Name (type).
+            const match = option.textContent.trim().match(/\(([^()]*)\)$/);
+
+            if (!match) {
+                return;
+            }
+
+            const categoryType = match[1].trim().toLowerCase();
+
+            if (categoryType === expectedCategoryType) {
+
+                const newOption = option.cloneNode(true);
+
+                category.appendChild(newOption);
+            }
+
+        });
+
+        // Preserve the category when initially loading an edit form.
+        if (previousCategory) {
+            category.value = previousCategory;
+        }
+
+        // If the previous category does not match, clear it.
+        if (category.value !== previousCategory && previousCategory) {
+            category.value = "";
+        }
     }
 
     function resetSubcategories() {
@@ -85,8 +148,15 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
-    transactionType.addEventListener("change", loadSubcategories);
+    // Update categories when transaction type changes.
+    transactionType.addEventListener("change", function () {
 
+        filterCategories(true);
+        loadSubcategories();
+
+    });
+
+    // Update subcategories when category changes.
     category.addEventListener("change", loadSubcategories);
 
     addButton.addEventListener("click", function () {
@@ -157,7 +227,6 @@ document.addEventListener("DOMContentLoaded", function () {
                 );
             }
 
-            // Add the newly created subcategory to the dropdown.
             const option = document.createElement("option");
 
             option.value = data.id;
@@ -184,7 +253,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
     });
 
-    // Load existing subcategories when editing a transaction.
+    // Filter categories first, then load existing subcategories.
+    // This also supports editing an existing transaction.
+    filterCategories(false);
     loadSubcategories();
 
 });
